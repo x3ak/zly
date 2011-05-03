@@ -1,0 +1,9 @@
+<?php echo $this->headLink()->appendStylesheet('/slysman/public/files/css/install.css'); ?>
+<h2>SlyS Manager</h2>
+<div class="slysman-settings-item">
+    <a href="<?php echo $this->url(array('action'=>'requirements'));?>">Check SlyS requirements</a>
+</div>
+
+<div class="slysman-settings-item">
+    <a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'modules'));?>">SlyS compatible modules</a>
+</div>

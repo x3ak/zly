@@ -1,0 +1,41 @@
+<?php echo $this->doctype() . PHP_EOL; ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+	<?php
+
+	$this->headLink()->appendStylesheet('/themes/default/css/main.css');
+
+	echo $this->headTitle('SlyS Default Frontend') . PHP_EOL .
+		 $this->headMeta() . PHP_EOL .
+		 $this->headLink() . PHP_EOL .
+		 $this->headStyle() . PHP_EOL .
+		 //$this->dojo() . PHP_EOL .
+		 $this->headScript();
+	?>
+		
+	</head>
+
+	<body class="claro">
+
+		<div id="header">
+			<div class="container">
+				<div id="logo"><a href="/"></a></div>
+			</div>
+		</div>
+
+		<div id="wrapper">
+			<div id="container" class="container">
+				<div id="main" class="span-18 colborder">
+					<div class="flash-messages"><?php echo $this->layout()->top; ?></div>
+					<?php echo $this->layout()->content; ?>
+				</div>
+				<div id="sidebox" class="span-5 last">
+					<?php echo $this->layout()->left; ?>
+				</div>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+		<div id="footer"><?php echo $this->layout()->footer; ?></div>
+	</body>
+</html>

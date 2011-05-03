@@ -1,0 +1,12 @@
+<?php if($this->mapper->exists()): ?>
+    <h1>'<?php echo $this->mapper->name;?>' attribute</h1>
+<?php else:?>
+    <h1>Create new attribute</h1>
+<?php endif;?>
+
+<?php
+/**
+ * @author     Pavel Galaton <pavel.galaton@gmail.com>
+ * @version    $Id: edit.phtml 1122 2011-01-27 14:13:09Z zak $
+ */
+echo $this->form;

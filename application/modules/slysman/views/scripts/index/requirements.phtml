@@ -1,0 +1,31 @@
+<?php echo $this->headLink()->appendStylesheet('/slysman/public/files/css/install.css'); ?>
+<div class="wrapper">
+
+    
+    <div class="description">
+        <div class="logo"></div>
+        <h2>Slys Platform installation.</h2><br />
+        <p>Please provide all requirements for normal working of Slys platform.</p>
+    </div>
+    <?php echo $this->form('installForm', array('method'=>'post')); ?>
+
+        <fieldset>
+            <legend>Installation requirements:</legend>
+
+            <fieldset>
+                <legend>Paths:</legend>
+                    <?php foreach($this->messages as $message) {  ?>
+                        <?php if($message instanceof Exception) {?>
+                           <div class="message warning"> Warning: <?php echo $message->getMessage(); ?></div>
+                        <?php } else {?>
+                           <div class="message"> <?php echo $message; ?></div>
+                        <?php } ?>
+                    <?php } ?>
+            </fieldset>
+
+        </fieldset>
+        <div>
+            <input type="submit" value="Refresh" name="refresh" />
+        </div>
+    </form>
+</div>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit bootstrap="./phpunit_bootstrap.php" colors="false">
+	<testsuites>
+	    <testsuite name="Slys">
+	        <directory>./</directory>
+	    </testsuite>
+	    <filter>
+	        <whitelist>
+	            <directory suffix=".php">../application</directory>
+	            <exclude>
+	                <directory suffix=".phtml">../application</directory>
+	            </exclude>
+	        </whitelist>
+	        <blacklist>
+	                <directory suffix=".php">../library</directory>
+	                <directory suffix=".phtml">../library</directory>
+	        </blacklist>
+	    </filter>
+	</testsuites>
+</phpunit>

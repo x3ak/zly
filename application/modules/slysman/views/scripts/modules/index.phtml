@@ -1,0 +1,67 @@
+<?php echo $this->headLink()->appendStylesheet('/slysman/public/files/css/install.css'); ?>
+<h2>Slys Modules Actions</h2>
+<?php echo $this->modulesForm->getElement('action'); ?>
+<table border="1" cellspacing="0" cellpadding="3">
+    <tr>
+        <th></th>
+        <th>Module Name</th>
+        <th>Module Description</th>
+        <th>Enabled</th>
+        <th>Actions</th>
+    </tr>
+    <?php foreach($this->modules as $moduleName=>$bootstrap) {    
+        $moduleOptions = $bootstrap->getOptions();
+
+        ?>
+        <tr>
+            <td><input type="checkbox" name="modules[]" value="<?php echo $moduleName; ?>"></td>
+            <td><?php if($bootstrap->hasOption('name')) echo $moduleOptions['name']; else echo ucfirst($moduleName)?></td>
+            <td>
+                <div><?php if($bootstrap->hasOption('description')) echo $moduleOptions['description'];?></div>
+                
+                <?php if(!empty($bootstrap->moduleRequirements['modules'])) { echo 'Require modules:';?>
+                    <ul>
+                    <?php foreach($bootstrap->moduleRequirements['modules'] as $name=>$version) {?>
+                        <li><?php echo ucfirst($name).' ver.'.$version; ?></li>
+                    <?php } ?> 
+                    </ul>
+                <?php } ?>  
+                
+                <?php if(!empty($bootstrap->moduleRequirements['resources'])) { echo 'Require resources:';?>
+                    <ul>
+                        <?php foreach($bootstrap->moduleRequirements['resources'] as $name=>$version) {?>
+                        <li><?php echo ucfirst($name).' ver.'.$version; ?></li>
+                        <?php } ?> 
+                    </ul>
+                <?php } ?>  
+            </td>
+
+            <td align="center"><?php if($bootstrap->hasOption('enabled')) echo (int)$moduleOptions['enabled'];?></td>
+            <td>
+                
+                <?php if($bootstrap instanceof Slys_Application_Module_Installable) {                    
+                    if(!$bootstrap->hasOption('installed') || (boolean)$bootstrap->getOption('installed') == false) {
+                        ?><a href="<?php echo $this->url(array('action'=>'install','item'=>$moduleName));?>">Install</a><?php 
+                    } elseif($bootstrap->hasOption('installed') && (boolean)$bootstrap->getOption('installed') == true) {
+                        ?><a href="#">Uninstall</a><?php 
+                    }
+                    }?>
+                <?php if($bootstrap instanceof Slys_Application_Module_Updateable) { ?>
+                    <a href="#">Update</a> 
+                <?php }?>
+                <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) { ?>    
+                    <a href="#">Disable</a> 
+                <?php } else { ?>
+                    <a href="#">Enable</a> 
+                <?php } ?>    
+                    
+                <a href="#">Remove</a>
+            </td>
+        </tr>
+
+        <?php
+        }
+    ?>
+</table>
+<?php echo $this->modulesForm->getElement('modules'); ?>
+<?php echo $this->modulesForm->getElement('submit'); ?>

@@ -1,0 +1,697 @@
+/*
+    Document   : main
+    Created on : Sep 13, 2010, 4:02:35 PM
+    Author     : deep
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+@import "./eav/admin.css";
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+body {
+    background: #fff url(../images/header-bg.png) repeat-x;
+    margin: 0px;
+    padding: 0px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 13px; /* TODO: make some changes for universal font size form many types of monitors */
+}
+
+a {
+/* Don't change because every type of link tag should have own style */
+}
+
+a:hover {
+/* Don't change because every type of link tag should have own style */
+}
+
+h2 {
+    margin: 0 !important;
+}
+
+div.clear {
+    clear: both;
+    height: 1px;
+}
+
+* {
+    outline: none !important;
+}
+
+body .colborder {
+    border-color: #DDD;
+}
+
+div#header {
+    height: 64px;
+}
+
+div#header a {
+    color: #313334;
+}
+
+div#logo a {
+    float: left;
+    font-size: 16px;
+    margin-left: 10px;
+    line-height: 60px;
+    background-repeat: no-repeat;
+    background-position: 0 5px;
+    text-decoration: none;
+}
+
+div.user-menu {
+    float: right;
+    margin: 20px 10px 0 0;
+    font-size: 100%;
+}
+
+div#logo a {
+    display: block;
+    height: 100%;
+}
+
+#header, #footer {
+/* background: #000; */
+}
+
+div#left {
+    float: left;
+    width: 200px;
+    height: 50%;
+}
+
+div.last {
+    margin-right: 0px;
+}
+
+div#footer {
+    margin-top: 10px;
+    color: #888;
+    text-align: center;
+}
+
+ul.errors {
+    color: red;
+    margin: 0;
+    list-style-type: none;
+    list-style-position: inside;
+    padding: 0;
+}
+
+div.flash-messages {
+    border: 1px solid #ccc;
+    padding: 5px;
+    background-color: #fff;
+}
+
+div.flash-messages div.message {
+    padding-left: 20px;
+    background: url(../images/information.png) no-repeat 0 0;
+}
+
+table.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #CBCBCB;
+    margin: 10px 0;
+}
+
+table.admin-table th {
+    border: 1px solid #CBCBCB;
+    font-weight: normal;
+    color: #000;
+    padding: 3px;
+    background: #92BCE1;
+}
+
+table.admin-table td {
+    border: 1px solid #ccc;
+    padding: 3px;
+    background: #fff;
+}
+
+table.admin-table td a {
+    text-decoration: none;
+    color: #333;
+}
+
+table.admin-table td a:hover {
+    text-decoration: underline;
+    color: black;
+}
+
+table.admin-table tr:hover td {
+    background-color: #e1effc;
+}
+
+table.admin-table th a {
+    text-decoration: none;
+    color: #333;
+}
+
+table.admin-table th a:hover {
+    text-decoration: underline;
+    color: black;
+}
+
+a.link-to-module {
+    display: block;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    height: 100px;
+    width: 150px;
+    float: left;
+    text-align: left;
+    background: url(../images/cog.png) no-repeat 140px 3px;
+}
+
+div.admin-submenu {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 7px;
+}
+
+div.admin-submenu-item {
+    margin: 0 10px;
+    float: left;
+    padding-left: 20px;
+    background: url(../images/brick.png) no-repeat 0 0;
+}
+
+div.user_box div.tool-bar {
+    padding: 0px 0;
+}
+
+a.user-profile {
+    padding: 0 10px 0 20px;
+    text-decoration: none;
+    background: url(../images/tools.png) no-repeat 0 0;
+    height: 25px;
+    display: block;
+    float: left;
+}
+
+a.user-logout {
+    padding: 0 10px 0 20px;
+    text-decoration: none;
+    background: url(../images/power-shut-down.png) no-repeat 0 0;
+    height: 25px;
+    display: block;
+    float: left;
+}
+
+h2.admin-header {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px !important;
+}
+
+.buttonIcon {
+    padding: 0 0 0 20px;
+}
+
+.icon16 {
+    display: block;
+    height: 16px;
+    width: 16px;
+}
+
+.add-item {
+    background-image: url(../images/add.png) !important;
+    background-repeat: no-repeat !important;
+}
+
+.edit-item {
+    background-image: url(../images/page_edit.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.delete-item {
+    background-image: url(../images/page_delete.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.list-item {
+    background-image: url(../images/page_white_text.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-vcard {
+    background-image: url(../images/vcard.png) !important;
+    background-repeat: no-repeat !important;
+}
+
+.icon-layers {
+    background-image: url(../images/palette.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-xhtml {
+    background-image: url(../images/layers.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-navigation {
+    background-image: url(../images/folder_table.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-layout_content {
+    background-image: url(../images/layout_content.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-widget-type {
+    background-image: url(../images/folder_image.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-users {
+    background-image: url(../images/folder_user.png);
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-user-list {
+    background-image: url(../images/group.png);
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-key {
+    background-image: url(../images/key.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-roles {
+    background-image: url(../images/user_suit.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-add {
+    background-image: url(../images/add.png);
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-menu-list {
+    background-image: url(../images/chart_organisation.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-folder-palette {
+    background-image: url(../images/folder_palette.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-notes {
+    background-image: url(../images/notes.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-published {
+    background-image: url(../images/accept.png) !important;
+    background-repeat: no-repeat !important;
+}
+
+.icon-not-published {
+    background-image: url(../images/accept_disabled.png) !important;
+    background-repeat: no-repeat !important;
+}
+
+.icon-settings {
+    background-image: url(../images/cog.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-file {
+    background-image: url(../images/folder_brick.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-resource {
+    background-image: url(../images/folder_page.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.icon-rules {
+    background-image: url(../images/folder_key.png) !important;
+    background-repeat: no-repeat !important;
+    padding-left: 20px;
+}
+
+.select-option-description {
+    font-size: 10px;
+    color: gray;
+    padding-right: 5px;
+}
+
+.navigation {
+    padding: 0px 0px 15px 0px;
+    margin: 0px 0px 0px 10px;
+}
+
+.navigation ul {
+    padding: 0px 0px 15px 0px;
+    margin: 0px;
+    margin-left: 20px;
+}
+
+.navigation li {
+    list-style: none;
+}
+
+.navigation li a {
+    padding: 0 5px 0 20px;
+    text-decoration: none;
+    color: black;
+    height: 20px;
+    display: block;
+}
+
+.navigation li a:hover {
+    text-decoration: underline;
+}
+
+.dojoxMultiSelect {
+    padding: 0px 10px 0px 10px !important;
+}
+
+.property {
+    padding: 0px !important;
+
+}
+
+.property .dijitTitlePaneContentInner {
+    padding: 0px 0 10px 0 !important;
+    background: #F6F6F6 !important;
+}
+
+.property dt {
+    background: #F6F6F6;
+    width: 50%;
+    display: block;
+    float: left;
+    margin: 0px !important;
+    text-align: right;
+    border-bottom: 1px solid #E9E9E9;
+}
+
+.property dt label {
+    margin: 0 5px;
+    color: #666;
+    line-height: 25px;
+    font-size: 90%;
+    overflow: hidden;
+}
+
+.property dd {
+    position: relative;
+    background: #F6F6F6;
+    width: 50%;
+    padding: 0;
+    display: block;
+    float: left;
+    margin: 0px !important;
+    border-bottom: 1px solid #E9E9E9;
+    height: 25px;
+}
+
+.property dd .dijitTextBox {
+    margin-top: 3px;
+    width: 70%;
+}
+
+.property dd .dijitInputInner {
+    padding: 0px !important;
+}
+
+.property dd ul.errors {
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    font-size: 50%;
+}
+
+.property-long dt {
+    width: 20%;
+}
+
+.property-long dd {
+    width: 80%;
+}
+
+.property-new-line dt {
+    width: 100%;
+    float: none !important;
+    text-align: left;
+    border-bottom: none;
+}
+
+.property-new-line dd {
+    width: 100%;
+    float: none !important;
+    height: auto;
+}
+
+div.main-content {
+    margin: 10px;
+}
+
+div.main-content h1 {
+    font-size: 150%;
+}
+
+div.breadcrumbs a {
+    text-decoration: none;
+}
+
+div.breadcrumbs {
+    background-color: #d4d4d4;
+    padding: 10px;
+    height: 30px;
+    border-bottom: 1px solid #CBCBCB;
+}
+
+div.main-breadcrumbs {
+    background-image: url(../images/breadcrumbs-bg-gray.png);
+    background-repeat: repeat-x;
+    float: left;
+}
+
+div.left-breadcrumbs {
+    background-repeat: no-repeat;
+    background-position: center left;
+    background-image: url(../images/breadcrumbs-left-gray.png);
+    padding-left: 5px;
+    height: 27px;
+    color: #fff;
+    line-height: 25px;
+}
+
+a.breadcrumbs-home {
+    background-repeat: no-repeat;
+    background-position: center right;
+    background-image: url(../images/home.png);
+    width: 16px !important;
+    display: block;
+}
+
+div.right-breadcrumbs {
+    background-repeat: no-repeat;
+    background-position: center right;
+    background-image: url(../images/breadcrumbs-right-gray.png);
+    padding-right: 10px;
+    height: 27px;
+    text-shadow: #fafafa 0px 1px 0px;
+    color: black;
+}
+
+div.right-breadcrumbs a {
+    float: left;
+    line-height: 25px;
+    background-position: 0 5px;
+    color: black;
+}
+
+div.right-breadcrumbs a:hover {
+
+}
+
+div.breadcrumbs-separator {
+    background-repeat: no-repeat;
+    background-position: center right;
+    background-image: url(../images/breadcrumbs-separator-gray.png);
+    float: left;
+    height: 27px;
+    width: 18px;
+
+}
+
+div.breadcrumbs-link {
+    color: #5d5d5d;
+    line-height: 26px;
+    float: left;
+    margin-left: 5px;
+}
+
+div.breadcrumbs-link a {
+    color: #5d5d5d;
+}
+
+div.breadcrumbs-link a:hover {
+    color: #242424;
+}
+
+a.breadcrumbs-root {
+    padding-left: 20px;
+}
+
+.main-wrapper .dijitMenuBar {
+    border-width: 0px 0px 1px 0px !important;
+}
+
+.main-content .dijitContentPane {
+    border: none !important;
+    background: transparent !important;
+}
+
+.centerContainer {
+    float: left;
+    width: 70%;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.rightContainer {
+    float: right;
+    width: 30%;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.bottomContainer {
+    clear: both;
+}
+
+.toolbarContainer {
+}
+
+.toolbarContainer .dijitButton {
+    float: right;
+    display: block;
+}
+
+.toolbarContainer .containerTitle {
+    float: left;
+    display: block;
+    font-size: 130%;
+}
+
+.header {
+    height: 72px;
+}
+
+.left {
+    float: left;
+    width: 200px;
+}
+
+.right {
+    float: right;
+    width: 100px;
+}
+
+.main-wrapper {
+
+}
+
+.with-left {
+    margin-left: 200px;
+}
+
+.with-right {
+    margin-right: 200px;
+}
+
+.subwrapper {
+    margin: 0px 5px;
+    background-color: #DFDFDF !important;
+    padding: 0 !important;
+    border-radius: 4px;
+    border: 1px solid #CBCBCB;
+    min-height: 600px;
+}
+
+ul.tree {
+    margin-left: 10px;
+    padding-left: 15px;
+}
+
+ul.tree.root-level {
+    height: 200px;
+    width: 50%;
+    overflow: auto;
+    border: 1px solid #000 !important;
+    background: #fff;
+    list-style: none;
+    padding-left: 5px;
+}
+
+ul.tree.children-level li {
+    list-style: url(../images/admin/elbow-end.gif);
+}
+
+/* Files module */
+
+.admin-table .folderRow {
+    background-image: url('../images/folder/folder.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 20px;
+}
+
+.admin-table .upFolder {
+    background-image: url('../images/folder/arrow_up.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 20px;
+}
+
+.admin-table .simpleFileRow {
+    background-image: url('../images/folder/simple_file.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 20px;
+}
+
+.newFolder {
+    background-image: url('../images/folder/folder_add.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 20px;
+    display: block;
+    height: 20px;
+    float: left;
+}

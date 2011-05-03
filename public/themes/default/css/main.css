@@ -1,0 +1,172 @@
+/* 
+    Document   : main
+    Created on : Sep 13, 2010, 4:02:35 PM
+    Author     : deep
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+* {
+    outline:none !important;
+}
+
+root { 
+  display: block;
+}
+html {
+  margin:0 !important;
+  padding: 0 !important;
+}
+
+body {
+  background: #F9F9F9;
+  color: #313334 !important;
+  font-family: Helvetica !important;
+  margin: 0px;
+  padding: 0px;
+}
+
+div.clear {clear: both;}
+
+.span-18 {
+width: 710px;
+}
+
+div.span-1, div.span-2, div.span-3, div.span-4, div.span-5, div.span-6, div.span-7, div.span-8, div.span-9, div.span-10, div.span-11, div.span-12, div.span-13, div.span-14, div.span-15, div.span-16, div.span-17, div.span-18, div.span-19, div.span-20, div.span-21, div.span-22, div.span-23, div.span-24 {
+  float: left;
+  margin-right: 10px;
+}
+
+.span-5 {
+  width: 190px;
+}
+
+div.colborder {
+  border-right: 1px solid #EEE;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: #EEE;
+  margin-right: 25px;
+  padding-right: 24px;
+  min-height: 400px;
+}
+
+body .colborder {
+border-color: #DDD;
+}
+
+div#header { 
+  background: #F9F9F9;
+  border-bottom: 1px solid #DDD;
+  height: 120px;
+}
+
+div#logo {
+  height: 89px;
+  width: 205px;
+  margin-top: 17px;
+  background: url(../images/slys1.png) no-repeat 0% 0%;
+  float:left
+}
+
+div#logo a {display: block; height: 100%;}
+
+#header, #footer {
+  background: #F9F9F9;
+}
+
+div.container { 
+  position: relative;
+  margin: 0px auto;
+  width: 950px;
+}
+
+div#wrapper {
+  background: #F4F5F5 url(../imagesgradient.png) repeat-x 0% 0%;
+  padding-bottom: 3em;
+  padding-top: 3em
+}
+
+div#container {  
+  min-height: 400px;
+}
+div#main {}
+div#sidebox { }
+
+div.last {
+  margin-right: 0px;
+}
+
+div#footer {
+  border-top: 1px solid #DDD;
+  color: #888;
+  font-size: 0.75em;
+  padding: 2em;
+  text-align: center;
+}
+
+ul.errors { 
+  color: red;
+  margin:0;
+  list-style-type: none;
+  list-style-position: inside;
+  padding: 0;
+}
+
+div.user_box div.tool-bar {
+  padding: 5px 0;
+}
+
+a.user-profile {
+  padding: 0 0 0 20px;
+  text-decoration: none;
+  background: url(../images/vcard.png) no-repeat 0 0;
+}
+
+a.user-logout {
+  padding: 0 0 0 20px;
+  text-decoration: none;
+  background: url(../images/door_in.png) no-repeat 0 0;
+}
+
+
+.claro .dojoxGridExpando {
+	float: left;
+	height: 18px;
+	width: 18px;
+	text-align: center;
+	margin-top: -3px;
+}
+.dijitRtl .tundra .dojoxGridExpando {
+	float: right;
+}
+.claro .dojoxGridExpandoCell {
+	padding-top: 5px;
+}
+.claro .dojoxGridExpandoNode {
+	height: 18px;
+	background-image: url('/js/dijit/themes/tundra/images/treeExpand_plus.gif');
+}
+.claro .dojoxGridExpandoOpened .dojoxGridExpandoNode {
+	background-image: url('/js/dijit/themes/tundra/images/treeExpand_minus.gif');
+}
+.claro .dojoxGridExpandoLoading .dojoxGridExpandoNode {
+	background-image: url('/js/dijit/themes/tundra/images/treeExpand_loading.gif');
+}
+.claro .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpando {
+	visibility: visible !important;
+	width: 18px !important;
+}
+.claro .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpandoNode {
+	background-image: url('/js/dijit/themes/tundra/images/treeExpand_leaf.gif');
+	background-position: -3px;
+}
+.claro .dojoxGridExpandoNodeInner {
+	visibility: hidden;
+}
+
+

@@ -1,0 +1,80 @@
+Eaventity_Model_Mapper_Entity:
+  connection: doctrine
+  tableName: eav_entities
+  columns:
+    id:
+      type: integer(11)
+      unsigned: true
+      primary: true
+      autoincrement: true
+    entity_name:
+      type: string(50)
+    type_id:
+      type: integer(11)
+      unsigned: true
+  relations:
+    Type:
+      local: type_id
+      foreign: id
+      foreignAlias: Entities
+      class: Eavtype_Model_Mapper_Type
+      onDelete: CASCADE
+
+Eaventity_Model_Mapper_Value:
+  connection: doctrine
+  tableName: eav_entity_values
+  columns:
+    id:
+      type: integer(11)
+      unsigned: true
+      primary: true
+      autoincrement: true
+    entity_id:
+      type: integer(11)
+      unsigned: true
+    attr_id:
+      type: integer(11)
+      unsigned: true
+    type_attr_relation_id:
+      type: integer(11)
+      unsigned: true
+    related_entity_id:
+      type: integer(11)
+      unsigned: true
+    string_value:
+      type: string(255)
+    integer_value:
+      type: integer(11)
+    timestamp_value:
+      type: timestamp
+    decimal_value:
+      type: decimal
+    text_value:
+      type: string(4000)
+    blob_value:
+      type: blob
+  relations:
+    Entity:
+      local: entity_id
+      foreign: id
+      foreignAlias: EntityValues
+      class: Eaventity_Model_Mapper_Entity
+      onDelete: CASCADE
+    Attr:
+      local: attr_id
+      foreign: id
+      foreignAlias: Values
+      class: Eavattribute_Model_Mapper_Attribute
+      onDelete: CASCADE
+    TypeAttrRelation:
+      local: type_attr_relation_id
+      foreign: id
+      foreignAlias: EntityValues
+      class: Eavtype_Model_Mapper_AttrRelation
+      onDelete: CASCADE
+    RelatedEntity:
+      local: related_entity_id
+      foreign: id
+      foreignAlias: RelatedTo
+      class: Eaventity_Model_Mapper_Entity
+      onDelete: CASCADE

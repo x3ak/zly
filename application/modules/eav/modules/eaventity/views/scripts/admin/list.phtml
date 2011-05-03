@@ -1,0 +1,37 @@
+<h1><?php
+    if ($this->typeFiltered) {
+        echo "List of &lsquo;".$this->typeMapper->name."&rsquo;";
+    } else {
+        echo "Entities list";
+    }
+?></h1>
+
+<table class="admin-table">
+    <tr>
+        <th width="30">Id</th>
+        <th width="100">Type</th>
+        <th>Name</th>
+        <th width="100"></th>
+    </tr>
+
+<?php
+foreach($this->list as $entity) {
+    echo "<tr>";
+        echo "<td>".$entity['id']."</td>";
+        echo "<td>".$entity['Type']['name']."</td>";
+        echo "<td>".$entity['name']."</td>";
+
+        echo "<td>";
+
+        echo $this->link(
+            'edit',
+            $this->url(array('module' => 'eaventity', 'controller'=>'admin' , 'action' => 'edit' , 'id' => $entity['id'])), array('class' => 'edit-item')
+        );
+
+        echo "</td>";
+
+    echo "</tr>";
+}
+
+?>
+</table>

@@ -1,0 +1,40 @@
+root { 
+    display: block;
+}
+
+html {
+    background: black;
+    color: white;
+    font-family: monospace;
+}
+
+.wrapper {
+    margin: 0 auto;
+    width: 50%;
+}
+
+.message {
+    border: 1px solid;
+    padding: 5px;
+    margin: 2px;
+    background: darkgreen;
+    border-color: lawngreen;
+}
+
+.message.warning {
+    background: #900;
+    border-color: red;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    color: red;
+    text-decoration: underline;
+}
+
+
+

@@ -1,0 +1,28 @@
+<h1>EAV Attributes List</h1>
+<table class="admin-table">
+    <tr>
+        <th><?php echo $this->translate('Name');?></th>
+        <th width="100"><?php echo $this->translate('Data type');?></th>
+    </tr>
+    <?php
+    /** @var $item Eavattribute_Model_Mapper_Attribute */
+    foreach($this->list as $item):
+        if($item->status == "HIDDEN")
+            continue;
+        ?>
+    <tr>
+        <td>
+
+            <?php
+                if($item->status == "READONLY") {
+                    echo $item->name;
+                } else {
+                    echo $this->link($item->name,$this->url(array('module'=>'eavattribute','controller'=>'admin','action'=>'edit','id'=>$item->id),'admin',true));
+                }
+            ?>
+
+        </td>
+        <td><?php echo $item->data_type;?></td>
+    </tr>
+    <?php endforeach ; ?>
+</table>

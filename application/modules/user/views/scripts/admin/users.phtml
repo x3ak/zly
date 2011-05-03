@@ -1,0 +1,33 @@
+<?php $this->adminCurrentSubmenu(); ?>
+<table class="admin-table">
+	<tr>
+		<th width="20">ID</th>
+		<th>Name</th>
+		<th>First name</th>
+		<th>Last name</th>
+		<th width="50">Role</th>
+		<th width="20">Active</th>
+		<th width="10">Actions</th>
+	</tr>
+	<?php foreach ($this->pager->execute() as $item) {?>
+	<tr>
+		<td align="center"><?php echo $item->id; ?></td>
+		<td><?php echo $item->login; ?></td>
+		<td><?php echo $item->firstname; ?></td>
+		<td><?php echo $item->lastname; ?></td>
+		<td><?php echo $item->Role->name; ?></td>
+                <td align="center"><a href="<?php echo $this->url(array('action' => 'publish-theme', 'module' => 'templater', 'id' => $item->id), 'admin', true); ?>" class="icon16 <?php
+            if ($item->active)
+                echo 'icon-published'; else
+                echo 'icon-not-published' ?>"></a></td>
+		<td align="center" nowrap="nowrap">
+			<a class="edit-item" href="<?php echo $this->url(array('action'=>'edit-user','module'=>'user', 'id'=>$item->id));?>">
+				Edit
+			</a>&nbsp;
+			<a  class="delete-item" href="<?php echo $this->url(array('action'=>'delete-user','module'=>'user', 'id'=>$item->id));?>">
+				Delete
+			</a>
+		</td>
+	</tr>
+	<?php } ?>
+</table>

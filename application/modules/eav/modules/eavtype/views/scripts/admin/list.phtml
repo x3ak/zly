@@ -1,0 +1,31 @@
+<h1>Types list</h1>
+
+<table class="admin-table">
+    <thead>
+    <tr>
+        <th width="20"></th>
+        <th><?php echo $this->translate('name');?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($this->list as $type): ?>
+    <tr>
+        <td>
+            <input type="hidden" name="item[<?php echo $type['id'];?>]" value="0" />
+            <input type="checkbox" name="item[<?php echo $type['id'];?>]" value="1" />
+        </td>
+        <td><?php
+            echo str_repeat('&nbsp;&nbsp;', $type['level']).'&nbsp;';
+			echo $this->link(
+				$type['name'],
+				$this->url(array('action' => 'edit', 'module' => 'eavtype', 'id' => $type['id']))
+			);
+            ?></td>
+    </tr>
+    <?php endforeach; ?>
+
+    </tbody>
+</table>
+
+
+

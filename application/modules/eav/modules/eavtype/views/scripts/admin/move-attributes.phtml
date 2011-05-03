@@ -1,0 +1,9 @@
+<h1>Rearrange attributes for type '<?php echo $this->mapper->name;?>'</h1>
+<?php
+echo $this->link('Edit Type',$this->url(array('action'=>'edit')));
+echo "|";
+echo $this->link('Rearrange attributes',$this->url(array('action'=>'move-attributes')));
+echo "|";
+echo $this->link('Add attribute',$this->url(array('form'=>'add-attribute')));
+
+echo $this->form;

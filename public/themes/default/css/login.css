@@ -1,0 +1,46 @@
+/* 
+    Document   : main
+    Created on : Sep 13, 2010, 4:02:35 PM
+    Author     : deep
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+  display: block;
+}
+html {
+  margin:0 !important;
+  padding: 0 !important;
+}
+
+body {
+  background: #fff url('/images/default/bg.gif');
+  color: #313334 !important;
+  font-family: Helvetica !important;
+  margin: 0px;
+  padding: 0px;
+  font-size: 80% !important;
+}
+
+div.content {
+  margin: 200px auto;
+  width: 250px;
+  border:1px solid #CBCBCB;
+  padding: 10px;
+  background: #DFDFDF;
+  border-radius: 4px;
+}
+
+ul.errors {
+  color: red;
+  margin:0;
+  list-style-type: none;
+  list-style-position: inside;
+  padding: 0;
+}
