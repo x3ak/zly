@@ -1,0 +1,19 @@
+Welcome to the Slys Platform 2 Release! 
+
+RELEASE INFORMATION
+---------------
+Slys Platform 2
+
+THIS RELEASE IS A DEVELOPMENT RELEASE AND NOT INTENDED FOR PRODUCTION USE.
+PLEASE USE AT YOUR OWN RISK.
+
+NEW FEATURES
+------------
+
+- Doctrine 2
+- Modules installation, update, and remove by admin panel
+
+SYSTEM REQUIREMENTS
+-------------------
+
+Slys Platform 2 requires PHP 5.3 or later. 
