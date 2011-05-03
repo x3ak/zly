@@ -1,7 +1,0 @@
-<?php if($this->mapper->exists()): ?>
-    <h1><?php echo $this->mapper->Type->name;?> &lsquo;<?php echo $this->mapper->entity_name;?>&rsquo;</h1>
-<?php else:?>
-    <h1>Create new &lsquo;<?php echo $this->mapper->Type->name;?>&rsquo;</h1>
-<?php endif;?>
-<?php
-echo $this->form;
