@@ -7,7 +7,7 @@
  *
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  */
-class User_Bootstrap extends Zend_Application_Module_Bootstrap 
+class User_Bootstrap extends Zend\Application\Module\Bootstrap 
     implements Slys_Api_Request_Requestable, 
                Slys_Application_Module_Installable,  
                Slys_Application_Module_Updateable
