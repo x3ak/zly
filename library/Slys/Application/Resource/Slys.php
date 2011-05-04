@@ -20,7 +20,7 @@
  */
 
 class Slys_Application_Resource_Slys
-    extends Zend_Application_Resource_ResourceAbstract
+    extends Zend\Application\Resource\ResourceAbstract
 {
     static $_started = false;
 
