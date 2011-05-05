@@ -4,7 +4,7 @@
 	url = git://github.com/zendframework/zf2.git
 [submodule "library/Doctrine/Orm"]
 	path = library/Doctrine/Orm
-	url = git://github.com/doctrine/orm.git
+	url = git://github.com/doctrine/doctrine2.git
 [submodule "library/Doctrine/Dbal"]
 	path = library/Doctrine/Dbal
 	url = git://github.com/doctrine/dbal.git
