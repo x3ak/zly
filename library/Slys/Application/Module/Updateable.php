@@ -1,6 +1,7 @@
 <?php
+namespace Slys\Application\Module;
 
-interface Slys_Application_Module_Updateable
+interface Updateable
 {
     public function update();
 }

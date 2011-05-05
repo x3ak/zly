@@ -1,8 +1,7 @@
 <?php
-/**
- * 
- */
-interface Slys_Application_Module_Installable
+namespace Slys\Application\Module;
+
+interface Installable
 {
     /**
      * Method for install module environment
