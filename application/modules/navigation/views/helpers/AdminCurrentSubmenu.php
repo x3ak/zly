@@ -1,6 +1,7 @@
 <?php
+namespace Navigation\View\Helper;
 
-class Navigation_View_Helper_AdminCurrentSubmenu extends Zend_View_Helper_Abstract
+class AdminCurrentSubmenu extends \Zend\View\Helper\AbstractHelper
 {
 
     /**

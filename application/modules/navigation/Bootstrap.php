@@ -8,28 +8,34 @@
  * @author Serghei Ilin <criolit@gmail.com>
  * @version $Id: Bootstrap.php 1139 2011-01-28 16:07:30Z criolit $
  */
-class Navigation_Bootstrap extends Zend_Application_Module_Bootstrap
+
+namespace Navigation;
+
+use \Slys\Application\Module as Module, 
+    \Slys\Api\Request as Api;
+
+class Bootstrap extends \Zend\Application\Module\Bootstrap
 {
     protected function _initRegisterHelper()
     {
-        if (!$this->getApplication()->hasPluginResource('view'))
-            $this->getApplication()->registerPluginResource('view');
+        if (!$this->getApplication()->hasResource('view'))
+            $this->getApplication()->getBroker()->register('view', new \Zend\Application\Resource\View());
 
         $this->getApplication()->bootstrap('view');
 
-        $this->getApplication()->getResource('view')->registerHelper(
-                new Navigation_View_Helper_AdminCurrentSubmenu(),
-                'adminCurrentSubmenu'
+        $this->getApplication()->getResource('view')->broker()->register(
+                'adminCurrentSubmenu',
+                new View\Helper\AdminCurrentSubmenu()
         );
 
-        $this->getApplication()->getResource('view')->registerHelper(
-                new Navigation_View_Helper_ArrayTreeToTable(),
-                'arrayTreeToTable'
+        $this->getApplication()->getResource('view')->broker()->register(
+                'arrayTreeToTable',
+                new View\Helper\ArrayTreeToTable()
         );
     }
 
     protected function _initPlugins()
     {
-        Zend_Controller_Front::getInstance()->registerPlugin(new Navigation_Plugin_Init());
+        \Zend\Controller\Front::getInstance()->registerPlugin(new Plugin\Init());
     }
 }

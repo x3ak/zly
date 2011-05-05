@@ -8,7 +8,9 @@
  *
  * @author Serghei Ilin <criolit@gmail.com>
  */
-class Navigation_Plugin_Init extends Zend_Controller_Plugin_Abstract
+namespace Navigation\Plugin;
+
+class Init extends \Zend\Controller\Plugin\AbstractPlugin
 {
     /**
      * On dispatch loop startup initializing global navigation
@@ -17,6 +19,6 @@ class Navigation_Plugin_Init extends Zend_Controller_Plugin_Abstract
      */
     public function dispatchLoopStartup(Zend_Controller_Request_Abstract $request)
     {
-        Zend_Registry::set('Zend_Navigation', Navigation_Model_Navigation::getInstance()->getNavigation());
+        \Zend\Registry::set('Zend\Navigation', Navigation\Model\Navigation::getInstance()->getNavigation());
     }
 }

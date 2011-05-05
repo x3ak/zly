@@ -7,9 +7,16 @@
  * @author Serghei Ilin <criolit@gmail.com>
  * @version $Id: Bootstrap.php 1231 2011-04-17 17:49:48Z deeper $
  */
-class Sysmap_Bootstrap extends Zend_Application_Module_Bootstrap implements Slys_Api_Request_Requestable
+
+
+namespace Sysmap;
+
+use \Slys\Application\Module as Module, 
+    \Slys\Api\Request as Api;
+
+class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Requestable
 {
-    public function onRequest(Slys_Api_Request $request) {
+    public function onRequest(Api\Request $request) {
         switch ($request->getName()) {
             case 'sysmap.get-map-tree':
                 $request->getResponse()->setData( Sysmap_Model_Map::getInstance()->getMapTreeElement() );
@@ -19,9 +26,9 @@ class Sysmap_Bootstrap extends Zend_Application_Module_Bootstrap implements Slys
                 $params = $request->getParams();
                 
                 if (empty($params['request']) === false and $params['request'] instanceof Zend_Controller_Request_Abstract)
-                    $request->getResponse()->setData( Sysmap_Model_Map::getInstance()->getActiveItems($params['request']) );
+                    $request->getResponse()->setData( Model\Map::getInstance()->getActiveItems($params['request']) );
                 else
-                    $request->getResponse()->setData( Sysmap_Model_Map::getInstance()->getActiveItems() );
+                    $request->getResponse()->setData( Model\Map::getInstance()->getActiveItems() );
 
                 break;
 
@@ -29,7 +36,7 @@ class Sysmap_Bootstrap extends Zend_Application_Module_Bootstrap implements Slys
                 $params = $request->getParams();
 
                 if (empty($params['identifier']) === false and is_string($params['identifier']) === true)
-                    $request->getResponse()->setData( Sysmap_Model_Map::getInstance()->getItemByHash($params['identifier']) );
+                    $request->getResponse()->setData( Model\Map::getInstance()->getItemByHash($params['identifier']) );
 
                 break;
 
@@ -37,7 +44,7 @@ class Sysmap_Bootstrap extends Zend_Application_Module_Bootstrap implements Slys
                 $params = $request->getParams();
 
                 if (empty($params['identifier']) === false and is_string($params['identifier']) === true)
-                    $request->getResponse()->setData( Sysmap_Model_Map::getInstance()->getItemParentsByHash($params['identifier']) );
+                    $request->getResponse()->setData( Model\Map::getInstance()->getItemParentsByHash($params['identifier']) );
 
                 break;
         }

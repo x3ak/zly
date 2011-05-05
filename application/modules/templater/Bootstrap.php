@@ -7,50 +7,26 @@
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  */
 
-class Templater_Bootstrap extends Zend_Application_Module_Bootstrap 
-    implements Slys_Api_Request_Requestable, 
-               Slys_Application_Module_Installable,  
-               Slys_Application_Module_Updateable
+namespace Templater;
+
+use \Slys\Application\Module as Module, 
+    \Slys\Api\Request as Api;
+
+class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Requestable, Module\Installable, Module\Updateable
 {
     
-    public function initThemes($application)
-    {
-        
-        $theme = Templater_Model_DbTable_Theme::getInstance()->getCurrentTheme();
-        
-        /**
-         * Loading theme config
-         */
-        $navigationPath = $this->getOption('directory').
-                DIRECTORY_SEPARATOR.$theme->name.
-                DIRECTORY_SEPARATOR.'theme.ini';
-
-        $themeConfig = new Zend_Config_Ini($navigationPath, APPLICATION_ENV);   
-  
-        $options = $themeConfig->toArray();
-
-        if(!empty($options)) {
-            $this->getApplication()->setOptions(
-                    $this->getApplication()->mergeOptions(
-                            $this->getApplication()->getOptions(), 
-                            $options
-                    ));
-        }
-        
-    }
-
     /**
      * Tempalter plugins initialization
      */
     protected function _initPlugins()
     {
-        $plugin = new Templater_Plugin_Layout($this->getOptions());
+        $plugin = new Plugin\Layout($this->getOptions());
         
-        Zend_Controller_Front::getInstance()
+        \Zend\Controller\Front::getInstance()
             ->registerPlugin($plugin);
     }
 
-    public function onRequest(Slys_Api_Request $request)
+    public function onRequest(Api\Request $request)
     {
         switch ($request->getName()) {
             case 'navigation.get-module-navigation':

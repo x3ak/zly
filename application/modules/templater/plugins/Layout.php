@@ -8,7 +8,9 @@
  *
  * @author Serghei Ilin <criolit@gmail.com>
  */
-class Templater_Plugin_Layout extends Zend_Controller_Plugin_Abstract
+namespace Templater\Plugin;
+
+class Layout extends \Zend\Controller\Plugin\AbstractPlugin
 {
 
     /**

@@ -7,7 +7,9 @@
  *
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  */
-class User_Plugin_Acl extends Zend_Controller_Plugin_Abstract
+namespace User\Plugin;
+
+class Acl extends \Zend\Controller\Plugin\AbstractPlugin
 {
 
     /**
@@ -31,7 +33,7 @@ class User_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      * Contructor waiting Zend_Acl instance
      * @param Zend_Acl $acl
      */
-    public function __construct(Zend_Acl $acl)
+    public function __construct(\Zend\Acl\Acl $acl)
     {
         $this->_acl = $acl;
     }

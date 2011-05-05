@@ -7,7 +7,9 @@
  *
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  */
-class Slysman_Bootstrap extends Zend_Application_Module_Bootstrap
+namespace Slysman;
+
+class Bootstrap extends \Zend\Application\Module\Bootstrap
 {
 
 }

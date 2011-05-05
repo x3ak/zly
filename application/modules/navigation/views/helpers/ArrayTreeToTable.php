@@ -7,7 +7,9 @@
  * @author     Serghei Ilin <criolit@gmail.com>
  * @version    $Id: ArrayTreeToTable.php 1177 2011-02-06 12:11:53Z criolit $
  */
-class Navigation_View_Helper_ArrayTreeToTable extends Zend_View_Helper_Abstract
+namespace Navigation\View\Helper;
+
+class ArrayTreeToTable extends \Zend\View\Helper\AbstractHelper
 {
 	/**
 	 * Render admin submenu. If no navigation container is added helper will automatically gets the current
