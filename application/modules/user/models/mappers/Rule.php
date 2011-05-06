@@ -8,12 +8,12 @@
  * @version $Id: Generator.php 761 2010-12-14 11:49:54Z deeper $
  * @license New BSD
  */
-
+namespace User\Model\Mapper;
 /**
  * @Entity
  * @Table(name="user_rules")
  */
-class User_Model_Mapper_Rule
+class Rule
 {
    /**
     * @Id @Column(type="integer")
@@ -31,7 +31,7 @@ class User_Model_Mapper_Rule
     protected $rule;
     
     /**
-     * @ManyToOne(targetEntity="User_Model_Mapper_Role", inversedBy="rules")
+     * @ManyToOne(targetEntity="User\Model\Mapper\Role", inversedBy="rules")
      * @JoinColumn(name="role_id", referencedColumnName="id")
      */
     protected $role;

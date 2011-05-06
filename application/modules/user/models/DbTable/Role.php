@@ -8,9 +8,11 @@
  * @version $Id: Role.php 1232 2011-04-17 21:00:36Z deeper $
  * @license New BSD
  */
+namespace User\Model\DbTable;
+
 use Doctrine\ORM\EntityRepository;
 
-class User_Model_DbTable_Role extends EntityRepository 
+class Role extends EntityRepository 
 {
 
     /**
@@ -55,7 +57,7 @@ class User_Model_DbTable_Role extends EntityRepository
     public function getPager($page = 1, $maxPerPage = 20) {
         $query = Doctrine_Query::create()
                 ->select('role.*')
-                ->from('User_Model_Mapper_Role role');
+                ->from('User\Model\Mapper\Role role');
 
         return new Doctrine_Pager($query, $page, $maxPerPage);
     }

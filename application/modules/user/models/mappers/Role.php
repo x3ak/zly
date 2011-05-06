@@ -10,10 +10,13 @@
  */
 
 /**
- * @Entity(repositoryClass="User_Model_DbTable_Role")
+ * @Entity(repositoryClass="User\Model\DbTable\Role")
  * @Table(name="user_roles")
  */
-class User_Model_Mapper_Role
+
+namespace User\Model\Mapper;
+
+class Role
 {
     /**
      * @Id 
@@ -32,7 +35,7 @@ class User_Model_Mapper_Role
     protected $is_default;
     
     /**
-     * @OneToMany(targetEntity="User_Model_Mapper_Rule", mappedBy="role_id")
+     * @OneToMany(targetEntity="User\Model\Mapper\Rule", mappedBy="role_id")
      */
     protected $rules;
    

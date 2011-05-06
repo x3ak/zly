@@ -95,7 +95,7 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
      * 
      * @param Zend_Controller_Request_Abstract $request
      */
-    public function routeShutdown(Zend_Controller_Request_Abstract $request)
+    public function routeShutdown(\Zend\Controller\Request\AbstractRequest $request)
     {
         /**
          * Init ACL it now not in contructor because possible some resources not initilized
@@ -121,8 +121,8 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
         }
 
         if(!$allow) {
-            $routeName = Zend_Controller_Front::getInstance()->getRouter()->getCurrentRouteName();
-            $front = Zend_Controller_Front::getInstance();
+            $routeName = \Zend\Controller\Front::getInstance()->getRouter()->getCurrentRouteName();
+            $front = \Zend\Controller\Front::getInstance();
             if ($routeName == 'admin')
                 $controller = 'admin';
             else
@@ -141,15 +141,15 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
      */
     protected function _initAcl()
     {
-        $userModel = new User_Model_Roles();
+        $userModel = new \User\Model\Roles();
         
         $rolesRows = $userModel->getRoles();
 
         $roles = array();
         foreach($rolesRows as $roleRow) {
-            $roles[$roleRow->id] = $roleRow;
-            if($roleRow->is_default)
-                $this->_currentRole = new Zend_Acl_Role($roleRow->name);
+            $roles[$roleRow->getId()] = $roleRow;
+            if($roleRow->getIs_default())
+                $this->_currentRole = new \Zend\Acl\Role\GenericRole($roleRow->getName());
         }
 
         foreach($roles as $role) {
@@ -158,10 +158,10 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
                 $parent = $roles[$role->parent_id]->name;
             }
 
-            $this->_acl->addRole(new Zend_Acl_Role($role->name), $parent);
+            $this->_acl->addRole(new \Zend\Acl\Role\GenericRole($role->getName()), $parent);
         }
 
-        $apiRequest = new Slys_Api_Request($this, 'sysmap.currently-active-items');
+        $apiRequest = new \Slys\Api\Request($this, 'sysmap.currently-active-items');
 
         foreach($apiRequest->proceed()->getResponse()->getFirst() as $resource) {
             if($resource instanceof Sysmap_Model_Mapper_Sysmap) {
@@ -184,7 +184,7 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
      */
     protected function setRules($role, $resources)
     {
-        $userModel = new User_Model_Roles();
+        $userModel = new \User\Model\Roles();
         $rules = $userModel->getRulesByRoleAndResources($role, $resources);
         if($rules->count() > 0) {
             foreach($rules as $rule) {

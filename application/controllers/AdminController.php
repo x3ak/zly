@@ -1,11 +1,11 @@
 <?php
 
-class AdminController extends Zend_Controller_Action
+class AdminController extends \Zend\Controller\Action
 {
 
     public function indexAction()
     {
-
+        
     }
 
 }

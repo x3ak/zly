@@ -5,12 +5,14 @@
  *
  * @version    $Id: Roles.php 1232 2011-04-17 21:00:36Z deeper $
  */
-class User_Model_Roles extends Slys_Doctrine_Model
+namespace User\Model;
+
+class Roles extends \Slys\Doctrine\Model
 {
     public function getRoles()
     {
         return $this->getEntityManager()
-                    ->getRepository('User_Model_Mapper_Role')
+                    ->getRepository('User\Model\Mapper\Role')
                     ->findAll();
     }
 

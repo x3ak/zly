@@ -8,12 +8,13 @@
  * @version $Id: User.php 1231 2011-04-17 17:49:48Z deeper $
  * @license New BSD
  */
+namespace User\Model\Mapper;
 
 /**
  * @Entity
  * @Table(name="user_users")
  */
-class User_Model_Mapper_User
+class User
 {
 
     /**
@@ -69,7 +70,7 @@ class User_Model_Mapper_User
     protected $mobile_number;
 
     /**
-     * @OneToOne(targetEntity="User_Model_Mapper_Role")
+     * @OneToOne(targetEntity="User\Model\Mapper\Role")
      * @JoinColumn(name="role_id", referencedColumnName="id")
      */
     protected $role;
