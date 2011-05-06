@@ -19,7 +19,9 @@
  * @license    http://zendmania.com/license/new-bsd New BSD License
  * @version    $Id: Modules.php 1249 2011-04-28 15:02:58Z deeper $
  */
-class Slys_Application_Resource_Modules extends Zend_Application_Resource_Modules
+namespace Slys\Application\Resource;
+
+class Modules extends \Zend\Application\Resource\Modules
 {
 
     public $_explicitType = 'modules';
@@ -46,9 +48,9 @@ class Slys_Application_Resource_Modules extends Zend_Application_Resource_Module
         $modulesArray = $front->getControllerDirectory();
         $default = $front->getDefaultModule();
         $curBootstrapClass = get_class($bootstrap);
-        $modules = new ArrayObject($modulesArray);
+        $modules = new \ArrayObject($modulesArray);
         foreach ($modules as $module => $moduleDirectory) {
-            $bootstrapClass = $this->_formatModuleName($module) . '_Bootstrap';
+            $bootstrapClass = $this->_formatModuleName($module) . '\Bootstrap';
             if (!class_exists($bootstrapClass, false)) {
                 $bootstrapPath = dirname($moduleDirectory) . '/Bootstrap.php';
                 if (file_exists($bootstrapPath)) {
@@ -57,14 +59,14 @@ class Slys_Application_Resource_Modules extends Zend_Application_Resource_Module
                     if (($default != $module)
                             && !class_exists($bootstrapClass, false)
                     ) {
-                        throw new Zend_Application_Resource_Exception(sprintf(
+                        throw new \Zend\Application\Resource\Exception\InitializationException(sprintf(
                                         $eMsgTpl, $module, $bootstrapClass
                         ));
                     } elseif ($default == $module) {
                         if (!class_exists($bootstrapClass, false)) {
                             $bootstrapClass = 'Bootstrap';
                             if (!class_exists($bootstrapClass, false)) {
-                                throw new Zend_Application_Resource_Exception(sprintf(
+                                throw new \Zend\Application\Resource\Exception\InitializationException(sprintf(
                                                 $eMsgTpl, $module, $bootstrapClass
                                 ));
                             }
@@ -74,7 +76,7 @@ class Slys_Application_Resource_Modules extends Zend_Application_Resource_Module
                     $moduleConfigFile = realpath($moduleDirectory . '/../configs/module.ini');
 
                     if ($moduleConfigFile) {
-                        $moduleConfig = new Zend_Config_Ini($moduleConfigFile);
+                        $moduleConfig = new \Zend\Config\Ini($moduleConfigFile);
                         $moduleConfig = $moduleConfig->get(APPLICATION_ENV);
         
                         if (!empty($moduleConfig)) {

@@ -9,7 +9,9 @@
  *
  * @author deep
  */
-abstract class Slys_Doctrine_Model
+namespace Slys\Doctrine;
+
+abstract class Model
 {
 
     /**
@@ -37,11 +39,11 @@ abstract class Slys_Doctrine_Model
      */
     private function _setEntityManager()
     {
-        $doctrine2 = Zend_Controller_Front::getInstance()
+        $doctrine2 = \Zend\Controller\Front::getInstance()
                         ->getParam('bootstrap')
                         ->getResource('doctrine2');
 
-        if(!empty($doctrine2) && $doctrine2 instanceof Slys_Application_Resource_Doctrine2) {
+        if(!empty($doctrine2) && $doctrine2 instanceof \Slys\Application\Resource\Doctrine2) {
             $this->_em = $doctrine2->getEntityManager();
         }
 

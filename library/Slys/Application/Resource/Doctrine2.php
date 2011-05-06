@@ -3,7 +3,9 @@
  * Slys Doctrine 2 resource
  * @author evgheni.poleacov@gmail.com
  */
-class Slys_Application_Resource_Doctrine2 extends Zend_Application_Resource_ResourceAbstract
+namespace Slys\Application\Resource;
+
+class Doctrine2 extends \Zend\Application\Resource\AbstractResource
 {
       /**
      * Entity Manager
@@ -20,26 +22,18 @@ class Slys_Application_Resource_Doctrine2 extends Zend_Application_Resource_Reso
 
     /**
      * Resource initialization
-     * @return Slys_Application_Resource_Doctrine2
+     * @return Slys\Application\Resource\Doctrine2
      */
     public function init()
     {
-        set_include_path(
-                implode(
-                        PATH_SEPARATOR, array(
-                                realpath(ROOT_PATH . '/library/Doctrine/'),
-                                get_include_path(),
-                        )
-                )
-        );
-        
-        $this->getBootstrap()->getApplication()->setAutoloaderNamespaces(
-            array('Doctrine','Symfony'));
+//       $this->getBootstrap()->setAutoloaderNamespaces( array(
+//            'Doctrine\ORM'=> APPLICATION_PATH.'/../library/Doctrine/Orm/lib/Doctrine/ORM',
+//            'Doctrine\Common'=> APPLICATION_PATH.'/../library/Doctrine/Common/lib/Doctrine/Common',
+//            'Doctrine\DBAL'=> APPLICATION_PATH.'/../library/Doctrine/Dbal/lib/Doctrine/DBAL',
+//            'Symfony'
+//        ));
 
-
-        $front = $this->getBootstrap()
-                      ->getPluginResource('frontController')
-                      ->getFrontController();
+        $front = $this->getBootstrap()->getBroker()->load('frontcontroller')->getFrontController();
 
         if (APPLICATION_ENV == "development") {
             $cache = new \Doctrine\Common\Cache\ArrayCache;

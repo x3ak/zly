@@ -6,8 +6,9 @@
  * Time: 12:15
  * To change this template use File | Settings | File Templates.
  */
+namespace Slys\Api;
 
-class Slys_Api_Request
+class Request
 {
     /**
      * @var Object which called the request (can be null)
@@ -40,7 +41,7 @@ class Slys_Api_Request
     public function __construct($context, $name, $params = array())
     {
         if ($context === null)
-            throw new Zend_Exception('Context must be an instance of the sender object or the name of the existing module!');
+            throw new Exception('Context must be an instance of the sender object or the name of the existing module!');
 
         if (is_object($context)) {
             $className = explode('_', get_class($context), 2);
@@ -49,8 +50,8 @@ class Slys_Api_Request
         elseif(is_string($context))
             $this->_contextModuleName = strtolower($context);
 
-        if (Zend_Controller_Front::getInstance()->getControllerDirectory($this->_contextModuleName) === null)
-            throw new Zend_Exception('Context object class must belong to one of the registered application module!');
+        if (\Zend\Controller\Front::getInstance()->getControllerDirectory($this->_contextModuleName) === null)
+            throw new Exception('Context object class must belong to one of the registered application module!');
 
         $this->_context = $context;
         $this->_name = strtolower(trim($name));
@@ -85,14 +86,14 @@ class Slys_Api_Request
         if (empty($params) === false)
             $this->_params = $params;
 
-        $this->_response = new Slys_Api_Request_Response($this);
+        $this->_response = new \Slys\Api\Request\Response($this);
         Slys_Api::getInstance()->request($this);
         return $this;
     }
 
     /**
      * Returns object which contains responses from handlers
-     * @return Slys_Api_Request_Response
+     * @return Slys\Api\Request\Response
      */
     public function getResponse()
     {
