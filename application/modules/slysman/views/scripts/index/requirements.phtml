@@ -1,4 +1,4 @@
-<?php echo $this->headLink()->appendStylesheet('/slysman/public/files/css/install.css'); ?>
+<?php echo $this->broker('headLink')->appendStylesheet('/slysman/public/files/css/install.css'); ?>
 <div class="wrapper">
 
     
@@ -7,7 +7,7 @@
         <h2>Slys Platform installation.</h2><br />
         <p>Please provide all requirements for normal working of Slys platform.</p>
     </div>
-    <?php echo $this->form('installForm', array('method'=>'post')); ?>
+    <?php echo $this->broker('form')->direct('installForm', array('method'=>'post')); ?>
 
         <fieldset>
             <legend>Installation requirements:</legend>

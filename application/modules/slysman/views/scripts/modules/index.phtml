@@ -1,5 +1,5 @@
-<?php echo $this->headLink()->appendStylesheet('/slysman/public/files/css/install.css'); ?>
-<h2>Slys Modules Actions</h2>
+<?php echo $this->broker('headLink')->appendStylesheet('/slysman/public/files/css/install.css'); ?>
+<h2>Application Modules </h2>
 <?php echo $this->modulesForm->getElement('action'); ?>
 <table border="1" cellspacing="0" cellpadding="3">
     <tr>
@@ -39,14 +39,14 @@
             <td align="center"><?php if($bootstrap->hasOption('enabled')) echo (int)$moduleOptions['enabled'];?></td>
             <td>
                 
-                <?php if($bootstrap instanceof Slys_Application_Module_Installable) {                    
+                <?php if($bootstrap instanceof \Slys\Application\Module\Installable) {                    
                     if(!$bootstrap->hasOption('installed') || (boolean)$bootstrap->getOption('installed') == false) {
-                        ?><a href="<?php echo $this->url(array('action'=>'install','item'=>$moduleName));?>">Install</a><?php 
+                        ?><a href="<?php echo $this->broker('url')->direct(array('action'=>'install','item'=>$moduleName));?>">Install</a><?php 
                     } elseif($bootstrap->hasOption('installed') && (boolean)$bootstrap->getOption('installed') == true) {
                         ?><a href="#">Uninstall</a><?php 
                     }
                     }?>
-                <?php if($bootstrap instanceof Slys_Application_Module_Updateable) { ?>
+                <?php if($bootstrap instanceof \Slys\Application\Module\Updateable) { ?>
                     <a href="#">Update</a> 
                 <?php }?>
                 <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) { ?>    

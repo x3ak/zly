@@ -1,6 +1,15 @@
 <?php
 
-class Slysman_ModulesController extends Zend_Controller_Action
+/**
+ * 
+ */
+
+namespace Slysman;
+
+/**
+ * 
+ */
+class ModulesController extends \Zend\Controller\Action
 {
     protected $_requiredOptions = array(
         'name',
@@ -9,9 +18,12 @@ class Slysman_ModulesController extends Zend_Controller_Action
         'compatible'
     );
     
+    /**
+     * 
+     */
     public function init()
     {
-        $this->modulesBootstraps = Zend_Controller_Front::getInstance()
+        $this->modulesBootstraps = \Zend\Controller\Front::getInstance()
                 ->getParam('bootstrap')->getResource('modules');
         
         foreach($this->modulesBootstraps as $key=>$bootstrap) {
@@ -21,9 +33,13 @@ class Slysman_ModulesController extends Zend_Controller_Action
         }
     }
 
+    /**
+     *
+     * @return type 
+     */
     public function indexAction()
     {
-        $modulesForm = new Slysman_Form_Modules(); 
+        $modulesForm = new \Slysman\Form\Modules(); 
         
         if($this->getRequest()->isPost() && $modulesForm->isValid($this->getRequest()->getPost())) {
             switch($modulesForm->getElement('action')->getValue()) {
@@ -38,23 +54,29 @@ class Slysman_ModulesController extends Zend_Controller_Action
         $this->view->modules = $this->modulesBootstraps;
     }
     
+    /**
+     * 
+     */
     public function installAction()
     {
         $module = $this->getRequest()->getParam('item');
 
         $bootstrap = $this->modulesBootstraps[$module];
-        if( $bootstrap instanceof Slys_Application_Module_Installable) {
+        if( $bootstrap instanceof \Slys\Application\Module\Installable) {
             $result = $bootstrap->install();
 
         }
         $this->view->result = $result;
     }
     
+    /**
+     * 
+     */
     public function updateAction()
     {
         $stack = array();
         foreach($this->modulesBootstrap as $moduleName=>$bootstrap) {
-            if($bootstrap instanceof Slys_Application_Module_Updateable) {                
+            if($bootstrap instanceof \Slys\Application\Module\Updateable) {                
                 $stack[$moduleName]['bootstrap'] = $bootstrap;
                 if($this->getRequest()->isPost()) {
                     $modules = $this->getRequest()->getPost('modules');
@@ -66,11 +88,14 @@ class Slysman_ModulesController extends Zend_Controller_Action
         $this->view->stack = $stack;
     }
     
+    /**
+     * 
+     */
     public function uninstallAction()
     {
         $stack = array();
         foreach($this->modulesBootstrap as $moduleName=>$bootstrap) {
-            if($bootstrap instanceof Slys_Application_Module_Installable) {
+            if($bootstrap instanceof \Slys\Application\Module\Installable) {
                 $stack[$moduleName]['bootstrap'] = $bootstrap;
                 if($this->getRequest()->isPost()) {
                     $modules = $this->getRequest()->getPost('modules');
@@ -82,7 +107,12 @@ class Slysman_ModulesController extends Zend_Controller_Action
         $this->view->stack = $stack;
     }
     
-    protected function _checkSlysCompatible(Zend_Application_Module_Bootstrap $bootstrap)
+    /**
+     *
+     * @param \Zend\Application\Module\Bootstrap $bootstrap
+     * @return boolean 
+     */
+    protected function _checkSlysCompatible(\Zend\Application\Module\Bootstrap $bootstrap)
     {   
         $compatible = true;
         foreach($this->_requiredOptions as $option) {
@@ -93,7 +123,12 @@ class Slysman_ModulesController extends Zend_Controller_Action
         return $compatible;
     }
     
-    protected function _checkModuleRequirements(Zend_Application_Module_Bootstrap $bootstrap)
+    /**
+     *
+     * @param \Zend\Application\Module\Bootstrap $bootstrap
+     * @return type 
+     */
+    protected function _checkModuleRequirements(\Zend\Application\Module\Bootstrap $bootstrap)
     {
         $requirements = array('modules'=>array(),'resources'=>array());
         if($bootstrap->hasOption('requires')) {

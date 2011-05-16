@@ -1,6 +1,6 @@
 <?php
-
-class Slysman_IndexController extends Zend_Controller_Action
+namespace Slysman;
+class IndexController extends \Zend\Controller\Action
 {
     protected $messages = array();
     protected $_directories = array(
@@ -13,7 +13,7 @@ class Slysman_IndexController extends Zend_Controller_Action
 
     public function preDispatch()
     {
-         $this->modulesBootstrap = Zend_Controller_Front::getInstance()
+         $this->modulesBootstrap = \Zend\Controller\Front::getInstance()
                 ->getParam('bootstrap')->getResource('modules');
     }
     
@@ -38,7 +38,7 @@ class Slysman_IndexController extends Zend_Controller_Action
         
         $application = $this->getInvokeArg('bootstrap')->getApplication();
         
-        if($application instanceof Zend_Application) {
+        if($application instanceof \Zend\Application) {
             $app = $application
                 ->getBootstrap()
                 ->getResourceLoader()
@@ -57,7 +57,7 @@ class Slysman_IndexController extends Zend_Controller_Action
         foreach($this->_directories as $dir) {
             $path = APPLICATION_PATH . '/..'.$dir;
             if(!is_writable($path))
-                $this->messages[] = new Zend_Exception($dir.': Path not writeable.');
+                $this->messages[] = new \Zend\Application\Exception\RuntimeException($dir.': Path not writeable.');
             else
                 $this->messages[] = $dir.': Path writeable';
         }

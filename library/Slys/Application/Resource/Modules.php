@@ -138,11 +138,12 @@ class Modules extends \Zend\Application\Resource\Modules
         }
        
         if(!empty($this->_bootstraps))
-            foreach($this->_bootstraps as $bootstrap) {
+            foreach($this->_bootstraps as $key=>$bootstrap) {
                 $options = $bootstrap->getOptions();
-                if($bootstrap instanceof Slys_Application_Module_Installable && !empty($options['installed'])) {
-                    if(!empty($options['enabled']))
+                if($bootstrap instanceof Slys_Application_Module_Installable && !empty($options['installed']) && !empty($options['enabled'])) {
                         $bootstrap->bootstrap();
+                } elseif(!$bootstrap instanceof Slys_Application_Module_Installable && !empty($options['enabled'])) {
+                    $bootstrap->bootstrap();
                 }
         }
 

@@ -1,6 +1,7 @@
 <?php
+namespace Slysman\Form;
 
-class Slysman_Form_Modules extends Zend_Form
+class Modules extends \Zend\Form\Form
 {
 
     public function init()
@@ -8,17 +9,17 @@ class Slysman_Form_Modules extends Zend_Form
         $this->setMethod('POST');
         
         
-        $loginElement = new Zend_Form_Element_Select('action');
+        $loginElement = new \Zend\Form\Element\Select('action');
         $loginElement->setLabel('Action:');
         $loginElement->setRequired(true)->addMultiOptions(array('install'=>'Install selected'));
         $this->addElement($loginElement);
 
-        $loginElement = new Zend_Form_Element_MultiCheckbox('modules');
+        $loginElement = new \Zend\Form\Element\MultiCheckbox('modules');
         $loginElement->removeDecorator('Label');
         $loginElement->setRequired(true);
         $this->addElement($loginElement);
         
-        $submitElement = new Zend_Form_Element_Submit('submit');
+        $submitElement = new \Zend\Form\Element\Submit('submit');
         $submitElement->setLabel('Do action');
         $submitElement->setIgnore(true);
         $this->addElement($submitElement);
