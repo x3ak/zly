@@ -12,7 +12,7 @@ namespace Templater;
 use \Slys\Application\Module as Module, 
     \Slys\Api\Request as Api;
 
-class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Requestable, Module\Installable, Module\Updateable
+class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Requestable
 {
     
     /**

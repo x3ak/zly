@@ -19,16 +19,16 @@
             <td>
                 <div><?php if($bootstrap->hasOption('description')) echo $moduleOptions['description'];?></div>
                 
-                <?php if(!empty($bootstrap->moduleRequirements['modules'])) { echo 'Require modules:';?>
-                    <ul>
+                <?php if(!empty($bootstrap->moduleRequirements['modules'])) { echo '<div class="slysman-requires-label modules">Require modules:</div>';?>
+                    <ul class="slysman-requirements-modules">
                     <?php foreach($bootstrap->moduleRequirements['modules'] as $name=>$version) {?>
                         <li><?php echo ucfirst($name).' ver.'.$version; ?></li>
                     <?php } ?> 
                     </ul>
                 <?php } ?>  
                 
-                <?php if(!empty($bootstrap->moduleRequirements['resources'])) { echo 'Require resources:';?>
-                    <ul>
+                <?php if(!empty($bootstrap->moduleRequirements['resources'])) { echo '<div class="slysman-requires-label resources">Require resources:</div>';?>
+                    <ul class="slysman-requirements-resources">
                         <?php foreach($bootstrap->moduleRequirements['resources'] as $name=>$version) {?>
                         <li><?php echo ucfirst($name).' ver.'.$version; ?></li>
                         <?php } ?> 
@@ -36,26 +36,32 @@
                 <?php } ?>  
             </td>
 
-            <td align="center"><?php if($bootstrap->hasOption('enabled')) echo (int)$moduleOptions['enabled'];?></td>
+            <td align="center">
+                <?php if($bootstrap instanceof \Slys\Application\Module\Enableable) { ?>
+                    <?php if($bootstrap->hasOption('enabled')) echo (int)$moduleOptions['enabled'];?>
+                <?php } ?>  
+            </td>
             <td>
                 
                 <?php if($bootstrap instanceof \Slys\Application\Module\Installable) {                    
-                    if(!$bootstrap->hasOption('installed') || (boolean)$bootstrap->getOption('installed') == false) {
-                        ?><a href="<?php echo $this->broker('url')->direct(array('action'=>'install','item'=>$moduleName));?>">Install</a><?php 
-                    } elseif($bootstrap->hasOption('installed') && (boolean)$bootstrap->getOption('installed') == true) {
-                        ?><a href="#">Uninstall</a><?php 
-                    }
-                    }?>
+                    if(!$bootstrap->hasOption('installed') || (boolean)$bootstrap->getOption('installed') == false) { ?>
+                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'install','item'=>$moduleName));?>">Install</a>
+                    <?php } elseif($bootstrap->hasOption('installed') && (boolean)$bootstrap->getOption('installed') == true) { ?>
+                        <a href="#">Uninstall</a>
+                    <?php  } }?>
+                        
                 <?php if($bootstrap instanceof \Slys\Application\Module\Updateable) { ?>
                     <a href="#">Update</a> 
                 <?php }?>
-                <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) { ?>    
-                    <a href="#">Disable</a> 
-                <?php } else { ?>
-                    <a href="#">Enable</a> 
-                <?php } ?>    
                     
-                <a href="#">Remove</a>
+                <?php if($bootstrap instanceof \Slys\Application\Module\Enableable) { ?>
+                    <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) { ?>    
+                        <a href="#">Disable</a> 
+                    <?php } else { ?>
+                        <a href="#">Enable</a> 
+                    <?php } ?>    
+                <?php } ?>  
+                        
             </td>
         </tr>
 

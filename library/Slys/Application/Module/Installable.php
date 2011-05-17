@@ -6,11 +6,11 @@ interface Installable
     /**
      * Method for install module environment
      */
-    public function install();
+    public function install(\Zend\Queue\Queue $queue);
     
     /**
      * Method for uninstall module environment
      */
-    public function uninstall();
+    public function uninstall(\Zend\Queue\Queue $queue);
 }
 

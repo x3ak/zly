@@ -19,6 +19,12 @@ class ModulesController extends \Zend\Controller\Action
     );
     
     /**
+     * Action queue for post actions
+     * @var \Zend\Queue 
+     */
+    protected $_queue;
+    
+    /**
      * 
      */
     public function init()
@@ -31,6 +37,10 @@ class ModulesController extends \Zend\Controller\Action
             $bootstrap->moduleRequirements = $this->_checkModuleRequirements($bootstrap);
             $this->modulesBootstraps[$key] = $bootstrap;
         }
+        $queueOptions = array(
+            'name' => 'SlysPostAction',
+        );
+        $this->_queue = new \Zend\Queue\Queue('ArrayAdapter', $queueOptions);
     }
 
     /**
@@ -63,7 +73,7 @@ class ModulesController extends \Zend\Controller\Action
 
         $bootstrap = $this->modulesBootstraps[$module];
         if( $bootstrap instanceof \Slys\Application\Module\Installable) {
-            $result = $bootstrap->install();
+            $result = $bootstrap->install($this->_queue);
 
         }
         $this->view->result = $result;

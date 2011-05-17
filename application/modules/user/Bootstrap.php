@@ -12,7 +12,8 @@ namespace User;
 use \Slys\Application\Module as Module, 
     \Slys\Api\Request as Api;
 
-class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Requestable, Module\Installable, Module\Updateable
+class Bootstrap extends \Zend\Application\Module\Bootstrap 
+                implements Api\Requestable, Module\Installable, Module\Updateable, Module\Enableable
 {
     
     protected function _initAcl()
@@ -39,9 +40,15 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
         }
     }
     
-    public function install()
+    public function install(\Zend\Queue\Queue $queue)
     {
+        \Zend\Debug::dump($queue);
         return true;
+    }
+    
+    public function uninstall(\Zend\Queue\Queue $queue)
+    {
+        return 'User uninstalled';
     }
     
     public function update()
@@ -49,9 +56,15 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
         return 'User updated';
     }
     
-    public function uninstall()
+    
+    public function enable()
     {
-        return 'User uninstalled';
+        return 'User enabled';
+    }
+    
+    public function disable()
+    {
+        return 'User disabled';
     }
 
 }

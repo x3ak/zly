@@ -1,6 +1,7 @@
 <?php
+namespace Slysman;
 
-class Slysman_PublicController extends Zend_Controller_Action
+class PublicController extends \Zend\Controller\Action
 {
     public function filesAction()
     {
