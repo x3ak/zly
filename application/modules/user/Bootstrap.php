@@ -42,7 +42,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
     
     public function install(\Zend\Queue\Queue $queue)
     {
-        \Zend\Debug::dump($queue);
+        $queue->send('sdfsdf');
         return true;
     }
     

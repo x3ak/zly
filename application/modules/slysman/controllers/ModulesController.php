@@ -41,7 +41,8 @@ class ModulesController extends \Zend\Controller\Action
             'name' => 'SlysPostAction',
         );
         $this->_queue = new \Zend\Queue\Queue('ArrayAdapter', $queueOptions);
-    }
+        //$this->_queue->setMessageClass('\Zend\Controller\Request\Simple');
+    } 
 
     /**
      *
@@ -76,6 +77,11 @@ class ModulesController extends \Zend\Controller\Action
             $result = $bootstrap->install($this->_queue);
 
         }
+        $actions = $this->_queue->receive();
+        foreach($actions as $action) {
+              \Zend\Debug::dump($action);
+        }
+        $this->_queue->deleteQueue('SlysPostAction');
         $this->view->result = $result;
     }
     
