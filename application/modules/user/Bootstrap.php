@@ -10,7 +10,7 @@
 namespace User;
 
 use \Slys\Application\Module as Module, 
-    \Slys\Api\Request as Api;
+    \Slys\Api\Request        as Api;
 
 class Bootstrap extends \Zend\Application\Module\Bootstrap 
                 implements Api\Requestable, Module\Installable, Module\Updateable, Module\Enableable
@@ -31,7 +31,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
                 $types = $this->getResourceLoader()->getResourceTypes();
                 $navigationPath = $types['config']['path'].DIRECTORY_SEPARATOR.'navigation.yml';
                 if(is_file($navigationPath)) {
-                    $navigation = new Zend\Navigation\Page\Mvc(new Zend\Config\Yaml($navigationPath));
+                    $navigation = new \Zend\Navigation\Page\Mvc(new \Zend\Config\Yaml($navigationPath));
                     $navName = $navigation->getLabel();
                     if(!empty($navName))
                         $request->getResponse()->setData($navigation);
@@ -40,15 +40,14 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
         }
     }
     
-    public function install(\Zend\Queue\Queue $queue)
+    public function install()
     {
-        $queue->send('sdfsdf');
-        return true;
+        return new \Zend\Controller\Request\Simple('index','install','user');
     }
     
-    public function uninstall(\Zend\Queue\Queue $queue)
+    public function uninstall()
     {
-        return 'User uninstalled';
+        return true;
     }
     
     public function update()
