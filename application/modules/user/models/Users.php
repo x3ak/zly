@@ -5,7 +5,9 @@
  *
  * @version    $Id: Users.php 1212 2011-03-03 13:53:33Z deeper $
  */
-class User_Model_Users extends Slys_Doctrine_Model
+namespace User\Model;
+
+class Users extends \Slys\Doctrine\Model
 {
 
     public function getlist()
@@ -57,6 +59,40 @@ class User_Model_Users extends Slys_Doctrine_Model
         $user->password = md5($newPassword);
         $user->save();
         return true;
+    }
+    
+    public function createDefaultUser($userName, $userPassword, $userRoleName, $guestRoleName) 
+    {
+            //TODO: receive next node id from sysmap module 
+            $rootNode = '0-816563134a61e1b2c7cd7899b126bde4';
+              
+            $guestRole = new Mapper\Role();
+            $guestRole->setName($guestRoleName);
+            $guestRole->setIs_default(true);
+            $this->getEntityManager()->persist($guestRole);
+            $this->getEntityManager()->flush();
+            
+            $userRole = new Mapper\Role();
+            $userRole->setName($userRoleName);
+            $userRole->setParent_id($guestRole->getId());
+            $this->getEntityManager()->persist($userRole);
+            $this->getEntityManager()->flush();
+            
+            $rule = new Mapper\Rule();
+            $rule->setResource_id($rootNode);
+            $rule->setRule('allow');
+            $this->getEntityManager()->persist($rule);            
+            $this->getEntityManager()->flush();
+            
+            $user = new Mapper\User();
+            $user->setActive(true);
+            $user->setPassword(md5($userPassword));
+            $user->setLogin($userName);
+            $user->setRole_id($userRole->getId());
+            $this->getEntityManager()->persist($user);
+            $this->getEntityManager()->flush();
+            
+            return $this;
     }
     
 }

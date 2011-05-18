@@ -24,10 +24,6 @@ namespace Slys\Application\Resource;
 class Modules extends \Zend\Application\Resource\Modules
 {
 
-    public $_explicitType = 'modules';
-    
-    protected $_disabledlModules = array();
-
     /**
      * Initialize modules
      *
@@ -86,6 +82,8 @@ class Modules extends \Zend\Application\Resource\Modules
                                 unset($mergedOptions['bootstrap']);
                             $bootstrap->getApplication()->setOptions($mergedOptions);
                             $bootstrap->setOptions($mergedOptions);
+                            $bootstrap->moduleConfigFile = $moduleConfigFile;
+                            \Zend\Debug::dump($moduleConfigFile);
                         }
                         
                     } else {
@@ -140,14 +138,46 @@ class Modules extends \Zend\Application\Resource\Modules
         if(!empty($this->_bootstraps))
             foreach($this->_bootstraps as $key=>$bootstrap) {
                 $options = $bootstrap->getOptions();
-                if($bootstrap instanceof Slys_Application_Module_Installable && !empty($options['installed']) && !empty($options['enabled'])) {
+                if($bootstrap instanceof \Slys\Application\Module\Installable && !empty($options['installed']) && !empty($options['enabled'])) {
                         $bootstrap->bootstrap();
-                } elseif(!$bootstrap instanceof Slys_Application_Module_Installable && !empty($options['enabled'])) {
+                } elseif(!$bootstrap instanceof \Slys\Application\Module\Installable && !empty($options['enabled'])) {
                     $bootstrap->bootstrap();
                 }
         }
 
 
         return $this->_bootstraps;
+    }
+    
+    public function enableModule($moduleName, $enabled = true)
+    {
+
+        return $this;
+    }
+    
+    public function installModule($moduleName, $installed = true)
+    {
+        $this->_bootstraps = \Zend\Controller\Front::getInstance()
+                ->getParam('bootstrap')->getResource('modules');
+        $moduleBootstrap = $this->_bootstraps[$moduleName];
+        $configFile = $moduleBootstrap->getApplication()->moduleConfigFile;
+        \Zend\Debug::dump($moduleBootstrap, $moduleName); die;
+        $config = new \Zend\Config\Ini($configFile);
+        $writer = new \Zend\Config\Writer\Ini();
+        $writer->setConfig($config);
+        $writer->setFilename($configFile);
+        $writer->write();
+        return $this;
+    }
+    
+    public function setModuleOptions($options)
+    {
+//        $config = new \Zend\Config\Config(array('user'=>$options));
+//            
+//        $writer = new \Zend\Config\Writer\Ini($options);
+//        $filename = APPLICATION_PATH.'/modules/user/configs/module.ini';
+//        $writer->setFilename($filename);
+//        $writer->setConfig($config);
+//        $writer->write();
     }
 }

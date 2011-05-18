@@ -16,19 +16,16 @@ class User_Form_Login extends Zend_Form
         $this->setMethod('POST');
 
         $loginElement = new Zend_Form_Element_Text('login');
-        $loginElement->setAttrib('id', uniqid());
         $loginElement->setLabel('Login:');
         $loginElement->setRequired(true);
         $this->addElement($loginElement);
 
         $passwordElement = new Zend_Form_Element_Password('password');
-        $passwordElement->setAttrib('id', uniqid());
         $passwordElement->setLabel('Password:');
         $passwordElement->setRequired(true);
         $this->addElement($passwordElement);
 
         $submitElement = new Zend_Form_Element_Submit('submit');
-        $submitElement->setAttrib('id', uniqid());
         $submitElement->setLabel('Login');
         $submitElement->setIgnore(true);
         $this->addElement($submitElement);

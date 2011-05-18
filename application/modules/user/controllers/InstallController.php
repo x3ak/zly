@@ -16,6 +16,25 @@ class InstallController extends \Zend\Controller\Action
 {
     public function indexAction()
     {
+        $options = $this->getInvokeArg('bootstrap')->getOption('user');
+
+        if(!empty($options['installed']))
+            return false;
         
+        $form = new Form\Install\Admin();
+        if($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+            
+            $userModel = new Model\Users();
+            $userModel->createDefaultUser(
+                    $form->getValue('admin_name'),                     
+                    $form->getValue('admin_password'),
+                    $form->getValue('admin_role'),
+                    $form->getValue('guest_role'));
+            
+            $modulesPlugin = $this->getInvokeArg('bootstrap')->getBroker()->load('modules');
+            $modulesPlugin->installModule('user', true);
+            
+        }
+        $this->view->initForm = $form;
     }
 }
