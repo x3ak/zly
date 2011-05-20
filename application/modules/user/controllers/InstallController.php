@@ -17,10 +17,10 @@ class InstallController extends \Zend\Controller\Action
     public function indexAction()
     {
         $options = $this->getInvokeArg('bootstrap')->getOption('user');
-
-        if(!empty($options['installed']))
-            return false;
-        
+        \Zend\Debug::dump($options);
+        if(!empty($options['installed'])) {
+            throw new \Exception('Module already installed');
+        }
         $form = new Form\Install\Admin();
         if($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
             
@@ -32,7 +32,7 @@ class InstallController extends \Zend\Controller\Action
                     $form->getValue('guest_role'));
             
             $modulesPlugin = $this->getInvokeArg('bootstrap')->getBroker()->load('modules');
-            $modulesPlugin->installModule('user', true);
+            $modulesPlugin->installModule('user');
             
         }
         $this->view->initForm = $form;

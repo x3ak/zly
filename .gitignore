@@ -3,4 +3,4 @@
 /error.log
 /access.log
 /application/modules/user/configs/module.ini.dist
-/application/configs/application.ini.dist
+/application/configs/modules.ini

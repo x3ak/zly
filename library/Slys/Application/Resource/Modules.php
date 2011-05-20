@@ -23,6 +23,13 @@ namespace Slys\Application\Resource;
 
 class Modules extends \Zend\Application\Resource\Modules
 {
+    /**
+     * Constructor
+     */
+    public function __construct($options = null)
+    {
+        parent::__construct($options);
+    }
 
     /**
      * Initialize modules
@@ -32,11 +39,13 @@ class Modules extends \Zend\Application\Resource\Modules
      */
     public function init()
     {
+        $configFile = APPLICATION_PATH.'/configs/modules.ini';
+        $config = new \Zend\Config\Ini($configFile, 'production');
+        $this->getBootstrap()->mergeOptions($config->toArray());
+        
+        
         $appOptions = $this->getBootstrap()->getApplication()->getOptions();
-
-        if(!empty($appOptions['resources']['doctrine']))
-            $this->getBootstrap()->bootstrap('Doctrine');
-
+\Zend\Debug::dump($appOptions);
         $bootstrap = $this->getBootstrap();
         $bootstrap->bootstrap('FrontController');
         $front = $bootstrap->getResource('FrontController');
@@ -150,7 +159,8 @@ class Modules extends \Zend\Application\Resource\Modules
     
     public function enableModule($moduleName, $enabled = true)
     {
-
+        $options['enabled'] = $enabled;
+        return $this->setModuleOptions($moduleName, $options);
         return $this;
     }
     
@@ -162,7 +172,7 @@ class Modules extends \Zend\Application\Resource\Modules
     
     public function setModuleOptions($moduleName, $options)
     {
-        $configFile = APPLICATION_PATH.'/configs/application.ini.dist';
+        $configFile = APPLICATION_PATH.'/configs/modules.ini';
         if(is_file($configFile) && is_readable($configFile)) {
             $configOptions = array( 'allowModifications' => true );
             $config = new \Zend\Config\Ini($configFile, null, $configOptions);
