@@ -8,7 +8,10 @@
  * @version $Id: Generator.php 1158 2011-02-02 09:48:32Z deeper $
  * @license New BSD
  */
-class Sysmap_Model_Mapper_Sysmap extends Sysmap_Model_Mapper_BaseSysmap
+
+namespace \Sysmap\Model\Mapper;
+
+class Sysmap
 {
 	public function getMapIdentifier()
     {
@@ -22,10 +25,10 @@ class Sysmap_Model_Mapper_Sysmap extends Sysmap_Model_Mapper_BaseSysmap
     public function toRequest()
     {
         if (empty($this->mca) and $this->level == 4)
-            $details = Sysmap_Model_Map::getInstance()->parseMcaFormat($this->getNode()->getParent()->mca);
+            $details = \Sysmap\Model\Map::getInstance()->parseMcaFormat($this->getNode()->getParent()->mca);
         else
-            $details = Sysmap_Model_Map::getInstance()->parseMcaFormat($this->mca);
+            $details = \Sysmap\Model\Map::getInstance()->parseMcaFormat($this->mca);
 
-        return new Zend_Controller_Request_Simple($details['action'], $details['controller'], $details['module'], (array)$this->params);
+        return new \Zend\Controller\Request\Simple($details['action'], $details['controller'], $details['module'], (array)$this->params);
     }
 }

@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: criollit
- * Date: 17.01.11
- * Time: 11:23
- * To change this template use File | Settings | File Templates.
- */
 
-class Slys_Api_Request_Response
+namespace Slys\Api\Request;
+
+class Response
 {
     /**
      * @var array
@@ -22,7 +17,7 @@ class Slys_Api_Request_Response
      */
     protected $_filter;
 
-    public function __construct(Slys_Api_Request $request)
+    public function __construct(\Slys\Api\Request $request)
     {
         $this->_request = $request;
     }

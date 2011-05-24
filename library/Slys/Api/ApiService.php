@@ -3,7 +3,10 @@
  * Slys Api manager class
  * @version $Id: Api.php 1231 2011-04-17 17:49:48Z deeper $
  */
-class Slys_Api
+
+namespace Slys\Api;
+
+class ApiService
 {
     /**
      * @var Slys_Api
@@ -32,7 +35,7 @@ class Slys_Api
      */
     protected function __construct()
     {
-        $this->_notificationRegistry = new Slys_Api_Notification_Registry();
+        $this->_notificationRegistry = new \Slys\Api\Notification\Registry();
         $this->_collectNotifications();
     }
 
@@ -63,7 +66,7 @@ class Slys_Api
      * @param Slys_Api_Request $request
      * @return Slys_Api_Request_Response
      */
-    public function request(Slys_Api_Request $request)
+    public function request(\Slys\Api\Request $request)
     {
         if (in_array($request->getName(), $this->_processedRequests) === true) {
             user_error('Possible request loop! Request \'' . $request->getName() . '\' was already processed!', E_USER_WARNING);
@@ -77,10 +80,10 @@ class Slys_Api
         $responcePriorities = array();
 
         /** @var $bootstraps ArrayObject */
-        $bootstraps = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('modules');
+        $bootstraps = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getResource('modules');
 
         foreach($bootstraps as $key=>$bootstrap) {
-            if ($bootstrap instanceof Slys_Api_Request_Requestable) {
+            if ($bootstrap instanceof \Slys\Api\Request\Requestable) {
                 $bootstrap->onRequest($request);
 
                 if ($request->getResponse()->getData() !== null) {
@@ -119,7 +122,7 @@ class Slys_Api
      */
     public function notify($context, $name, $params = array())
     {
-        $notification = new Slys_Api_Notification($context, $name, $params);
+        $notification = new \Slys\Api\Notification($context, $name, $params);
 
         if (in_array($notification->getName(), $this->_processedNotifications)) {
             user_error('Possible notification loop! Notification \'' . $notification->getName() . '\' was already processed!', E_USER_WARNING);
@@ -133,7 +136,7 @@ class Slys_Api
 
         $this->_processedNotifications[] = $notification->getName();
 
-        $bootstraps = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('modules');
+        $bootstraps = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getResource('modules');
 
         foreach($bootstraps as $bootstrap) {
             if ($bootstrap instanceof Slys_Api_Notification_Notifiable) {
@@ -146,10 +149,10 @@ class Slys_Api
 
     protected function _collectNotifications()
     {
-        $bootstraps = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('modules');
+        $bootstraps = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getResource('modules');
 
         foreach($bootstraps as $bootstrap) {
-            if ($bootstrap instanceof Slys_Api_Notification_Notifier) {
+            if ($bootstrap instanceof \Slys\Api\Notification\Notifier) {
                 $bootstrap->publishNotifications( $this->_notificationRegistry );
             }
         }

@@ -44,7 +44,7 @@ class Request
             throw new Exception('Context must be an instance of the sender object or the name of the existing module!');
 
         if (is_object($context)) {
-            $className = explode('_', get_class($context), 2);
+            $className = explode('\\', get_class($context), 2);
             $this->_contextModuleName = strtolower($className[0]);
         }
         elseif(is_string($context))
@@ -56,7 +56,7 @@ class Request
         $this->_context = $context;
         $this->_name = strtolower(trim($name));
         $this->_params = $params;
-        $this->_response = new Slys_Api_Request_Response($this);
+        $this->_response = new Request\Response($this);
     }
 
     /**
@@ -87,7 +87,7 @@ class Request
             $this->_params = $params;
 
         $this->_response = new \Slys\Api\Request\Response($this);
-        Slys_Api::getInstance()->request($this);
+        \Slys\Api\ApiService::getInstance()->request($this);
         return $this;
     }
 

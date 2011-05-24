@@ -12,7 +12,7 @@ namespace Templater;
 use \Slys\Application\Module as Module, 
     \Slys\Api\Request as Api;
 
-class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Requestable
+class Bootstrap extends \Zend\Application\Module\Bootstrap implements Module\Installable, Module\Updateable
 {
     
     /**
@@ -26,7 +26,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
             ->registerPlugin($plugin);
     }
 
-    public function onRequest(Api\Request $request)
+    public function onRequest(Request $request)
     {
         switch ($request->getName()) {
             case 'navigation.get-module-navigation':

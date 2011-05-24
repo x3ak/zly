@@ -8,8 +8,40 @@
  * @version $Id: Generator.php 761 2010-12-14 11:49:54Z deeper $
  * @license New BSD
  */
-class Sysmap_Model_DbTable_Sysmap extends Doctrine_Table
+
+namespace Sysmap\Model\DbTable;
+
+class Sysmap
 {
+    protected static $_instance = null;
+       
+    /**
+     *
+     * @var \Zend\Cache\Frontend\Core
+     */
+    protected $_cache = null;
+    /**
+     *
+     * @var \DOMDocument
+     */
+    protected $_sysmap = null;
+    
+    protected function __construct()
+    {
+        $cache = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getBroker()
+                    ->load('cachemanager')->getCacheManager();
+        
+        if($cache->hasCache('sysmap')) {
+            $this->_cache = $cache->getCache('sysmap');
+            if($this->_cache->test('sysmap')) {
+                $this->_sysmap = $this->_cache->load('sysmap');
+            }
+            
+        } else {
+            throw 'Sysmap module require own cache';
+        }
+
+    }
 
     /**
      * Returns an instance of this class.
@@ -18,84 +50,13 @@ class Sysmap_Model_DbTable_Sysmap extends Doctrine_Table
      */
     public static function getInstance()
     {
-        return Doctrine_Core::getTable('Sysmap_Model_Mapper_Sysmap');
+        if (null === self::$_instance) {
+            self::$_instance = new self();
+        }
+
+        return self::$_instance;
     }
 
-    /**
-     * Returns root element from map.
-     * @return Sysmap_Model_Mapper_Sysmap
-     */
-    public function getRootElement()
-    {
-        return Doctrine_Query::create()
-            ->select()
-            ->from('Sysmap_Model_Mapper_Sysmap')
-            ->where('level = 0')
-            ->fetchOne();
-    }
-
-    /**
-     * Finds modules in in map.
-     *
-     * @param array $params              query parameters (a la PDO)
-     * @param int $hydrationMode         Doctrine_Core::HYDRATE_ARRAY or Doctrine_Core::HYDRATE_RECORD
-     * @return Doctrine_Collection|array Depends from $hydrationMode can be collection of Sysmap_Model_Mapper_Sysmap
-     */
-    public function findModules($params = array(), $hydrationMode = null)
-    {
-        return Doctrine_Query::create()
-            ->select()
-            ->from('Sysmap_Model_Mapper_Sysmap')
-            ->where('level < 2')
-            ->execute($params,$hydrationMode);
-    }
-
-    /**
-     * Finds controllers in in map.
-     *
-     * @param array $params              query parameters (a la PDO)
-     * @param int $hydrationMode         Doctrine_Core::HYDRATE_ARRAY or Doctrine_Core::HYDRATE_RECORD
-     * @return Doctrine_Collection|array Depends from $hydrationMode can be collection of Sysmap_Model_Mapper_Sysmap
-     */
-    public function findControllers($params = array(), $hydrationMode = null)
-    {
-        return Doctrine_Query::create()
-            ->select()
-            ->from('Sysmap_Model_Mapper_Sysmap')
-            ->where('level = 2')
-            ->execute($params,$hydrationMode);
-    }
-
-    /**
-     * Gets the list of all actions for specified module-controller
-     * @param  $moduleName
-     * @param  $controllerName
-     * @param  array $params
-     * @param  null $hydrationMode
-     * @return Doctrine_Collection
-     */
-    public function findActions($moduleName, $controllerName, $params = array(), $hydrationMode = null)
-    {
-        return Doctrine_Query::create()
-            ->select()
-            ->from('Sysmap_Model_Mapper_Sysmap')
-            ->where('mca like ?', $moduleName.'.'.$controllerName.'.%')
-            ->andWhere('level = 3')
-            ->execute($params,$hydrationMode);
-    }
-
-    /**
-     * Clear records with the passed id(s)
-     * @param  string|array $ids
-     * @return void
-     */
-    public function deleteRecords($ids)
-    {
-        if (is_string($ids))
-            $ids = array(array('id' => $ids));
-
-        foreach($ids as $id)
-            $this->findOneBy('id', $id['id'])->getNode()->delete();
-    }
+    
 }
 

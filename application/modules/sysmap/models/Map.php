@@ -9,7 +9,10 @@
  * Sysmap model class. Provides as singleton
  * @throws Zend_Exception
  */
-class Sysmap_Model_Map
+
+namespace Sysmap\Model;
+
+class Map
 {
     /**
      * @var Sysmap_Model_Map
@@ -26,8 +29,35 @@ class Sysmap_Model_Map
      */
     protected $_requestActiveElementsCache = array();
 
+    /**
+     *
+     * @var \Zend\Cache\Frontend\Core
+     */
+    protected $_cache = null;
+    
+    protected $_cachedControllers = array();
+    /**
+     *
+     * @var \DOMDocument
+     */
+    protected $_sysmap = null;
+    
     protected function __construct()
-    {}
+    {
+        $cache = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getBroker()
+                    ->load('cachemanager')->getCacheManager();
+        
+        if($cache->hasCache('sysmap')) {
+            $this->_cache = $cache->getCache('sysmap');
+            if($this->_cache->test('sysmap')) {
+                $this->_sysmap = $this->_cache->load('sysmap');
+            }
+            
+        } else {
+            throw 'Sysmap module require own cache';
+        }
+
+    }
 
     public static function getInstance()
     {
@@ -59,7 +89,7 @@ class Sysmap_Model_Map
      * @param Sysmap_Model_Mapper_Sysmap $item
      * @return void
      */
-    protected function _generateHash(Sysmap_Model_Mapper_Sysmap $item)
+    protected function _generateHash(\Sysmap\Model\Mapper\Sysmap $item)
     {
         if (empty($item) === false)
             $item->hash = $item->level . '-' . md5(
@@ -117,17 +147,17 @@ class Sysmap_Model_Map
         $applicationPath = str_replace('\\','/',realpath(APPLICATION_PATH));
 
         if(!empty($mcaParts['controller'])) {
-            $frontController = Zend_Controller_Front::getInstance();
+            $frontController = \Zend\Controller\Front::getInstance();
             $controllerClassName = $frontController->getDispatcher()->formatControllerName($mcaParts['controller']);
             $controllerFileName = $frontController->getDispatcher()->classToFilename($controllerClassName);
 
             return str_replace(
                 $applicationPath,
                 '',
-                str_replace('\\','/',realpath(Zend_Controller_Front::getInstance()->getControllerDirectory($mcaParts['module']).DIRECTORY_SEPARATOR.$controllerFileName))
+                str_replace('\\','/',realpath(\Zend\Controller\Front::getInstance()->getControllerDirectory($mcaParts['module']).DIRECTORY_SEPARATOR.$controllerFileName))
             );
         } else {
-            return str_replace($applicationPath,'',str_replace('\\','/',realpath(Zend_Controller_Front::getInstance()->getModuleDirectory($mcaParts['module']))));
+            return str_replace($applicationPath,'',str_replace('\\','/',realpath(\Zend\Controller\Front::getInstance()->getModuleDirectory($mcaParts['module']))));
         }
     }
 
@@ -136,13 +166,13 @@ class Sysmap_Model_Map
      */
     public function addModule($moduleName, $path, $title = null, $description = null)
     {
-        $rootNode = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('mca','*.*.*');
+        $rootNode = \Sysmap\Model\DbTable\Sysmap::getInstance()->findOneBy('mca','*.*.*');
 
         if (empty($rootNode))
             throw new Zend_Exception('Can not find root of the sysmap!');
 
         $newItem = false;
-        $mapItem = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName)));
+        $mapItem = \Sysmap\Model\DbTable\Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName)));
 
         if (empty($mapItem)) {
             $newItem = true;
@@ -173,13 +203,13 @@ class Sysmap_Model_Map
      */
     public function addController($moduleName, $controllerName, $path, $title = null, $description = null)
     {
-        $moduleRoot = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName)));
+        $moduleRoot = \Sysmap\Model\DbTable\Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName)));
 
         if (empty($moduleRoot))
             throw new Zend_Exception('Can not find module root entry!');
 
         $newItem = false;
-        $mapItem = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName, 'controller' => $controllerName)));
+        $mapItem = \Sysmap\Model\DbTable\Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName, 'controller' => $controllerName)));
 
         if (empty($mapItem)) {
             $newItem = true;
@@ -211,13 +241,13 @@ class Sysmap_Model_Map
      */
     public function addAction($moduleName, $controllerName, $actionName, $path, $formClass = null, $title = null, $description = null)
     {
-        $controllerRoot = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName, 'controller' => $controllerName)));
+        $controllerRoot = \Sysmap\Model\DbTable\Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName, 'controller' => $controllerName)));
 
         if (empty($controllerRoot))
             throw new Zend_Exception('Can not find controller root element!');
 
         $newItem = false;
-        $mapItem = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName, 'controller' => $controllerName, 'action' => $actionName)));
+        $mapItem = \Sysmap\Model\DbTable\Sysmap::getInstance()->findOneBy('mca', $this->formatMcaName(array('module' => $moduleName, 'controller' => $controllerName, 'action' => $actionName)));
 
         if (empty($mapItem)) {
             $newItem = true;
@@ -333,7 +363,7 @@ class Sysmap_Model_Map
             // adding module-controller
             $this->addController($module, $controllerName, $path, $controllerDocTitle, $controllerDocDescription);
 
-            $tmpMapMethods = Sysmap_Model_DbTable_Sysmap::getInstance()->findActions($module, $controllerName, array(), Doctrine_Core::HYDRATE_ARRAY);
+            $tmpMapMethods = \Sysmap\Model\DbTable\Sysmap::getInstance()->findActions($module, $controllerName, array(), Doctrine_Core::HYDRATE_ARRAY);
 
             foreach($tmpMapMethods as $method)
                 $mapMethods[$method['mca']] = $method;
@@ -372,7 +402,7 @@ class Sysmap_Model_Map
             }
 
             if (empty($mapMethods) === false) {
-                Sysmap_Model_DbTable_Sysmap::getInstance()->deleteRecords(array_values($mapMethods));
+                \Sysmap\Model\DbTable\Sysmap::getInstance()->deleteRecords(array_values($mapMethods));
                 unset($mapMethods);
             }
         }
@@ -384,119 +414,37 @@ class Sysmap_Model_Map
      */
     public function reindexMCA()
     {
-        if ($this->_reindexed === true)
-            return;
 
-        $rootElement = Sysmap_Model_DbTable_Sysmap::getInstance()->getRootElement();
-        $lastIndexedDate = (int)strtotime($rootElement->index_date);
-        $applicationPath = str_replace('\\','/', realpath(APPLICATION_PATH));
-        $indexFile = $applicationPath.'/../tmp/mca.index';
-
-        $doReindex = false;
-
-        $pathsInIndex = $foundPaths = $addPaths = $resultIndex = $removedPaths = array(
-            'controllers' => array(),
-            'controllers_folders' => array(),
-        );
-
-        if( file_exists($indexFile) ) {
-            $pathsInIndex = require_once $indexFile;
-            $indexDate = $pathsInIndex['index_date'];
-        } else {
-            $indexDate = 1;
-            $doReindex = true;
-        }
-
-        if($indexDate != $lastIndexedDate) { //full reindex case
-            $pathsInIndex = array(
-                'controllers' => array(),
-                'controllers_folders' => array(),
-            );
-
-            if($lastIndexedDate > 0) { //file was removed, but index in database exists
-                $indexDate = $lastIndexedDate; //restoring indexation date from database
-                $oldIndex = Sysmap_Model_DbTable_Sysmap::getInstance()->findControllers();
-
-                /** @var $module Sysmap_Model_Mapper_Sysmap */
-                foreach($oldIndex as $mapItem)
-                    $pathsInIndex['controllers'][] = $this->formatPathFromMca($mapItem->mca);
+        $this->_checkControllersModify();
+        die;
+    }
+    
+    protected function _checkControllersModify()
+    {
+        $controllers = $this->getApplicationControllers();
+    }
+    
+    public function getCurrentApplicationControllers() 
+    {
+        if(!empty($this->_controllers) && is_array($this->_controllers))
+                return $this->_controllers;
+        
+        $controllers = array();
+        $controllersDirs = \Zend\Controller\Front::getInstance()->getControllerDirectory();
+        foreach($controllersDirs as $module=>$dir) {
+            $dirIterator = new \DirectoryIterator($dir);
+            foreach ($dirIterator as $file) {
+                if($file->isFile())
+                    \Zend\Debug::dump($file->getFilename());
             }
         }
-
-        foreach(Zend_Controller_Front::getInstance()->getControllerDirectory() as $moduleName => $controllersDirectory) {
-            if (file_exists($controllersDirectory) === false)
-                continue;
-
-            $controllersDirectoryRelPath = str_replace($applicationPath,'',str_replace('\\','/',realpath($controllersDirectory)));
-
-            if(!in_array($controllersDirectoryRelPath,$pathsInIndex['controllers_folders'])) {
-                $addPaths['controllers_folders'][] = $controllersDirectoryRelPath;
-            } else {
-                $foundPaths['controllers_folders'][] = $controllersDirectoryRelPath;
-            }
-
-            foreach (new DirectoryIterator($controllersDirectory) as $fileInfo) {
-                if( $fileInfo->isFile() ) {
-                    $pathName = str_replace($applicationPath,'',str_replace('\\','/',realpath($fileInfo->getPathname())));
-                    if(
-                        !in_array($pathName,$pathsInIndex['controllers'])
-                        OR
-                        $fileInfo->getMTime() > $indexDate
-                    ) {
-                        $addPaths['controllers'][] = $pathName;
-                    } else {
-                        $foundPaths['controllers'][] = $pathName;
-                    }
-                }
-            }
-        }
-
-        $resultIndex['controllers_folders'] += $foundPaths['controllers_folders'];
-        $resultIndex['controllers']         += $foundPaths['controllers'];
-        $resultIndex['controllers_folders'] += $addPaths['controllers_folders'];
-
-        $resultIndex['controllers'] = array_merge($resultIndex['controllers'], $addPaths['controllers']);
-
-        $removedPaths['controllers']         = array_diff($pathsInIndex['controllers'],$resultIndex['controllers']);
-        $removedPaths['controllers_folders'] = array_diff($pathsInIndex['controllers_folders'],$resultIndex['controllers_folders']);
-
-        if (empty($removedPaths['controllers']) === false) {
-            foreach($removedPaths['controllers'] as $path) {
-                $item = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('path', $path);
-
-                if (empty($item) === false)
-                    $item->getNode()->delete();
-            }
-
-            $doReindex = true;
-        }
-
-        if (empty($removedPaths['controllers_folders']) === false) {
-            foreach($removedPaths['controllers_folders'] as $path) {
-                $item = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('path', $path);
-
-                if (empty($item) === false)
-                    $item->getNode()->delete();
-            }
-
-            $doReindex = true;
-        }
-
-        if(empty($addPaths['controllers']) === false) {
-            $this->addToMap($addPaths['controllers']);
-            $doReindex = true;
-        }
-
-        if($doReindex) {
-            $resultIndex['index_date'] = time();
-            $rootElement->index_date = date('Y-m-d H:i:s',$resultIndex['index_date']);
-            $rootElement->save();
-
-            file_put_contents($indexFile,'<?php return '.var_export($resultIndex,true).';' );
-            chmod($indexFile,0777);
-        }
-
-        $this->_reindexed = true;
+        $this->_controllers = $controllers;
+        return $controllers;
+    }
+    
+    protected function _getPreviousApplicationControllers()
+    {
+        
     }
 
     public function addExtend(array $data)
@@ -504,7 +452,7 @@ class Sysmap_Model_Map
         if (empty($data) === true)
             throw new Zend_Exception('Can not create an extend! Empty data passed!');
 
-        $mapItem = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('id', $data['sysmap_id']);
+        $mapItem = \Sysmap\Model\DbTable\Sysmap::getInstance()->findOneBy('id', $data['sysmap_id']);
 
         if (empty($mapItem))
             throw new Zend_Exception('The root element you choosed does not exists!');
@@ -541,7 +489,7 @@ class Sysmap_Model_Map
     public function getItemByHash($hash)
     {
         if (empty($hash) === false)
-            return Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('hash', $hash);
+            return \Sysmap\Model\DbTable\Sysmap::getInstance()->findOneBy('hash', $hash);
 
         return null;
     }
@@ -582,7 +530,7 @@ class Sysmap_Model_Map
         if ($customRequest !== null)
             $request = $customRequest;
         else
-            $request = Zend_Controller_Front::getInstance()->getRequest();
+            $request = \Zend\Controller\Front::getInstance()->getRequest();
 
         if (empty($request))
             return null;
@@ -598,7 +546,7 @@ class Sysmap_Model_Map
 
         $this->reindexMCA();
 
-        $currentMcaCollection = Sysmap_Model_DbTable_Sysmap::getInstance()->findBy(
+        $currentMcaCollection = \Sysmap\Model\DbTable\Sysmap::getInstance()->findBy(
             'mca',
             $this->formatMcaName(array(
                 'module' => $request->getModuleName(),
@@ -625,7 +573,7 @@ class Sysmap_Model_Map
 
     public function getItemParentsByHash($hash)
     {
-        $currentCollection = Sysmap_Model_DbTable_Sysmap::getInstance()->findBy('hash', $hash);
+        $currentCollection = \Sysmap\Model\DbTable\Sysmap::getInstance()->findBy('hash', $hash);
         $mapItem = $currentCollection[0];
 
         if (empty($mapItem) === false) {
@@ -640,5 +588,81 @@ class Sysmap_Model_Map
             $collection = $currentCollection;
 
         return $collection;
+    }
+    
+    /**
+     * Returns root element from map.
+     * @return \DOMElement
+     */
+    public function getRootElement()
+    {
+        if(empty($this->_sysmap))
+                return false;
+        
+        return $this->_sysmap->getElementsByTagName('root');
+    }
+
+    /**
+     * Finds modules in in map.
+     *
+     * @param array $params              query parameters (a la PDO)
+     * @param int $hydrationMode         Doctrine_Core::HYDRATE_ARRAY or Doctrine_Core::HYDRATE_RECORD
+     * @return Doctrine_Collection|array Depends from $hydrationMode can be collection of Sysmap_Model_Mapper_Sysmap
+     */
+    public function findModules($params = array(), $hydrationMode = null)
+    {
+        return Doctrine_Query::create()
+            ->select()
+            ->from('Sysmap_Model_Mapper_Sysmap')
+            ->where('level < 2')
+            ->execute($params,$hydrationMode);
+    }
+
+    /**
+     * Finds controllers in in map.
+     *
+     * @param array $params              query parameters (a la PDO)
+     * @param int $hydrationMode         Doctrine_Core::HYDRATE_ARRAY or Doctrine_Core::HYDRATE_RECORD
+     * @return Doctrine_Collection|array Depends from $hydrationMode can be collection of Sysmap_Model_Mapper_Sysmap
+     */
+    public function findControllers($params = array(), $hydrationMode = null)
+    {
+        return Doctrine_Query::create()
+            ->select()
+            ->from('Sysmap_Model_Mapper_Sysmap')
+            ->where('level = 2')
+            ->execute($params,$hydrationMode);
+    }
+
+    /**
+     * Gets the list of all actions for specified module-controller
+     * @param  $moduleName
+     * @param  $controllerName
+     * @param  array $params
+     * @param  null $hydrationMode
+     * @return Doctrine_Collection
+     */
+    public function findActions($moduleName, $controllerName, $params = array(), $hydrationMode = null)
+    {
+        return Doctrine_Query::create()
+            ->select()
+            ->from('Sysmap_Model_Mapper_Sysmap')
+            ->where('mca like ?', $moduleName.'.'.$controllerName.'.%')
+            ->andWhere('level = 3')
+            ->execute($params,$hydrationMode);
+    }
+
+    /**
+     * Clear records with the passed id(s)
+     * @param  string|array $ids
+     * @return void
+     */
+    public function deleteRecords($ids)
+    {
+        if (is_string($ids))
+            $ids = array(array('id' => $ids));
+
+        foreach($ids as $id)
+            $this->findOneBy('id', $id['id'])->getNode()->delete();
     }
 }

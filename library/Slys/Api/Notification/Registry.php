@@ -9,7 +9,10 @@
  * Instance of this registry is passed to publishNotifications of your bootstrap
  * @link http://wiki.optimum-web.com/doku.php/slys:manual:library
  */
-class Slys_Api_Notification_Registry
+
+namespace Slys\Api\Notification;
+
+class Registry
 {
     /**
      * List of registered notifications

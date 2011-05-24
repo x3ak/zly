@@ -13,9 +13,8 @@ use \Slys\Application\Module as Module,
     \Slys\Api\Request        as Api;
 
 class Bootstrap extends \Zend\Application\Module\Bootstrap 
-                implements Api\Requestable, Module\Installable, Module\Updateable, Module\Enableable
+                implements Module\Installable, Module\Updateable, Module\Enableable
 {
-    
     protected function _initAcl()
     {
         $this->bootstrap('Frontcontroller');
@@ -24,22 +23,6 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
         );
     }
 
-    public function onRequest(Api\Request $request)
-    {
-        switch ($request->getName()) {
-            case 'navigation.get-module-navigation':
-                $types = $this->getResourceLoader()->getResourceTypes();
-                $navigationPath = $types['config']['path'].DIRECTORY_SEPARATOR.'navigation.yml';
-                if(is_file($navigationPath)) {
-                    $navigation = new \Zend\Navigation\Page\Mvc(new \Zend\Config\Yaml($navigationPath));
-                    $navName = $navigation->getLabel();
-                    if(!empty($navName))
-                        $request->getResponse()->setData($navigation);
-                }
-            break;
-        }
-    }
-    
     public function install()
     {
         return new \Zend\Controller\Request\Simple('index','install','user');

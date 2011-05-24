@@ -12,20 +12,20 @@
 namespace Sysmap;
 
 use \Slys\Application\Module as Module, 
-    \Slys\Api\Request as Api;
+    \Slys\Api as Api;
 
-class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Requestable
+class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Request\Requestable
 {
-    public function onRequest(Api\Request $request) {
+    public function onRequest(\Slys\Api\Request $request) {
         switch ($request->getName()) {
             case 'sysmap.get-map-tree':
-                $request->getResponse()->setData( Sysmap_Model_Map::getInstance()->getMapTreeElement() );
+                $request->getResponse()->setData( \Sysmap\Model\Map::getInstance()->getMapTreeElement() );
                 break;
 
             case 'sysmap.currently-active-items':
                 $params = $request->getParams();
                 
-                if (empty($params['request']) === false and $params['request'] instanceof Zend_Controller_Request_Abstract)
+                if (empty($params['request']) === false and $params['request'] instanceof \Zend\Controller\Request\AbstractRequest)
                     $request->getResponse()->setData( Model\Map::getInstance()->getActiveItems($params['request']) );
                 else
                     $request->getResponse()->setData( Model\Map::getInstance()->getActiveItems() );
