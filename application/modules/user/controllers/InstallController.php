@@ -17,7 +17,7 @@ class InstallController extends \Zend\Controller\Action
     public function indexAction()
     {
         $options = $this->getInvokeArg('bootstrap')->getOption('user');
-        \Zend\Debug::dump($options);
+
         if(!empty($options['installed'])) {
             throw new \Exception('Module already installed');
         }
@@ -25,6 +25,7 @@ class InstallController extends \Zend\Controller\Action
         if($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
             
             $userModel = new Model\Users();
+            $userModel->initSchema();
             $userModel->createDefaultUser(
                     $form->getValue('admin_name'),                     
                     $form->getValue('admin_password'),

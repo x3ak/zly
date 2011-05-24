@@ -56,9 +56,9 @@
                     
                 <?php if($bootstrap instanceof \Slys\Application\Module\Enableable) { ?>
                     <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) { ?>    
-                        <a href="#">Disable</a> 
+                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'disable','item'=>$moduleName));?>">Disable</a> 
                     <?php } else { ?>
-                        <a href="#">Enable</a> 
+                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'enable','item'=>$moduleName));?>">Enable</a> 
                     <?php } ?>    
                 <?php } ?>  
                         

@@ -16,7 +16,6 @@ namespace User\Model\Mapper;
  */
 class User
 {
-
     /**
     * @Id 
     * @Column(type="integer")
@@ -30,43 +29,43 @@ class User
     /** @Column(length=32) */
     protected $password;
     
-    /** @Column(type="integer") */
+    /** @Column(type="integer", nullable=true) */
     protected $role_id;
     
     /** @Column(type="boolean") */
     protected $active;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $firstname;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $lastname;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $patronymic;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $email;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $phone;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $region;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $city;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $zip;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $address;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $mobile_code;
     
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $mobile_number;
 
     /**

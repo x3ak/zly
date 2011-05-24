@@ -58,12 +58,16 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
     
     public function enable()
     {
-        return 'User enabled';
+        $modulesPlugin = $this->getBroker()->load('modules');
+        $modulesPlugin->enableModule('user');
+        return true;
     }
     
     public function disable()
     {
-        return 'User disabled';
+        $modulesPlugin = $this->getBroker()->load('modules');
+        $modulesPlugin->enableModule('user', false);
+        return true;
     }
 
 }

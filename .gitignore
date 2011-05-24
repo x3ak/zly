@@ -4,3 +4,4 @@
 /access.log
 /application/modules/user/configs/module.ini.dist
 /application/configs/modules.ini
+/application/configs/local.ini

@@ -71,6 +71,37 @@ class ModulesController extends \Zend\Controller\Action
                         $result->getModuleName(), 
                         $result->getParams()
                 );
+            } else {
+                $this->_redirect($this->broker('url')->direct('index','modules','slysman'));
+                return true;
+            }
+
+        }
+        
+        $this->view->result = $result;
+    }
+    
+    
+    /**
+     * 
+     */
+    public function enableAction()
+    {
+        $module = $this->getRequest()->getParam('item');
+
+        $bootstrap = $this->modulesBootstraps[$module];
+        if( $bootstrap instanceof \Slys\Application\Module\Installable) {
+            $result = $bootstrap->enable();
+            if($result instanceof \Zend\Controller\Request\AbstractRequest) {
+                $this->_forward(
+                        $result->getActionName(), 
+                        $result->getControllerName(), 
+                        $result->getModuleName(), 
+                        $result->getParams()
+                );
+            } else {
+                $this->_redirect($this->broker('url')->direct('index','modules','slysman'));
+                return true;
             }
 
         }

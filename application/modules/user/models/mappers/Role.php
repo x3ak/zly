@@ -28,10 +28,10 @@ class Role
     /** @Column(length=50) */
     protected $name;
 
-    /** @Column(type="integer") */
+    /** @Column(type="integer", nullable=true) */
     protected $parent_id;
 
-    /** @Column(type="boolean") */
+    /** @Column(type="boolean", nullable=true) */
     protected $is_default;
     
     /**

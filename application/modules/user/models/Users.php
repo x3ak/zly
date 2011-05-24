@@ -9,6 +9,36 @@ namespace User\Model;
 
 class Users extends \Slys\Doctrine\Model
 {
+    public function initSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->dropSchema($classes);    
+        $tool->createSchema($classes);
+        return $this;
+    }
+    
+    public function updateSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->updateSchema($classes);
+        return $this;
+    }
+    
+    protected function _getShemaClasses()
+    {
+        $em = $this->getEntityManager();
+        $classes = array(
+          $em->getClassMetadata('User\Model\Mapper\User'),
+          $em->getClassMetadata('User\Model\Mapper\Role'),
+          $em->getClassMetadata('User\Model\Mapper\Rule')
+        );
+        
+        return $classes;
+    }
 
     public function getlist()
     {
@@ -81,6 +111,7 @@ class Users extends \Slys\Doctrine\Model
             $rule = new Mapper\Rule();
             $rule->setResource_id($rootNode);
             $rule->setRule('allow');
+            $rule->setRole($userRole);
             $this->getEntityManager()->persist($rule);            
             $this->getEntityManager()->flush();
             
@@ -88,7 +119,7 @@ class Users extends \Slys\Doctrine\Model
             $user->setActive(true);
             $user->setPassword(md5($userPassword));
             $user->setLogin($userName);
-            $user->setRole_id($userRole->getId());
+            $user->setRole($userRole);
             $this->getEntityManager()->persist($user);
             $this->getEntityManager()->flush();
             

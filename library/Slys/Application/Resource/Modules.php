@@ -39,13 +39,7 @@ class Modules extends \Zend\Application\Resource\Modules
      */
     public function init()
     {
-        $configFile = APPLICATION_PATH.'/configs/modules.ini';
-        $config = new \Zend\Config\Ini($configFile, 'production');
-        $this->getBootstrap()->mergeOptions($config->toArray());
-        
-        
         $appOptions = $this->getBootstrap()->getApplication()->getOptions();
-\Zend\Debug::dump($appOptions);
         $bootstrap = $this->getBootstrap();
         $bootstrap->bootstrap('FrontController');
         $front = $bootstrap->getResource('FrontController');
@@ -146,9 +140,10 @@ class Modules extends \Zend\Application\Resource\Modules
         if(!empty($this->_bootstraps))
             foreach($this->_bootstraps as $key=>$bootstrap) {
                 $options = $bootstrap->getOptions();
+//                \Zend\Debug::dump($options, $key);
                 if($bootstrap instanceof \Slys\Application\Module\Installable && !empty($options['installed']) && !empty($options['enabled'])) {
                         $bootstrap->bootstrap();
-                } elseif(!$bootstrap instanceof \Slys\Application\Module\Installable && !empty($options['enabled'])) {
+                } elseif(!$bootstrap instanceof \Slys\Application\Module\Enableable && !empty($options['enabled'])) {
                     $bootstrap->bootstrap();
                 }
         }
@@ -172,20 +167,29 @@ class Modules extends \Zend\Application\Resource\Modules
     
     public function setModuleOptions($moduleName, $options)
     {
-        $configFile = APPLICATION_PATH.'/configs/modules.ini';
-        if(is_file($configFile) && is_readable($configFile)) {
-            $configOptions = array( 'allowModifications' => true );
-            $config = new \Zend\Config\Ini($configFile, null, $configOptions);
-            
-            $config->merge(new \Zend\Config\Config(array('production'=>array($moduleName=>$options))));
-            
+        $configFile = $this->getBootstrap()->getApplication()->getOption('config');
+        if(!empty($configFile)) {
+            if(is_file($configFile) && is_readable($configFile) && is_writable($configFile)) {
+                
+                $sections = array();
+                
+                $configOptions = array( 'allowModifications' => true );
+                $config = new \Zend\Config\Ini($configFile, null, $configOptions);
+                foreach($config as $section=>$value) {
+                    $config->merge(new \Zend\Config\Config(array($section=>array($moduleName=>$options))));
+                }
+
+            } else {
+                $config = new \Zend\Config\Config(array('production'=>array($moduleName=>$options)));
+            }
+            $writer = new \Zend\Config\Writer\Ini();
+            $writer->setConfig($config);
+            $writer->setFilename($configFile);
+            $writer->write();
         } else {
-            $config = new \Zend\Config\Config(array('production'=>array($moduleName=>$options)));
+            throw Exception("For save modules local config required local config file and 'config'\n"
+                    ." option with path ot in in main application config");
         }
-        $writer = new \Zend\Config\Writer\Ini();
-        $writer->setConfig($config);
-        $writer->setFilename($configFile);
-        $writer->write();
         return $this;
     }
 }

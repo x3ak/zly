@@ -21,10 +21,10 @@ class Rule
     */
     protected $id;
 
-    /** @Column(type="integer") */    
+    /** @Column(type="integer", nullable=true) */    
     protected $role_id;
 
-    /** @Column(type="integer") */
+    /** @Column(length=255) */
     protected $resource_id;
 
     /** @Column(length=50) */
@@ -66,6 +66,10 @@ class Rule
 
     public function setRule($rule) {
         $this->rule = $rule;
+    }
+    
+    public function setRole($role) {
+        $this->role = $role;
     }
 }
 
