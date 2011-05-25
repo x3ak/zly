@@ -421,7 +421,7 @@ class Map
     
     protected function _checkControllersModify()
     {
-        $controllers = $this->getApplicationControllers();
+        $controllers = $this->getCurrentApplicationControllers();
     }
     
     public function getCurrentApplicationControllers() 
