@@ -42,17 +42,17 @@ class Map
      */
     protected $_sysmap = null;
     
+    protected $_actionSuffix = 'Action';
+    
+    protected $_paramFormTag = 'ParamsForm';
+    
     protected function __construct()
     {
         $cache = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getBroker()
                     ->load('cachemanager')->getCacheManager();
         
         if($cache->hasCache('sysmap')) {
-            $this->_cache = $cache->getCache('sysmap');
-            if($this->_cache->test('sysmap')) {
-                $this->_sysmap = $this->_cache->load('sysmap');
-            }
-            
+            $this->_cache = $cache->getCache('sysmap');            
         } else {
             throw 'Sysmap module require own cache';
         }
@@ -414,17 +414,27 @@ class Map
      */
     public function reindexMCA()
     {
-
-        $this->_checkControllersModify();
-        die;
+        $map = array();
+        $curContrl = $this->_getCurrentApplicationControllers();
+        $prevContrl = $this->_getPreviousApplicationControllers();
+        
+        foreach($curContrl as $hash=>$file) {
+            if(!array_key_exists($hash, $prevContrl)) {
+                $ctrlInfo = $this->_saveControllerMap($file['file']);
+                $map[$file['module']][] = $ctrlInfo;
+            }
+        }
+        \Zend\Debug::dump($map);
+        $this->_cache->save($curContrl, 'controllers');
+        die('debug reindex MCA');
     }
     
-    protected function _checkControllersModify()
-    {
-        $controllers = $this->getCurrentApplicationControllers();
-    }
-    
-    public function getCurrentApplicationControllers() 
+    /**
+     * Return current hashes of controllers files
+     * 
+     * @return array
+     */
+    protected function _getCurrentApplicationControllers() 
     {
         if(!empty($this->_controllers) && is_array($this->_controllers))
                 return $this->_controllers;
@@ -435,16 +445,72 @@ class Map
             $dirIterator = new \DirectoryIterator($dir);
             foreach ($dirIterator as $file) {
                 if($file->isFile())
-                    \Zend\Debug::dump($file->getFilename());
+                    $controllers[hash_file('md5', $file->getPathname())] = 
+                            array('module'=>$module,'file'=>$file->getPathname());
+                    
             }
         }
         $this->_controllers = $controllers;
         return $controllers;
     }
     
+    /**
+     * Return previos hashes of controllers files
+     * 
+     * @return array 
+     */
     protected function _getPreviousApplicationControllers()
     {
+        $controllers = array();
+        if($this->_cache->test('controllers')) {
+            $controllers = (array)$this->_cache->load('controllers');
+        }
+        return $controllers;
+    }
+    
+    /**
+     * Save file methods information to sysmap cache
+     * 
+     * @param string $fileName 
+     */
+    protected function _saveControllerMap($fileName)
+    {
+        include_once $fileName;
+        $file = new \Zend\Reflection\ReflectionFile($fileName);
+        $classes = $file->getClasses();
+        $controller = array();
+        foreach ($classes as $class) {
+            if('' != $class->getDocComment()) {
+                $controller['longDescr'] = $class->getDocblock()->getLongDescription();
+                $controller['shortDescr'] = $class->getDocblock()->getShortDescription();
+            }
+            $controller['name'] = $class->getName();
+            $actions = array();
+            foreach($class->getMethods() as $method) {
+                
+                $methodName = $method->getName();
+                
+                if(strstr($methodName, $this->_actionSuffix)) {
+                    $action = array();  
+                    $action['name'] = $methodName;
+                    if('' != $method->getDocComment()) {
+                        $docBlock = $method->getDocblock();
+                        $action['shortDescr'] = $docBlock->getShortDescription();
+                        $action['longDescr'] = $docBlock->getLongDescription();
+                        if($docBlock->hasTag($this->_paramFormTag)) {
+                            $action['paramForm'] = $docBlock->getTag($this->_paramFormTag)->getDescription();
+                        }
+                    }
+                    $actions[] = $action;
+                }
+                
+                
+            }                
+            $controller['actions'] = $actions;            
+        }
         
+        return $controller;
+
     }
 
     public function addExtend(array $data)

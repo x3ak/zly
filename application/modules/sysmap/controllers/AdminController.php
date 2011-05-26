@@ -11,8 +11,10 @@
 /**
  * Sysmap admin controller
  */
-class Sysmap_AdminController extends Zend_Controller_Action
-{
+namespace Sysmap;
+
+class AdminController extends \Zend\Controller\Action
+{ 
     /**
      * @var Sysmap_Model_Map
      */
