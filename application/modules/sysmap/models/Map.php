@@ -420,7 +420,7 @@ class Map
         
         foreach($curContrl as $hash=>$file) {
             if(!array_key_exists($hash, $prevContrl)) {
-                $ctrlInfo = $this->_saveControllerMap($file['file']);
+                $ctrlInfo = $this->_getControllerMap($file['file']);
                 $map[$file['module']][] = $ctrlInfo;
             }
         }
@@ -473,7 +473,7 @@ class Map
      * 
      * @param string $fileName 
      */
-    protected function _saveControllerMap($fileName)
+    protected function _getControllerMap($fileName)
     {
         include_once $fileName;
         $file = new \Zend\Reflection\ReflectionFile($fileName);
