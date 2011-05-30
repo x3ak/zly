@@ -414,18 +414,25 @@ class Map
      */
     public function reindexMCA()
     {
-        $map = array();
+        $cachedMap = array();
+        if($this->_cache->test('map')) {
+            $cachedMap = $this->_cache->load('map');
+        }
+        
         $curContrl = $this->_getCurrentApplicationControllers();
         $prevContrl = $this->_getPreviousApplicationControllers();
-        
+
         foreach($curContrl as $hash=>$file) {
+            
             if(!array_key_exists($hash, $prevContrl)) {
+                \Zend\Debug::dump($file['file']);
                 $ctrlInfo = $this->_getControllerMap($file['file']);
-                $map[$file['module']][] = $ctrlInfo;
+                $cachedMap[$file['module']]['controllers'][$ctrlInfo['name']] = $ctrlInfo;
             }
         }
-        \Zend\Debug::dump($map);
+        $this->_cache->save($cachedMap, 'map');
         $this->_cache->save($curContrl, 'controllers');
+//        $this->loadSysmap();
         die('debug reindex MCA');
     }
     
@@ -444,9 +451,10 @@ class Map
         foreach($controllersDirs as $module=>$dir) {
             $dirIterator = new \DirectoryIterator($dir);
             foreach ($dirIterator as $file) {
-                if($file->isFile())
-                    $controllers[hash_file('md5', $file->getPathname())] = 
+                if($file->isFile()) {                    
+                    $controllers[md5(filemtime($file->getPathname()).$file->getPathname())] = 
                             array('module'=>$module,'file'=>$file->getPathname());
+                }
                     
             }
         }
@@ -477,6 +485,8 @@ class Map
     {
         include_once $fileName;
         $file = new \Zend\Reflection\ReflectionFile($fileName);
+        die;
+
         $classes = $file->getClasses();
         $controller = array();
         foreach ($classes as $class) {
@@ -484,7 +494,17 @@ class Map
                 $controller['longDescr'] = $class->getDocblock()->getLongDescription();
                 $controller['shortDescr'] = $class->getDocblock()->getShortDescription();
             }
-            $controller['name'] = $class->getName();
+            
+            $toDashFilter = new \Zend\Filter\Word\CamelCaseToDash();
+            $parts = explode('\\',$class->getName());
+            
+            if(count($parts) < 2)
+                array_unshift($parts, \Zend\Controller\Front::getInstance()->getDefaultModule());
+                
+            list($namespace, $className) = $parts;
+                
+            $controller['name'] = strtolower($toDashFilter->filter(str_replace('Controller', '', $className)));
+            $controller['module'] = $namespace;
             $actions = array();
             foreach($class->getMethods() as $method) {
                 
@@ -492,7 +512,7 @@ class Map
                 
                 if(strstr($methodName, $this->_actionSuffix)) {
                     $action = array();  
-                    $action['name'] = $methodName;
+                    $action['name'] = strtolower($toDashFilter->filter(str_replace($this->_actionSuffix, '', $methodName)));
                     if('' != $method->getDocComment()) {
                         $docBlock = $method->getDocblock();
                         $action['shortDescr'] = $docBlock->getShortDescription();
@@ -501,7 +521,7 @@ class Map
                             $action['paramForm'] = $docBlock->getTag($this->_paramFormTag)->getDescription();
                         }
                     }
-                    $actions[] = $action;
+                    $actions[$action['name']] = $action;
                 }
                 
                 
