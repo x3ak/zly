@@ -1,14 +1,20 @@
 <?php
+
+namespace Application;
+
 class ErrorController extends \Zend\Controller\Action {
 
     public function  init()
-    {
+    { 
 //        $ajaxContext = $this->_helper->getHelper('AjaxContext');
 //        $ajaxContext->addActionContext('error', 'html')
 //                            ->initContext('html');
     }
 
 
+    /**
+     * Display application errors
+     */
     public function errorAction()
     {
         $errors = $this->_getParam('error_handler');

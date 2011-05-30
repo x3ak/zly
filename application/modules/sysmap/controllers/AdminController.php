@@ -8,15 +8,16 @@
  * Time: 11:10
  */
 
+namespace Sysmap;
+
 /**
  * Sysmap admin controller
  */
-namespace Sysmap;
 
 class AdminController extends \Zend\Controller\Action
 { 
     /**
-     * @var Sysmap_Model_Map
+     * @var Sysmap_Model_Map 
      */
     protected $_mapModel;
 

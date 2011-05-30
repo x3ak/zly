@@ -9,10 +9,13 @@
  * @version    $Id: ProfileController.php 1018 2011-01-13 14:28:24Z deeper $
  */
 
+namespace User;
+
 /**
  * User profile pages
  */
-class User_ProfileController extends Zend_Controller_Action
+
+class ProfileController extends \Zend\Controller\Action
 {
     /**
      * Display&Edit user profile form

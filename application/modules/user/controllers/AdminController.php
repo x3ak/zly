@@ -9,10 +9,13 @@
  * @version    $Id: AdminController.php 1189 2011-02-10 16:26:25Z deeper $
  */
 
+namespace User;
+
 /**
  * User administrator panel
  */
-class User_AdminController extends Zend_Controller_Action
+
+class AdminController extends \Zend\Controller\Action
 {
 
     /**

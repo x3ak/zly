@@ -9,10 +9,13 @@
  * @version    $Id: IndexController.php 1018 2011-01-13 14:28:24Z deeper $
  */
 
+namespace User;
+
 /**
  * User authorization pages
  */
-class User_IndexController extends Zend_Controller_Action
+
+class IndexController extends \Zend\Controller\Action
 {
 
     public function indexAction()
