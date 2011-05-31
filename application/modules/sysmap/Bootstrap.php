@@ -17,18 +17,21 @@ use \Slys\Application\Module as Module,
 class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Request\Requestable
 {
     public function onRequest(\Slys\Api\Request $request) {
+        
+        $mapModel = new \Sysmap\Model\Map();
+        
         switch ($request->getName()) {
             case 'sysmap.get-map-tree':
-                $request->getResponse()->setData( \Sysmap\Model\Map::getInstance()->getMapTreeElement() );
+                $request->getResponse()->setData( $mapModel->getMapTreeElement() );
                 break;
 
             case 'sysmap.currently-active-items':
                 $params = $request->getParams();
                 
                 if (empty($params['request']) === false and $params['request'] instanceof \Zend\Controller\Request\AbstractRequest)
-                    $request->getResponse()->setData( Model\Map::getInstance()->getActiveItems($params['request']) );
+                    $request->getResponse()->setData( $mapModel->getActiveItems($params['request']) );
                 else
-                    $request->getResponse()->setData( Model\Map::getInstance()->getActiveItems() );
+                    $request->getResponse()->setData( $mapModel->getActiveItems() );
 
                 break;
 
@@ -36,7 +39,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
                 $params = $request->getParams();
 
                 if (empty($params['identifier']) === false and is_string($params['identifier']) === true)
-                    $request->getResponse()->setData( Model\Map::getInstance()->getItemByHash($params['identifier']) );
+                    $request->getResponse()->setData( $mapModel->getItemByHash($params['identifier']) );
 
                 break;
 
@@ -44,7 +47,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
                 $params = $request->getParams();
 
                 if (empty($params['identifier']) === false and is_string($params['identifier']) === true)
-                    $request->getResponse()->setData( Model\Map::getInstance()->getItemParentsByHash($params['identifier']) );
+                    $request->getResponse()->setData( $mapModel->getItemParentsByHash($params['identifier']) );
 
                 break;
         }

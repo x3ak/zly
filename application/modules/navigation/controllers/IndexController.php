@@ -5,11 +5,11 @@
  * @author Serghei Ilin <criolit@gmail.com>
  * @version $Id$
  */
-
+namespace Navigation;
 /**
  * Contains methods for displaying parts of the navigation
  */
-class Navigation_IndexController extends Zend_Controller_Action
+class IndexController extends \Zend\Controller\Action
 {
     /**
      * Display user defined navigation

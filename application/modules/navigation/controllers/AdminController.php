@@ -4,7 +4,9 @@
  *
  * @version    $Id: AdminController.php 1136 2011-01-28 15:50:56Z criolit $
  */
-class Navigation_AdminController extends Zend_Controller_Action
+namespace Navigation;
+
+class AdminController extends \Zend\Controller\Action
 {
 	/**
 	 * @var Navigation_Model_Navigation

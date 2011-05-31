@@ -46,7 +46,7 @@ class Map
     
     protected $_paramFormTag = 'ParamsForm';
     
-    protected function __construct()
+    public function __construct()
     {
         $cache = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getBroker()
                     ->load('cachemanager')->getCacheManager();
@@ -57,14 +57,6 @@ class Map
             throw 'Sysmap module require own cache';
         }
 
-    }
-
-    public static function getInstance()
-    {
-        if (self::$_instance === null)
-            self::$_instance = new self;
-
-        return self::$_instance;
     }
 
     /**
@@ -407,33 +399,50 @@ class Map
             }
         }
     }
+    
+    public function getSysmap()
+    {
+        if(!empty($this->_sysmap))
+            return $this->_sysmap;
+        
+        if(APPLICATION_ENV == 'development') {
+            return $this->_reindexMCA();
+        } elseif($map = $this->_loadMapCache()) {
+            return $map;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Reindex MCA
      * @return void
      */
-    public function reindexMCA()
+    protected function _reindexMCA()
     {
-        $cachedMap = array();
-        if($this->_cache->test('map')) {
-            $cachedMap = $this->_cache->load('map');
+        $map = (array)$this->_loadMapCache();
+        
+        $curContrl = $this->_getCurrentControllers();
+        $prevContrl = $this->_getControllersCache();
+
+        foreach($curContrl as $hash=>$file) {            
+            if(!array_key_exists($hash, $prevContrl)) {
+                $ctrlInfo = $this->_getControllerMap($file['file']);
+                $map[$file['module']]['controllers'][$ctrlInfo['name']] = $ctrlInfo;
+            }   
         }
         
-        $curContrl = $this->_getCurrentApplicationControllers();
-        $prevContrl = $this->_getPreviousApplicationControllers();
-
-        foreach($curContrl as $hash=>$file) {
-            
-            if(!array_key_exists($hash, $prevContrl)) {
-                \Zend\Debug::dump($file['file']);
-                $ctrlInfo = $this->_getControllerMap($file['file']);
-                $cachedMap[$file['module']]['controllers'][$ctrlInfo['name']] = $ctrlInfo;
-            }
-        }
-        $this->_cache->save($cachedMap, 'map');
-        $this->_cache->save($curContrl, 'controllers');
-//        $this->loadSysmap();
-        die('debug reindex MCA');
+        $this->_saveSysmap($map);
+        $this->_saveControllersCache($curContrl);
+        return $map;
+    }
+    
+    protected function _loadMapCache()
+    {
+        if($this->_cache->test('map'))
+            return $this->_cache->load('map');
+        else 
+            return false;
     }
     
     /**
@@ -441,7 +450,7 @@ class Map
      * 
      * @return array
      */
-    protected function _getCurrentApplicationControllers() 
+    protected function _getCurrentControllers() 
     {
         if(!empty($this->_controllers) && is_array($this->_controllers))
                 return $this->_controllers;
@@ -462,12 +471,19 @@ class Map
         return $controllers;
     }
     
-    /**
-     * Return previos hashes of controllers files
-     * 
-     * @return array 
-     */
-    protected function _getPreviousApplicationControllers()
+    
+    protected function _saveSysmap($sysmap) 
+    {
+        $this->_sysmap = $sysmap;
+        return $this->_cache->save($sysmap, 'map');
+    }
+    
+    protected function _saveControllersCache($controllers) 
+    {
+        return $this->_cache->save($controllers, 'controllers');
+    }
+    
+    protected function _getControllersCache() 
     {
         $controllers = array();
         if($this->_cache->test('controllers')) {
@@ -484,9 +500,7 @@ class Map
     protected function _getControllerMap($fileName)
     {
         include_once $fileName;
-        $file = new \Zend\Reflection\ReflectionFile($fileName);
-        die;
-
+        @$file = new \Zend\Reflection\ReflectionFile($fileName);
         $classes = $file->getClasses();
         $controller = array();
         foreach ($classes as $class) {
@@ -609,51 +623,10 @@ class Map
      * @param null|Zend_Controller_Request_Abstract $customRequest
      * @return null|Doctrine_Collection
      */
-    public function getActiveItems(Zend_Controller_Request_Abstract $customRequest = null)
-    {
-        $collection = null;
-
-        if ($customRequest !== null)
-            $request = $customRequest;
-        else
-            $request = \Zend\Controller\Front::getInstance()->getRequest();
-
-        if (empty($request))
-            return null;
-
-        $currentMcaName = $this->formatMcaName(array(
-            'module' => $request->getModuleName(),
-            'controller' => $request->getControllerName(),
-            'action' => $request->getActionName()
-        ));
-
-        if (empty($this->_requestActiveElementsCache[$currentMcaName]) === false)
-            return $this->_requestActiveElementsCache[$currentMcaName];
-
-        $this->reindexMCA();
-
-        $currentMcaCollection = \Sysmap\Model\DbTable\Sysmap::getInstance()->findBy(
-            'mca',
-            $this->formatMcaName(array(
-                'module' => $request->getModuleName(),
-                'controller' => $request->getControllerName(),
-                'action' => $request->getActionName()
-            ))
-        );
-
-        $mapItem = $currentMcaCollection[0];
-
-        if (empty($mapItem) === false) {
-            $collection = $mapItem->getNode()->getAncestors();
-
-            if (empty($collection) === false)
-                $collection->add($mapItem);
-            else
-                $collection = $currentMcaCollection;
-        }
-
-        $this->_requestActiveElementsCache[$currentMcaName] = $collection;
-
+    public function getActiveItems(\Zend\Controller\Request\AbstractRequest $customRequest = null)
+    {        
+        $sysmap = $this->getSysmap();
+        
         return $collection;
     }
 

@@ -9,7 +9,9 @@
  * @version    $Id: ToolsController.php 763 2010-12-14 12:21:26Z deeper $
  */
 
-class Templater_ToolsController extends Zend_Controller_Action
+namespace Templater;
+
+class ToolsController extends \Zend\Controller\Action
 {
     /**
      * Display flash system messages

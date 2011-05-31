@@ -1,6 +1,8 @@
 <?php
 
-class Slysman_MarketplaceController extends Zend_Controller_Action
+namespace Slysman;
+
+class MarketplaceController extends \Zend\Controller\Action
 {
     public function indexAction()
     {

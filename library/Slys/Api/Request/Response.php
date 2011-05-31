@@ -26,7 +26,7 @@ class Response
      * @param null|Zend_Validate_Callback $filter
      * @return array
      */
-    public function getData(Zend_Validate_Callback $filter = null)
+    public function getData(\Zend\Validate\Callback $filter = null)
     {
         if ($filter !== null) {
             $resultData = array();
@@ -41,7 +41,7 @@ class Response
         return $this->_data;
     }
 
-    public function getFirst(Zend_Validate_Callback $filter = null)
+    public function getFirst(\Zend\Validate\Callback $filter = null)
     {
         if (empty($this->_data))
             return null;
@@ -66,7 +66,7 @@ class Response
      */
     public function setData($data, $priority = 0)
     {
-        if (Slys_Api::getInstance()->isRequestInProcess($this->_request->getName())) {
+        if (\Slys\Api\ApiService::getInstance()->isRequestInProcess($this->_request->getName())) {
             $this->_data['data'] = $data;
             $this->_data['priority'] = (int)$priority;
         }

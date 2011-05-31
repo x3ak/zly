@@ -9,11 +9,11 @@
  *
  * @version     $Id: AdminController.php 1183 2011-02-07 08:38:38Z deeper $
  */
-
+namespace Templater;
 /**
  * Themes administrator panel
  */
-class Templater_AdminController extends Zend_Controller_Action
+class AdminController extends \Zend\Controller\Action
 {
 
     /**
