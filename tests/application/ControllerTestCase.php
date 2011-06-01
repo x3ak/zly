@@ -7,7 +7,7 @@
  * @author     Serghei Ilin <criolit@gmail.com>
  * @version    $Id: Main.php 461 2010-10-22 15:09:14Z criolit $
  */
-abstract class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
+abstract class ControllerTestCase extends \Zend\Test\PHPUnit\ControllerTestCase
 {
 	protected $_application;
 
@@ -22,7 +22,7 @@ abstract class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 		$this->_application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH. '/configs/application.ini');
 		$this->_application->bootstrap();
 
-		/**
+	/**
          * Fix for ZF-8193
          * http://framework.zend.com/issues/browse/ZF-8193
          * Zend_Controller_Action->getInvokeArg('bootstrap') doesn't work
