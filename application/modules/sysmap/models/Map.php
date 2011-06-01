@@ -624,10 +624,11 @@ class Map
      * @return null|Doctrine_Collection
      */
     public function getActiveItems(\Zend\Controller\Request\AbstractRequest $customRequest = null)
-    {        
+    {   
+        $activeItems = array();
         $sysmap = $this->getSysmap();
         
-        return $collection;
+        return $activeItems;
     }
 
     public function getItemParentsByHash($hash)

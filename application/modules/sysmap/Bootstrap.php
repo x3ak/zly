@@ -18,7 +18,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
 {
     public function onRequest(\Slys\Api\Request $request) {
         
-        $mapModel = new \Sysmap\Model\Map();
+        $mapModel = new Model\Map();
         
         switch ($request->getName()) {
             case 'sysmap.get-map-tree':
@@ -27,7 +27,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
 
             case 'sysmap.currently-active-items':
                 $params = $request->getParams();
-                
+
                 if (empty($params['request']) === false and $params['request'] instanceof \Zend\Controller\Request\AbstractRequest)
                     $request->getResponse()->setData( $mapModel->getActiveItems($params['request']) );
                 else
