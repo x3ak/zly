@@ -2,7 +2,7 @@
 /**
  * Slys index file
  *
- * @author Serghei Ilin <criolit@gmail.com>
+ * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  */
 
 defined('ROOT_PATH') or define('ROOT_PATH', dirname( dirname(__FILE__) ) );
