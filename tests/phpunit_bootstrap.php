@@ -1,26 +1,19 @@
 <?php
 /**
- * Slys
+ * Tests bootstrap
  *
- * Unit testing bootstrap for PHPUnit and ZF
- *
- * @version    $Id: phpunit_bootstrap.php 461 2010-10-22 15:09:14Z criolit $
+ * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  */
-
 defined('ROOT_PATH') or define('ROOT_PATH', dirname( dirname(__FILE__) ) );
 defined('APPLICATION_PATH') or define('APPLICATION_PATH', ROOT_PATH . '/application');
-defined('APPLICATION_ENV') or define('APPLICATION_ENV', 'testing');
+defined('APPLICATION_ENV') or define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'development'));
 
-set_include_path(
-	implode(
-		PATH_SEPARATOR, array(
-			realpath(ROOT_PATH . '/library'),
-			get_include_path(),
-		)
-	)
-);
+set_include_path( implode( PATH_SEPARATOR, array( realpath(ROOT_PATH . '/library'), realpath(ROOT_PATH . '/library/Zend/library'), get_include_path(), ) ) );
 
-require_once 'Zend/Loader/Autoloader.php';
-$autoLoader = Zend_Loader_Autoloader::getInstance();
+require_once 'Zend/Application/Application.php';
 
-require_once 'application/ControllerTestCase.php';
+$application = new \Zend\Application\Application( APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini' );
+$application->bootstrap();            
+$bootstrap = $application->getBootstrap();
+$front = $bootstrap->getResource('frontcontroller');
+$front->setParam('bootstrap', $bootstrap);
