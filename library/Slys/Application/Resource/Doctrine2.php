@@ -26,13 +26,6 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
      */
     public function init()
     {
-//       $this->getBootstrap()->setAutoloaderNamespaces( array(
-//            'Doctrine\ORM'=> APPLICATION_PATH.'/../library/Doctrine/Orm/lib/Doctrine/ORM',
-//            'Doctrine\Common'=> APPLICATION_PATH.'/../library/Doctrine/Common/lib/Doctrine/Common',
-//            'Doctrine\DBAL'=> APPLICATION_PATH.'/../library/Doctrine/Dbal/lib/Doctrine/DBAL',
-//            'Symfony'
-//        ));
-
         $front = $this->getBootstrap()->getBroker()->load('frontcontroller')->getFrontController();
 
         if (APPLICATION_ENV == "development") {
@@ -68,7 +61,7 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
             $connectionOptions = array('driver'=>'pdo_mysql');
 
         $this->_em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
-
+        $front->setParam('doctrine', $this->_em);
         return $this;
     }
 
