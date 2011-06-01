@@ -7,7 +7,12 @@
  *
  * @version    $Id: Login.php 821 2010-12-17 16:24:51Z deeper $
  */
-class User_Form_Login extends Zend_Form
+
+namespace User\Form;
+
+use \Zend\Form\Element as Element;
+
+class Login extends \Zend\Form\Form
 {
 
     public function init()
@@ -15,17 +20,17 @@ class User_Form_Login extends Zend_Form
 
         $this->setMethod('POST');
 
-        $loginElement = new Zend_Form_Element_Text('login');
+        $loginElement = new Element\Text('login');
         $loginElement->setLabel('Login:');
         $loginElement->setRequired(true);
         $this->addElement($loginElement);
 
-        $passwordElement = new Zend_Form_Element_Password('password');
+        $passwordElement = new Element\Password('password');
         $passwordElement->setLabel('Password:');
         $passwordElement->setRequired(true);
         $this->addElement($passwordElement);
 
-        $submitElement = new Zend_Form_Element_Submit('submit');
+        $submitElement = new Element\Submit('submit');
         $submitElement->setLabel('Login');
         $submitElement->setIgnore(true);
         $this->addElement($submitElement);

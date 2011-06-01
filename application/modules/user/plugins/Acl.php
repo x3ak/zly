@@ -28,14 +28,22 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
      * @var Zend_Acl_Role
      */
     protected $_currentRole;
+    
+    /**
+     * Authentification service
+     * @var \Zend\Authentication\AuthenticationService 
+     */
+    protected $_auth;
 
     /**
      * Contructor waiting Zend_Acl instance
      * @param Zend_Acl $acl
      */
-    public function __construct(\Zend\Acl\Acl $acl)
+    public function __construct(\Zend\Acl\Acl $acl, \Zend\Authentication\AuthenticationService $authenticationService = null)
     {
         $this->_acl = $acl;
+        if(empty($authenticationService))
+        $this->_auth = new \Zend\Authentication\AuthenticationService();
     }
 
     /**
@@ -45,6 +53,15 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
     public function getAcl()
     {
         return $this->_acl;
+    }
+    
+    /**
+     * Return application authentification service
+     * @return \Zend\Authentication\AuthenticationService 
+     */    
+    public function getAuthentificationService()
+    {
+        return $this->_auth;
     }
 
     /**
@@ -102,17 +119,17 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
          */
         $this->_initAcl();
         
-        Zend_View_Helper_Navigation_HelperAbstract::setDefaultAcl($this->_acl);
+        \Zend\View\Helper\Navigation\AbstractHelper::setDefaultAcl($this->_acl);
 
-        if(Zend_Auth::getInstance()->hasIdentity()) {
-            if (!empty(Zend_Auth::getInstance()->getIdentity()->Role->name))
-                $this->_currentRole = new Zend_Acl_Role(Zend_Auth::getInstance()->getIdentity()->Role->name);
+        if($this->_auth->hasIdentity()) {
+            if (!empty($this->_auth->getIdentity()->Role->name))
+                $this->_currentRole = new \Zend\Acl\GenericRole(Zend_Auth::getInstance()->getIdentity()->Role->name);
         }
 
         if (empty($this->_currentRole)) {
                 trigger_error ( 'Please provide default user role' );
          }
-        Zend_View_Helper_Navigation_HelperAbstract::setDefaultRole($this->_currentRole);
+        \Zend\View\Helper\Navigation\AbstractHelper::setDefaultRole($this->_currentRole);
 
         $allow = false;
         foreach($this->_acl->getResources() as $resource) {
@@ -164,7 +181,7 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
         $apiRequest = new \Slys\Api\Request($this, 'sysmap.currently-active-items');
 
         foreach($apiRequest->proceed()->getResponse()->getFirst() as $resource) {
-            if($resource instanceof Sysmap_Model_Mapper_Sysmap) {
+            if($resource instanceof \Zend\Acl\Resource\GenericResource) {
                 $this->_acl->addResource($resource->getMapIdentifier());
             }
         }
@@ -185,6 +202,9 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
     protected function setRules($role, $resources)
     {
         $userModel = new \User\Model\Roles();
+        if(empty($resources))
+            return $this;
+        
         $rules = $userModel->getRulesByRoleAndResources($role, $resources);
         if($rules->count() > 0) {
             foreach($rules as $rule) {

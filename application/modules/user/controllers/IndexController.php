@@ -18,6 +18,23 @@ namespace User;
 class IndexController extends \Zend\Controller\Action
 {
 
+    /**
+     * Authentification service
+     * @var \Zend\Authentication\AuthenticationService 
+     */
+    protected $_auth;
+    
+    /**
+     * Controller resorces initialization
+     */
+    public function init()
+    {
+        $this->_auth = $this->getFrontController()->getPlugin('User\Plugin\Acl')->getAuthentificationService();
+    }
+    
+    /**
+     * Short page for user profile
+     */
     public function indexAction()
     {
         $this->_forward('index', 'profile');
@@ -39,28 +56,29 @@ class IndexController extends \Zend\Controller\Action
     }
 
     /**
-     * Login action
+     * User login action
      */
     public function loginAction()
     {
-        $form = new User_Form_Login();
+        $form = new Form\Login();
 
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
             // collect the data from the user
             $loginUsername = $form->getValue('login');
             $loginPassword = md5($form->getValue('password'));
-            $slysAuth = Zend_Auth::getInstance();
+
             // do the authentication
 
             $authAdapter = $this->_getAuthAdapter($loginUsername, $loginPassword);
-            $result = $slysAuth->authenticate($authAdapter);
+            $result = $this->_auth->authenticate($authAdapter);
             if (!$result->isValid()) {
-                $form->setDecorators(array('Errors', 'FormElements', 'Form'));
+                $form->setDecorators(array('Errors', 'FormElements', 'FormDecorator'));
                 $form->addError('Wrong combination of username and password');
             } else {
+                $userModel = new Model\Users();
                 $identity = $authAdapter->getResultRowObject(null, 'password');
-                $identity = User_Model_DbTable_User::getInstance()->getUser($identity->id);
-                $slysAuth->getStorage()->write($identity);
+                $identity = $userModel->getUser($identity->id);
+                $this->_auth->getStorage()->write($identity);
                 $this->_helper->getHelper('FlashMessenger')->addMessage('You are successful logged!');
                 $this->_redirect($this->getRequest()->getRequestUri());
             }
@@ -72,23 +90,24 @@ class IndexController extends \Zend\Controller\Action
     }
 
     /**
-     * Logout action
+     * User Logout action
      */
     public function logoutAction()
     {
-        Zend_Auth::getInstance()->clearIdentity();
+        $this->_auth->clearIdentity();
         $this->_redirect('/');
     }
 
     /**
      * Return doctrine based auth adapter
+     * 
      * @param string $username
      * @param string $password
      * @return ZendX_Doctrine_Auth_Adapter 
      */
     protected function _getAuthAdapter($username, $password)
     {
-        $authAdapter = new ZendX_Doctrine_Auth_Adapter(Doctrine_Manager::getInstance()->getCurrentConnection());
+        $authAdapter = new \Slys\Authentication\Adapter\Doctrine($this->getFrontController()->getParam('doctrine'));
         $authAdapter->setTableName('User_Model_Mapper_User u')
                 ->setIdentityColumn('u.login')
                 ->setCredentialColumn('u.password')
