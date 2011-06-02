@@ -19,21 +19,33 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
      */
     public function testRequestable()
     {
-        $sysmapBootstrap = new \Sysmap\Bootstrap($this->_application);
         
         $requests = array(
-            new \Slys\Api\Request($this, 'sysmap.currently-active-items'),
+            new \Slys\Api\Request($this, 'sysmap.currently-active-items', 
+                    array('request'=> new \Zend\Controller\Request\Simple('index', 'admin', 'sysmap'))),
 //            new \Slys\Api\Request($this, 'sysmap.get-map-tree'),
 //            new \Slys\Api\Request($this, 'sysmap.get-item-by-identifier'),
 //            new \Slys\Api\Request($this, 'sysmap.get-item-parents-by-identifier'),
         );
         foreach($requests as $request) {
-            $result = $sysmapBootstrap->onRequest($request);
-            switch($request->getName()) {
-                case 'sysmap.currently-active-items': 
-                    $this->assertFalse(is_array($result));
-                break;
+
+            $responses = $request->proceed()->getResponse();
+
+            foreach($responses->getData() as $response) {
+                switch($request->getName()) {
+
+                    case 'sysmap.currently-active-items':
+                        $this->assertTrue(is_array($response) , 'sysmap should return active items as array'); 
+                        $this->assertFalse(empty($response) , 'sysmap should return active items always');
+                        $this->assertFalse(count($response) < 4 , 'Minimal amount of active items is 4, returned:'.count($response));
+                        foreach($response as $item) {
+                            $this->assertTrue($item instanceof \Zend\Acl\Resource\GenericResource, 
+                                    'every sysmap item should be instance of \Zend\Acl\Resource\GenericResource');
+                        }
+                    break;
+                }
             }
+
         }
     }    
 }

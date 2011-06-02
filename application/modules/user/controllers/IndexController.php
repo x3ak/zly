@@ -42,7 +42,7 @@ class IndexController extends \Zend\Controller\Action
 
     /**
      * Display user box
-     * @paramsform User_Form_Widget_UserBox
+     * @Qualifier \User\Form\Widget\UserBox
      */
     public function userBoxAction()
     {

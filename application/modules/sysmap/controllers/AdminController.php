@@ -29,7 +29,8 @@ class AdminController extends \Zend\Controller\Action
 
     public function init()
     {
-        $this->_mapModel = Sysmap_Model_Map::getInstance();
+        
+        $this->_mapModel = new \Sysmap\Model\Map();
     }
 
     public function indexAction()
@@ -47,8 +48,7 @@ class AdminController extends \Zend\Controller\Action
      */
     public function listAction()
     {
-        $this->_mapModel->reindexMCA();
-        $this->view->sysmapTree = array($this->_mapModel->getMapTree(array('id', 'title', 'mca'))->fetchTree(array('id' => 1), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY));
+        $this->view->sysmapTree = array($this->_mapModel->getSysmap(array('id', 'title', 'mca'))->fetchTree(array('id' => 1), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY));
     }
 
     /**

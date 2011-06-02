@@ -44,7 +44,7 @@ class Map
     
     protected $_actionSuffix = 'Action';
     
-    protected $_paramFormTag = 'ParamsForm';
+    protected $_paramFormTag = 'Qualifier';
     
     public function __construct()
     {
@@ -272,24 +272,7 @@ class Map
      */
     public function getMapTree($fields = null)
     {
-        $tree = Doctrine_Core::getTable('Sysmap_Model_Mapper_Sysmap')->getTree();
-    	$baseAlias = $tree->getBaseAlias();
-    	$select = '';
-
-    	if ($fields === null)
-    		$select = $baseAlias . '.id,' . $baseAlias . '.title';
-    	else {
-    		foreach ($fields as $field)
-    			$select .= $baseAlias . '.' . $field . ',';
-
-    		$select = substr($select, 0, -1);
-    	}
-
-		$tree->setBaseQuery(
-			Doctrine_Core::getTable('Sysmap_Model_Mapper_Sysmap')
-						   ->createQuery($baseAlias)
-						   ->select($select)
-		);
+        
 
     	return $tree;
     }
@@ -428,7 +411,8 @@ class Map
         foreach($curContrl as $hash=>$file) {            
             if(!array_key_exists($hash, $prevContrl)) {
                 $ctrlInfo = $this->_getControllerMap($file['file']);
-                $map[$file['module']]['controllers'][$ctrlInfo['name']] = $ctrlInfo;
+                $map[$file['module']]['hash'] = md5($file['module'].'.*.*');
+                $map[$file['module']]['controllers'][$ctrlInfo['name']] = $ctrlInfo;  
             }   
         }
         
@@ -517,22 +501,26 @@ class Map
                 
             list($namespace, $className) = $parts;
                 
-            $controller['name'] = strtolower($toDashFilter->filter(str_replace('Controller', '', $className)));
+            $controller['name'] = strtolower($toDashFilter->filter(str_replace('Controller', '', $className)));            
             $controller['module'] = $namespace;
+            
+            $controller['hash'] = md5($controller['module'].'.'.$controller['name'].'.*');
+            
             $actions = array();
             foreach($class->getMethods() as $method) {
                 
                 $methodName = $method->getName();
                 
                 if(strstr($methodName, $this->_actionSuffix)) {
-                    $action = array();  
+                    $action = array();                     
                     $action['name'] = strtolower($toDashFilter->filter(str_replace($this->_actionSuffix, '', $methodName)));
+                    $action['hash'] = md5($controller['module'].'.'.$controller['name'].'.'.$action['name']);
                     if('' != $method->getDocComment()) {
                         $docBlock = $method->getDocblock();
                         $action['shortDescr'] = $docBlock->getShortDescription();
                         $action['longDescr'] = $docBlock->getLongDescription();
                         if($docBlock->hasTag($this->_paramFormTag)) {
-                            $action['paramForm'] = $docBlock->getTag($this->_paramFormTag)->getDescription();
+                            $action[$this->_paramFormTag] = $docBlock->getTag($this->_paramFormTag)->getDescription();
                         }
                     }
                     $actions[$action['name']] = $action;
@@ -625,9 +613,24 @@ class Map
      */
     public function getActiveItems(\Zend\Controller\Request\AbstractRequest $customRequest = null)
     {   
-        $activeItems = array();
-        $sysmap = $this->getSysmap();
+        $request = \Zend\Controller\Front::getInstance()->getRequest();
+        if(!empty($customRequest)) {
+            $request = $customRequest;
+        }
         
+        $activeItems = array();
+        
+        $sysmap = $this->getSysmap();
+        \Zend\Debug::dump($sysmap);
+        $module = $sysmap[$request->getModuleName()];
+        $controller = $module['controllers'][$request->getControllerName()];
+        $action = $controller['actions'][$request->getActionName()];
+        
+        $activeItems[0] = new \Zend\Acl\Resource\GenericResource(md5('*.*.*'));
+        $activeItems[1] = new \Zend\Acl\Resource\GenericResource($module['hash']);
+        $activeItems[2] = new \Zend\Acl\Resource\GenericResource($controller['hash']);
+        $activeItems[3] = new \Zend\Acl\Resource\GenericResource($action['hash']);
+
         return $activeItems;
     }
 

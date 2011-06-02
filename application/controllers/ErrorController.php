@@ -1,7 +1,5 @@
 <?php
 
-namespace Application;
-
 class ErrorController extends \Zend\Controller\Action {
 
     public function  init()

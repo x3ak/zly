@@ -13,7 +13,7 @@ class IndexController extends \Zend\Controller\Action
 {
     /**
      * Display user defined navigation
-     * @paramsform Navigation_Form_DisplayMenuParams
+     * @Qualifier \Navigation\Form\DisplayMenuParams
      * @return void
      */
     public function displayMenuAction()
