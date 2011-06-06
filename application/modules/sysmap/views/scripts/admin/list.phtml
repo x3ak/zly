@@ -1,2 +1,92 @@
-<?php
-echo $this->arrayTreeToTable($this->sysmapTree);
+<?php 
+//\Zend\Debug::dump($this->sysmapTree); die;
+?>
+<table class="sysmap-list">
+    <tr>
+        <th>
+            Module
+        </th>
+        <th>
+            Controller
+        </th>
+        <th>
+            Action
+        </th>
+        <th>
+            Extensions
+        </th>
+    </tr>
+    
+<?php foreach($this->sysmapTree as $module) {?>
+    <tr>
+        <td>
+            <?php echo $module->name ?>
+        </td>
+        <td>
+           
+        </td>
+        <td>
+            
+        </td>
+        <td>
+            
+        </td>
+    </tr>
+    <?php foreach($module->controllers as $controller) {?>
+    <tr>
+        <td>
+            
+        </td>
+        <td>
+            <?php if(!empty($controller->shortDescr)) {?>
+                <div class="controller-full-name" title="<?php echo $controller->longDescr; ?>"><?php echo $controller->shortDescr; ?> (<?php echo $controller->name;?>)</div>
+            <?php } else {?>
+                <div class="controller-short-name"><?php echo $controller->name; ?></div>
+            <?php } ?>
+        </td>
+        <td>
+            
+        </td>
+        <td>
+            
+        </td>
+    </tr>
+    <?php } ?>
+    <?php foreach($controller->actions as $action) {?>
+    <tr>
+        <td>
+            
+        </td>
+        <td>
+           
+        </td>
+        <td>
+            <?php if(!empty($action->shortDescr)) {?>
+                <div class="action-full-name" title="<?php echo $action->longDescr; ?>"><?php echo $action->shortDescr; ?> (<?php echo $action->name;?>)</div>
+            <?php } else {?>
+                <div class="action-short-name"><?php echo $action->name; ?></div>
+            <?php } ?>
+        </td>
+        <td>
+            
+        </td>
+    </tr>
+     <?php foreach($action->extensions as $extension) {?>
+    <tr>
+        <td>
+            
+        </td>
+        <td>
+           
+        </td>
+        <td>
+           
+        </td>
+        <td>
+            <?php echo $extension['name']?>
+        </td>
+    </tr>
+    <?php } ?>    
+    <?php } ?>   
+    <?php } ?>
+</table>

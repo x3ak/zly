@@ -1,13 +1,9 @@
 <?php
 /**
- * Slys
- *
- * Map module bootstrap class
- *
- * @author Serghei Ilin <criolit@gmail.com>
- * @version $Id: Bootstrap.php 1231 2011-04-17 17:49:48Z deeper $
+ * Slys 2
+ * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
+ * 
  */
-
 
 namespace Sysmap;
 

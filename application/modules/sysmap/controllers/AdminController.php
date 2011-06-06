@@ -1,11 +1,8 @@
 <?php
 /**
- * SlyS
- *
- * Created by Serghei Ilin <criolit@gmail.com>
- * User: criolit
- * Date: 29.12.10
- * Time: 11:10
+ * Slys 2
+ * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
+ * 
  */
 
 namespace Sysmap;
@@ -48,25 +45,9 @@ class AdminController extends \Zend\Controller\Action
      */
     public function listAction()
     {
-        $this->view->sysmapTree = array($this->_mapModel->getSysmap(array('id', 'title', 'mca'))->fetchTree(array('id' => 1), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY));
+        $this->view->sysmapTree = $this->_mapModel->getSysmap();
     }
 
-    /**
-     * List extensions
-     * @return void
-     */
-    public function listExtendsAction()
-    {
-        $dql = Doctrine_Query::create()->select()
-                                       ->from('Sysmap_Model_Mapper_Sysmap')
-                                       ->where('level = 4');
-
-        $paginator = new Zend_Paginator(new Slys_Paginator_Adapter_Doctrine($dql));
-        $this->view->extendsListPaginator = $paginator->setItemCountPerPage($this->_perPage)
-                                                      ->setCurrentPageNumber($this->getRequest()->getParam('page', 1));
-
-
-    }
 
     /**
      * @return void

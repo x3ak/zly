@@ -1,31 +1,28 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: criollit
- * Date: 03.01.11
- * Time: 17:39
- * To change this template use File | Settings | File Templates.
- */
 
-class Sysmap_Form_Extend extends Zend_Form
+namespace Sysmap\Form;
+
+use \Zend\Form\Element as Element;
+
+class Extend extends \Zend\Form\Form
 {
     public function init()
     {
-        $title = new Zend_Form_Element_Text('title');
+        $title = new Element\Text('title');
         $title->setLabel('title')
               ->setRequired(true)
               ->setAttrib('maxLength', 100);
 
         $this->addElement($title);
 
-        /** @var $mapTree Slys_Form_Element_Tree */
-        $mapTree = Sysmap_Model_Map::getInstance()->getMapTreeElement();
+        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-tree');
+        $mapTree = $apiRequest->proceed()->getResponse()->getFirst();
 
-        $mapTree->addDisableCondition('level', new Zend_Validate_LessThan(3))
-                ->addDisableCondition('level', new Zend_Validate_GreaterThan(3));
+        $mapTree->addDisableCondition('level', new \Zend\Validate\LessThan(3))
+                ->addDisableCondition('level', new \Zend\Validate\GreaterThan(3));
         $this->addElement($mapTree);
 
-        $submit = new Zend_Form_Element_Submit('submit_extension');
+        $submit = new \Element\Submit('submit_extension');
         $submit->setLabel('save')
                ->setOrder(20);
         $this->addElement($submit);
