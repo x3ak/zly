@@ -6,7 +6,10 @@
  * @author  Evgheni Poleacov <evgheni.poelacov@gmail.com>
  * @version $Id: Tree.php 998 2011-01-06 16:14:45Z deeper $
  */
-class Slys_Form_Element_Tree extends Zend_Form_Element_Multi
+
+namespace Slys\Form\Element;
+
+class Tree extends \Zend\Form\Element\Multi
 {
     /**
      * Disable autoregister inArray validator
@@ -89,7 +92,7 @@ class Slys_Form_Element_Tree extends Zend_Form_Element_Multi
      * @param Zend_Validate_Interface $validator
      * @return Slys_Form_Element_Tree
      */
-    public function addDisableCondition($field, Zend_Validate_Interface $validator = null)
+    public function addDisableCondition($field, \Zend\Validator\AbstractValidator $validator = null)
     {
         $this->_disableConditions[$field][] = $validator;
         return $this;
@@ -195,9 +198,11 @@ class Slys_Form_Element_Tree extends Zend_Form_Element_Multi
      * @param Zend_View_Abstract $view
      * @return string
      */
-    public function render(Zend_View_Interface $view = null)
+    public function render(\Zend\View\Renderer $view = null)
     {
+        \Zend\Debug::dump($this->options);
         $preparedOptions = $this->_prepareOptions($this->options);
+//        \Zend\Debug::dump($preparedOptions);
         $this->options = $this->_addRoot($preparedOptions);        
         return parent::render($view);
     }
@@ -213,27 +218,26 @@ class Slys_Form_Element_Tree extends Zend_Form_Element_Multi
     {
        $prepared = array();       
        foreach ($options as $key => $option) {
-
-            if(is_object($option))
-                if(method_exists($option, 'toArray')) {
-                    $option = $option->toArray();
-                    $options[$key] = $option;
-                } else {
-                    throw new Zend_Exception('Options should be provided as array or toArray() method avaible');
-                }
-
+            
             $value = $this->_parsePattern($option, $this->getValueKey());
             $title = $this->_parsePattern($option, $this->getTitleKey());
-
             $this->_checkDisabled($option, $value);
 
-            if(!empty($option[$this->_childrensKey])
+            if(is_array($option) && !empty($option[$this->_childrensKey])
                 && is_array($option[$this->_childrensKey])) {
+                
                     $prepared[$value] = $title;
                     $prepared[$value.'_childrens'] = $this->_prepareOptions($option[$this->_childrensKey]);
-            } else {
+                    
+            } elseif(is_object($option) && !empty($option->{$this->_childrensKey}) 
+                && is_array($option->{$this->_childrensKey})) {
+            \Zend\Debug::dump($title);
                 $prepared[$value] = $title;
+                $prepared[$value.'_childrens'] = $this->_prepareOptions($option->{$this->_childrensKey});
+                
             }
+            
+            
         }
 
         return $prepared;
@@ -254,8 +258,11 @@ class Slys_Form_Element_Tree extends Zend_Form_Element_Multi
                 foreach($validators as $validator) {                    
                     if ($validator instanceof Zend_Validate_Interface && isset($option[$field]))
                         $disables[] = $validator->isValid($option[$field]);
-                    elseif (isset($option[$field]))
+                    elseif(is_array($option) && isset($option[$field]))
                         $disables[] = true;
+                    elseif($option instanceof \stdClass && isset($option->$field)) {
+                        $disables[] = true;
+                    }
                 }
 
                 if(in_array(true, $disables))
@@ -293,10 +300,15 @@ class Slys_Form_Element_Tree extends Zend_Form_Element_Multi
         $parts = explode($this->_patternSeparator, $pattern);
         $values = array();
         foreach ($parts as $part) {
-            if (!empty($option[$part]))
+            if (is_array($option) && !empty($option[$part]))
                 $values[] = $option[$part];
+            elseif($option instanceof \stdClass && !empty($option->$part)) {
+                $values[] = $option->$part;
+            }
         }
-        return implode($this->_patternSeparator, $values);
+        $value = implode($this->_patternSeparator, $values);
+
+        return $value;
     }
 
     /**

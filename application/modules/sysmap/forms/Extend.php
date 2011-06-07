@@ -17,12 +17,14 @@ class Extend extends \Zend\Form\Form
 
         $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-tree');
         $mapTree = $apiRequest->proceed()->getResponse()->getFirst();
+        
+//        \Zend\Debug::dump($mapTree);
 
-        $mapTree->addDisableCondition('level', new \Zend\Validate\LessThan(3))
-                ->addDisableCondition('level', new \Zend\Validate\GreaterThan(3));
+        $mapTree->addDisableCondition('level', new \Zend\Validator\LessThan(3))
+                ->addDisableCondition('level', new \Zend\Validator\GreaterThan(3));
         $this->addElement($mapTree);
 
-        $submit = new \Element\Submit('submit_extension');
+        $submit = new Element\Submit('submit_extension');
         $submit->setLabel('save')
                ->setOrder(20);
         $this->addElement($submit);
@@ -43,7 +45,8 @@ class Extend extends \Zend\Form\Form
         return parent::populate($values);
     }
 
-    public function isValid($data) {
+    public function isValid($data) 
+    {
         if (empty($data['sysmap_id']) === false)
             $this->_appendParamsSubform($data['sysmap_id']);
 
@@ -52,17 +55,18 @@ class Extend extends \Zend\Form\Form
 
     protected function _appendParamsSubform($sysmap_id)
     {
-        $sysmapItem = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('id', $sysmap_id, Doctrine_Core::HYDRATE_ARRAY);
-        $formClass = $sysmapItem['form_name'];
+        $model = new \Sysmap\Model\Map();
+        $sysmapItem = $model->getNodeByHash($sysmap_id);
+        $formClass = $sysmapItem['Qualifier'];
 
         if (empty($formClass) === false) {
             if (class_exists($formClass) === false)
-                throw new Zend_Exception('Associated form class does not exists!');
+                throw new \Zend\Form\Exception\UnexpectedValueException('Associated form class does not exists!');
 
             $paramsForm = new $formClass();
 
-            if (($paramsForm instanceof Zend_Form_SubForm) === false)
-                throw new Zend_Exception('Associated form class must be instance of Zend_Form_SubForm!');
+            if (($paramsForm instanceof \Zend\Form\SubForm) === false)
+                throw new \Zend\Form\Exception\UnexpectedValueException('Associated form class must be instance of Zend_Form_SubForm!');
 
             $this->addSubForm($paramsForm, 'params', $this->getElement('submit_extension')->getOrder() - 1);
         }

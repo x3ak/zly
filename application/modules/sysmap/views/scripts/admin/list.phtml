@@ -39,7 +39,9 @@
         </td>
         <td>
             <?php if(!empty($controller->shortDescr)) {?>
-                <div class="controller-full-name" title="<?php echo $controller->longDescr; ?>"><?php echo $controller->shortDescr; ?> (<?php echo $controller->name;?>)</div>
+                <div class="controller-full-name" title="<?php echo $controller->longDescr; ?>">
+                    <?php echo $controller->shortDescr; ?> (<?php echo $controller->name;?>)
+                </div>
             <?php } else {?>
                 <div class="controller-short-name"><?php echo $controller->name; ?></div>
             <?php } ?>
@@ -62,7 +64,9 @@
         </td>
         <td>
             <?php if(!empty($action->shortDescr)) {?>
-                <div class="action-full-name" title="<?php echo $action->longDescr; ?>"><?php echo $action->shortDescr; ?> (<?php echo $action->name;?>)</div>
+                <div class="action-full-name" title="<?php echo $action->longDescr; ?>">
+                    <?php echo $action->shortDescr; ?> (<?php echo $action->name;?>)
+                </div>
             <?php } else {?>
                 <div class="action-short-name"><?php echo $action->name; ?></div>
             <?php } ?>
@@ -83,7 +87,9 @@
            
         </td>
         <td>
-            <?php echo $extension['name']?>
+            <a href="<?php echo $this->broker('url')->direct(array('action'=>'edit-extend','hash'=>$extension->hash));?>">
+                <?php echo $extension->name?>
+            </a>
         </td>
     </tr>
     <?php } ?>    

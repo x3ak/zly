@@ -8,7 +8,10 @@
  * @subpackage Helper
  * @version    $Id: Tree.php 1003 2011-01-11 10:43:38Z deeper $
  */
-class Slys_View_Helper_Tree extends Zend_View_Helper_FormRadio
+
+namespace Slys\View\Helper;
+
+class Tree extends \Zend\View\Helper\FormRadio
 {
     /**
      * Input type to use

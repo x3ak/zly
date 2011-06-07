@@ -21,7 +21,7 @@ class Map
     
     protected $_cachedControllers = array();
 
-    protected $_sysmap = null;
+    static protected $_sysmap = null;
     
     protected $_actionSuffix = 'Action';
     
@@ -48,8 +48,8 @@ class Map
      */
     public function getSysmap()
     {
-        if(!empty($this->_sysmap))
-            return $this->_sysmap;
+        if(!empty(self::$_sysmap))
+            return self::$_sysmap;
         
         if(APPLICATION_ENV == 'development') {
             return $this->_reindexMCA();
@@ -85,13 +85,90 @@ class Map
         $activeItems[2] = new \Zend\Acl\Resource\GenericResource($controller->hash);
         $activeItems[3] = new \Zend\Acl\Resource\GenericResource($action->hash);
         
-        $extHash = $this->_getExtensionsByRequest($request, true);
-        if($extHash)
-            $activeItems[4] = new \Zend\Acl\Resource\GenericResource($extHash);
+        $extHashes = $this->_getExtensionsByRequest($request, true, true);
+        foreach($extHashes as $hash)
+            $activeItems[] = new \Zend\Acl\Resource\GenericResource($hash);
         
         return $activeItems;
     }
+    
+    /**
+     * Return extension object by hash
+     * @param string $hash
+     * @return stdClass
+     */
+    public function getNodeByHash($hash)
+    {
+        $sysmap = $this->getSysmap();
+        foreach($sysmap as $module) {
+            
+            if($module->hash == $hash) {
+                return $module;
+            }
+            
+            foreach($module->_childrens as $controller) {
+                
+                if($controller->hash == $hash) {
+                    return $controller;
+                }
+                
+                foreach($controller->_childrens as $action) {
+                    
+                    if($action->hash == $hash) {
+                        return $action;
+                    }
+                    
+                    foreach($action->_childrens as $ext) {
+                        if($ext->hash == $hash) {
+                            return $ext;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * Return parent of extension by extension hash
+     * @param string $hash
+     * @return stdClass
+     */
+    public function getParentByHash($hash)
+    {
+        $sysmap = $this->getSysmap();
+        foreach($sysmap as $module) {
+            foreach($module->_childrens as $controller) {
+                
+                if($controller->hash == $hash) {
+                    return $module;
+                }
+                
+                foreach($controller->_childrens as $action) {
+                    if($action->hash == $hash) {
+                        return $controller;
+                    }
+                    foreach($action->_childrens as $ext) {
+                        if($ext->hash == $hash) {
+                            return $action;
+                        }
+                    }
+                }
+            }
+        }        
+    }
+    
+    public function getMapTreeElement()
+    {
+        $sysmap = $this->getSysmap();
 
+        $formElement = new \Slys\Form\Element\Tree('sysmap_id');
+        $formElement->setValueKey('hash');
+        $formElement->setTitleKey('name');
+        $formElement->setChildrensKey('_childrens');
+        $formElement->setMultiOptions($sysmap);
+        return $formElement;
+    }
+    
     /**
      * Return extension hash of provided action and request
      * 
@@ -99,7 +176,7 @@ class Map
      * @param \Zend\Controller\Request\AbstractRequest $request
      * @return array
      */
-    protected function _getExtensionsByRequest(\Zend\Controller\Request\AbstractRequest $request, $current = false)
+    protected function _getExtensionsByRequest(\Zend\Controller\Request\AbstractRequest $request, $current = false, $hashesOnly = false)
     {
         $options = \Zend\Controller\Front::getInstance()
                         ->getParam('bootstrap')
@@ -107,32 +184,64 @@ class Map
         
         if(!empty($options['extensions'][$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
             $extensions = $options['extensions'][$request->getModuleName()][$request->getControllerName()][$request->getActionName()];
-
-            if($current) {
                 
-                $currentExtensions =array();
-                
-                foreach($extensions as $extKey=>$extension) {
-   
-                    parse_str(base64_decode($extension['params']), $params);
-                    $currentParams = $request->getParams();
-                    $currentExtension = true;
+            $currentExtensions = array();
 
+            foreach($extensions as $extKey=>$value) {
+                //Params decoding
+                list($name, $params) = explode('\\',$value);
+                parse_str($params, $params);
+
+                $currentParams = $request->getParams();
+                $toOutput = true;
+    
+                if($current)
                     foreach($params as $key=>$value) {
                         if(!isset($currentParams[$key]) || (isset($currentParams[$key]) && $currentParams[$key] != $value)) {
-                            $currentExtension = false;
+                            $toOutput = false;
                         }
                     }
-
-                    if($currentExtension)
-                        return $currentExtensions[$extKey] = $extKey;                        
+                    
+                $currentRequest = clone $request;    
+                $currentRequest->clearParams();
+                $currentRequest->setParams($params);
+                
+                $hash = $this->_getHashByRequest($currentRequest);
+                
+                if($toOutput) {
+                    if($hashesOnly)
+                        $currentExtensions[$hash] = $hash;
+                    else {
+                        $extObject = new \stdClass();
+                        $extObject->name = $name;
+                        $extObject->params = $params;
+                        $extObject->hash = $hash;
+                        $currentExtensions[$hash] = $extObject;                        
+                    }
                 }
-                return $currentExtensions;
-            } else {
-                return $extensions;
-            }
-        } 
+
+            } 
+            return $currentExtensions;
+        }
         return array();                    
+    }
+    
+    /**
+     * Return hash of current request
+     * 
+     * @param \Zend\Controller\Request\AbstractRequest $request
+     * @return string
+     */
+    protected function _getHashByRequest(\Zend\Controller\Request\AbstractRequest $request)
+    {
+        $mca = "{$request->getModuleName()}.{$request->getControllerName()}.{$request->getActionName()}";
+        $params = $request->getParams();
+        if(!empty($params)) {
+            $params = http_build_query($params);
+            $mca .= ':'.$params;
+        }
+
+        return md5($mca);
     }
     
     /**
@@ -142,11 +251,13 @@ class Map
     protected function _reindexMCA()
     {
         if($this->_reindexing)
-                return $this->_sysmap;
+            return self::$_sysmap;
         
         $this->_reindexing = true;
         
         $map = $this->_loadMapCache();
+        if(empty($map))
+            $map = array();
 
         $curContrl = $this->_getCurrentControllers();
         $prevContrl = $this->_getControllersCache();
@@ -158,23 +269,20 @@ class Map
                 $module->hash = md5($file['module'].'.*.*');
                 $module->level = 1;
                 $module->name = $file['module'];
-                $module->controllers[$ctrlInfo->name] = $ctrlInfo;
+                $module->_childrens[$ctrlInfo->name] = $ctrlInfo;
                 $map[$file['module']] = $module;
             }   
         }
         
         foreach($map as $mkey=>$module) {
-            foreach($module->controllers as $ckey=>$controller) {
-                foreach($controller->actions as $akey=>$action) {
-                   $action->extensions = $this->_getExtensionsByRequest(
+            foreach($module->_childrens as $ckey=>$controller) {
+                foreach($controller->_childrens as $akey=>$action) {
+                   $action->_childrens = $this->_getExtensionsByRequest(
                             new \Zend\Controller\Request\Simple($akey, $ckey, $mkey));
-
-                   $map[$mkey]->controllers[$ckey]->actions[$akey] = $action;
                 }
             }
         }
-//        \Zend\Debug::dump($map);
-        die;
+
         $this->_saveSysmap($map);
         $this->_saveControllersCache($curContrl);
         $this->_reindexing = false;
@@ -226,7 +334,7 @@ class Map
      */
     protected function _saveSysmap($sysmap) 
     {
-        $this->_sysmap = $sysmap;
+        self::$_sysmap = $sysmap;
         return $this->_cache->save($sysmap, 'map');
     }
     
@@ -308,10 +416,12 @@ class Map
                     $actions[$action->name] = $action;
                 }
             }                
-            $controller->actions = $actions;            
+            $controller->_childrens = $actions;            
         }
         
         return $controller;
 
     }
+    
+
 }

@@ -54,23 +54,20 @@ class AdminController extends \Zend\Controller\Action
      */
     public function editExtendAction()
     {
-        $form = new Sysmap_Form_Extend();
-        $form->getElement('sysmap_id')->setValueKey('id');
+        $form = new Form\Extend();
 
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
                 $this->_mapModel->addExtend($form->getValues());
                 return $this->_helper->redirector->gotoUrl( $this->view->url( array('module' => 'sysmap', 'controller' => 'admin', 'action' => 'list-extends'), null, true ) );
             }
-        }
-        else {
-            $extendId = $this->getRequest()->getParam('id');
-            if (empty($extendId) === false) {
-                $mapItem = Sysmap_Model_DbTable_Sysmap::getInstance()->findOneBy('id', $extendId);
+        } else {
+            $hash = $this->getRequest()->getParam('hash');
+            if (!empty($hash)) {
+                $extend = $this->_mapModel->getNodeByHash($hash);
 
-                if (empty($mapItem) === false) {
-                    $values = $mapItem->toArray();
-                    $values['sysmap_id'] = $mapItem->getNode()->getParent()->id;
+                if (!empty($extend)) {
+                    $values['sysmap_id'] = $this->_mapModel->getParentByHash($hash);
                     $form->populate($values);
                 }
             }

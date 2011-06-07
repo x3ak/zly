@@ -25,6 +25,7 @@ class ResourceLoader extends PluginClassLoader
         'session'         => 'Zend\Application\Resource\Session',
         'translate'       => 'Zend\Application\Resource\Translate',
         'view'            => 'Zend\Application\Resource\View',
-        'doctrine2'       => 'Slys\Application\Resource\Doctrine2'
+        'doctrine2'       => 'Slys\Application\Resource\Doctrine2',
+        'slys'            => 'Slys\Application\Resource\Slys'
     );
 }
