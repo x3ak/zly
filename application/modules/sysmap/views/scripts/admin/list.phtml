@@ -32,7 +32,7 @@
             
         </td>
     </tr>
-    <?php foreach($module->controllers as $controller) {?>
+    <?php foreach($module->_childrens as $controller) {?>
     <tr>
         <td>
             
@@ -54,7 +54,7 @@
         </td>
     </tr>
     <?php } ?>
-    <?php foreach($controller->actions as $action) {?>
+    <?php foreach($controller->_childrens as $action) {?>
     <tr>
         <td>
             
@@ -75,7 +75,7 @@
             
         </td>
     </tr>
-     <?php foreach($action->extensions as $extension) {?>
+     <?php foreach($action->_childrens as $extension) {?>
     <tr>
         <td>
             

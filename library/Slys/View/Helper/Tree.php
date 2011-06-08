@@ -28,8 +28,9 @@ class Tree extends \Zend\View\Helper\FormRadio
      * @param string $listsep
      * @return string
      */
-    public function tree($name, $value = null, $attribs = null, $options = null, $listsep = "<br />\n")
+    public function direct($name, $value = null, $attribs = null, $options = null, $listsep = "<br />\n")
     {
+
         if(isset($attribs['__isChild'])) {
              if($attribs['__isChild'])
                 $class = 'children-level';
@@ -52,11 +53,13 @@ class Tree extends \Zend\View\Helper\FormRadio
             $html .= '<li>';
             
             if (is_string($option)) {
-                $html .= $this->formRadio($name, $value, $attribs, array($okey => $option), $listsep);
+                
+                $html .= parent::direct($name, $value, $attribs, array($okey => $option), $listsep);
             } elseif(is_array($option)) {
+
                 $nextAttribs = $attribs;
                 $nextAttribs['__isChild'] = true;
-                $html .= $this->tree($name, $value, $nextAttribs, $option, $listsep);
+                $html .= $this->direct($name, $value, $nextAttribs, $option, $listsep);
             }
             $html .= '</li>';
         }

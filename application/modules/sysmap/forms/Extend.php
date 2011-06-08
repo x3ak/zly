@@ -17,8 +17,6 @@ class Extend extends \Zend\Form\Form
 
         $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-tree');
         $mapTree = $apiRequest->proceed()->getResponse()->getFirst();
-        
-//        \Zend\Debug::dump($mapTree);
 
         $mapTree->addDisableCondition('level', new \Zend\Validator\LessThan(3))
                 ->addDisableCondition('level', new \Zend\Validator\GreaterThan(3));

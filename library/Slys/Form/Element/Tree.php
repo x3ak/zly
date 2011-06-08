@@ -200,9 +200,7 @@ class Tree extends \Zend\Form\Element\Multi
      */
     public function render(\Zend\View\Renderer $view = null)
     {
-        \Zend\Debug::dump($this->options);
         $preparedOptions = $this->_prepareOptions($this->options);
-//        \Zend\Debug::dump($preparedOptions);
         $this->options = $this->_addRoot($preparedOptions);        
         return parent::render($view);
     }
@@ -222,17 +220,16 @@ class Tree extends \Zend\Form\Element\Multi
             $value = $this->_parsePattern($option, $this->getValueKey());
             $title = $this->_parsePattern($option, $this->getTitleKey());
             $this->_checkDisabled($option, $value);
-
+            $prepared[$value] = $title;
+            
             if(is_array($option) && !empty($option[$this->_childrensKey])
-                && is_array($option[$this->_childrensKey])) {
-                
-                    $prepared[$value] = $title;
+                && is_array($option[$this->_childrensKey])) {                
+                    
                     $prepared[$value.'_childrens'] = $this->_prepareOptions($option[$this->_childrensKey]);
                     
             } elseif(is_object($option) && !empty($option->{$this->_childrensKey}) 
                 && is_array($option->{$this->_childrensKey})) {
-            \Zend\Debug::dump($title);
-                $prepared[$value] = $title;
+
                 $prepared[$value.'_childrens'] = $this->_prepareOptions($option->{$this->_childrensKey});
                 
             }
@@ -256,11 +253,14 @@ class Tree extends \Zend\Form\Element\Multi
             foreach($this->_disableConditions as $field=>$validators) {
                 $disables = array();
                 foreach($validators as $validator) {                    
-                    if ($validator instanceof Zend_Validate_Interface && isset($option[$field]))
+                    if ($validator instanceof \Zend\Validator\Validator && is_array($option) && isset($option[$field]))
                         $disables[] = $validator->isValid($option[$field]);
+                    elseif ($validator instanceof \Zend\Validator\Validator && is_object($option) && isset($option->$field)) {
+                        $disables[] = $validator->isValid($option->$field);
+                    }
                     elseif(is_array($option) && isset($option[$field]))
                         $disables[] = true;
-                    elseif($option instanceof \stdClass && isset($option->$field)) {
+                    elseif(is_object($option) && isset($option->$field)) {
                         $disables[] = true;
                     }
                 }

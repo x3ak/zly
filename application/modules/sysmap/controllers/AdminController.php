@@ -45,6 +45,7 @@ class AdminController extends \Zend\Controller\Action
      */
     public function listAction()
     {
+        
         $this->view->sysmapTree = $this->_mapModel->getSysmap();
     }
 

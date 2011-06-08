@@ -162,7 +162,7 @@ class Map
         $sysmap = $this->getSysmap();
 
         $formElement = new \Slys\Form\Element\Tree('sysmap_id');
-        $formElement->setValueKey('hash');
+        $formElement->setValueKey('name');
         $formElement->setTitleKey('name');
         $formElement->setChildrensKey('_childrens');
         $formElement->setMultiOptions($sysmap);
