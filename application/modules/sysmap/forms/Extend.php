@@ -8,8 +8,8 @@ class Extend extends \Zend\Form\Form
 {
     public function init()
     {
-        $title = new Element\Text('title');
-        $title->setLabel('title')
+        $title = new Element\Text('name');
+        $title->setLabel('Name')
               ->setRequired(true)
               ->setAttrib('maxLength', 100);
 
@@ -17,13 +17,13 @@ class Extend extends \Zend\Form\Form
 
         $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-tree');
         $mapTree = $apiRequest->proceed()->getResponse()->getFirst();
-
+        $mapTree->setLabel('Extension parent node');
         $mapTree->addDisableCondition('level', new \Zend\Validator\LessThan(3))
                 ->addDisableCondition('level', new \Zend\Validator\GreaterThan(3));
         $this->addElement($mapTree);
 
         $submit = new Element\Submit('submit_extension');
-        $submit->setLabel('save')
+        $submit->setLabel('Save')
                ->setOrder(20);
         $this->addElement($submit);
 
@@ -55,7 +55,9 @@ class Extend extends \Zend\Form\Form
     {
         $model = new \Sysmap\Model\Map();
         $sysmapItem = $model->getNodeByHash($sysmap_id);
-        $formClass = $sysmapItem['Qualifier'];
+        if(empty($sysmapItem->Qualifier))
+                return false;
+        $formClass = $sysmapItem->Qualifier;
 
         if (empty($formClass) === false) {
             if (class_exists($formClass) === false)

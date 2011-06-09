@@ -29,8 +29,11 @@ class Map
     
     protected $_reindexing = false;
     
+    protected $_configFile;
+    
     public function __construct()
     {
+        $this->_configFile = APPLICATION_PATH.'/configs/sysmap.json';
         $cache = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getBroker()
                     ->load('cachemanager')->getCacheManager();
         
@@ -157,16 +160,32 @@ class Map
         }        
     }
     
+    /**
+     * Return from element with system map tree
+     * @return \Slys\Form\Element\Tree 
+     */
     public function getMapTreeElement()
     {
         $sysmap = $this->getSysmap();
 
         $formElement = new \Slys\Form\Element\Tree('sysmap_id');
-        $formElement->setValueKey('name');
+        $formElement->setValueKey('hash');
         $formElement->setTitleKey('name');
         $formElement->setChildrensKey('_childrens');
         $formElement->setMultiOptions($sysmap);
         return $formElement;
+    }
+    
+    /**
+     * Save extension to application local storage
+     * @param array $values 
+     */
+    public function saveExtension($values)
+    {
+        $localConfig = $this->_getConfig();
+
+        $this->_saveConfig($localConfig);
+        return true;
     }
     
     /**
@@ -178,25 +197,20 @@ class Map
      */
     protected function _getExtensionsByRequest(\Zend\Controller\Request\AbstractRequest $request, $current = false, $hashesOnly = false)
     {
-        $options = \Zend\Controller\Front::getInstance()
-                        ->getParam('bootstrap')
-                        ->getOption('sysmap');
+        $options = $this->_getConfig(true);
         
         if(!empty($options['extensions'][$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
             $extensions = $options['extensions'][$request->getModuleName()][$request->getControllerName()][$request->getActionName()];
                 
             $currentExtensions = array();
 
-            foreach($extensions as $extKey=>$value) {
-                //Params decoding
-                list($name, $params) = explode('\\',$value);
-                parse_str($params, $params);
+            foreach($extensions as $extKey=>$extendParams) {
 
                 $currentParams = $request->getParams();
                 $toOutput = true;
     
                 if($current)
-                    foreach($params as $key=>$value) {
+                    foreach($extendParams['params'] as $key=>$value) {
                         if(!isset($currentParams[$key]) || (isset($currentParams[$key]) && $currentParams[$key] != $value)) {
                             $toOutput = false;
                         }
@@ -204,7 +218,7 @@ class Map
                     
                 $currentRequest = clone $request;    
                 $currentRequest->clearParams();
-                $currentRequest->setParams($params);
+                $currentRequest->setParams($extendParams['params']);
                 
                 $hash = $this->_getHashByRequest($currentRequest);
                 
@@ -213,9 +227,10 @@ class Map
                         $currentExtensions[$hash] = $hash;
                     else {
                         $extObject = new \stdClass();
-                        $extObject->name = $name;
-                        $extObject->params = $params;
+                        $extObject->name = $extendParams['name'];
+                        $extObject->params = $extendParams['params'];
                         $extObject->hash = $hash;
+                        $extObject->level = 4;
                         $currentExtensions[$hash] = $extObject;                        
                     }
                 }
@@ -423,5 +438,21 @@ class Map
 
     }
     
+    protected function _getConfig($asArray = false)
+    {
+        $config = new \Zend\Config\Json($this->_configFile);
+        if($asArray)
+            return $config->toArray();
+        return $config;
+    }
+    
+    protected function _saveConfig($options)
+    {
+        $config = new \Zend\Config\Writer\Json();
+        $config->setConfig($options);
+        $config->setFilename($this->_configFile);
+        $config->write();
+        return $this;
+    }
 
 }
