@@ -88,7 +88,7 @@ class Map
         $activeItems[2] = new \Zend\Acl\Resource\GenericResource($controller->hash);
         $activeItems[3] = new \Zend\Acl\Resource\GenericResource($action->hash);
         
-        $extHashes = $this->_getExtensionsByRequest($request, true, true);
+        $extHashes = $this->_getExtensionsByRequest($action->hash, $request->getParams(), true);
         foreach($extHashes as $hash)
             $activeItems[] = new \Zend\Acl\Resource\GenericResource($hash);
         
@@ -182,10 +182,25 @@ class Map
      */
     public function saveExtension($values)
     {
-        $localConfig = $this->_getConfig();
-
+        $this->_loadLocalConfig();
+        \Zend\Debug::dump($this->getSysmap());
+        
+        die;
         $this->_saveConfig($localConfig);
         return true;
+    }
+    
+    public function deleteExtend($hash)
+    {
+        $config = $this->_getConfig();
+        foreach($config->extensions as $extension) {
+            foreach($extension as $module) {
+                foreach($module as $controller) {
+                    
+                }
+            }
+        }
+        return $this;
     }
     
     /**
@@ -195,33 +210,27 @@ class Map
      * @param \Zend\Controller\Request\AbstractRequest $request
      * @return array
      */
-    protected function _getExtensionsByRequest(\Zend\Controller\Request\AbstractRequest $request, $current = false, $hashesOnly = false)
+    protected function _getExtensionsByRequest($hash, $currentParams = array(), $hashesOnly = false)
     {
-        $options = $this->_getConfig(true);
+        $options = $this->_loadLocalConfig();
         
-        if(!empty($options['extensions'][$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
-            $extensions = $options['extensions'][$request->getModuleName()][$request->getControllerName()][$request->getActionName()];
+        if(!empty($options['sysmap']['extensions'][$hash])) {
+            $extensions = $options['sysmap']['extensions'][$hash];
                 
             $currentExtensions = array();
 
-            foreach($extensions as $extKey=>$extendParams) {
-
-                $currentParams = $request->getParams();
+            foreach($extensions as $hash=>$extendParams) {
+                
                 $toOutput = true;
-    
-                if($current)
+                
+                if(!empty($request)) {
                     foreach($extendParams['params'] as $key=>$value) {
-                        if(!isset($currentParams[$key]) || (isset($currentParams[$key]) && $currentParams[$key] != $value)) {
+                        if(!isset($currentParams[$key]) 
+                                || (isset($currentParams[$key]) && $currentParams[$key] != $value)) {
                             $toOutput = false;
                         }
                     }
-                    
-                $currentRequest = clone $request;    
-                $currentRequest->clearParams();
-                $currentRequest->setParams($extendParams['params']);
-                
-                $hash = $this->_getHashByRequest($currentRequest);
-                
+                }
                 if($toOutput) {
                     if($hashesOnly)
                         $currentExtensions[$hash] = $hash;
@@ -292,8 +301,7 @@ class Map
         foreach($map as $mkey=>$module) {
             foreach($module->_childrens as $ckey=>$controller) {
                 foreach($controller->_childrens as $akey=>$action) {
-                   $action->_childrens = $this->_getExtensionsByRequest(
-                            new \Zend\Controller\Request\Simple($akey, $ckey, $mkey));
+                   $action->_childrens = $this->_getExtensionsByRequest($action->hash);
                 }
             }
         }
@@ -438,21 +446,10 @@ class Map
 
     }
     
-    protected function _getConfig($asArray = false)
+    protected function _loadLocalConfig()
     {
-        $config = new \Zend\Config\Json($this->_configFile);
-        if($asArray)
-            return $config->toArray();
-        return $config;
+        $localConfigFile = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getOption('config');
+        $localConfig = new \Zend\Config\Ini($localConfigFile, APPLICATION_ENV);
+        return $localConfig->toArray();
     }
-    
-    protected function _saveConfig($options)
-    {
-        $config = new \Zend\Config\Writer\Json();
-        $config->setConfig($options);
-        $config->setFilename($this->_configFile);
-        $config->write();
-        return $this;
-    }
-
 }
