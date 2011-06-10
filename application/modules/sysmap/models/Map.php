@@ -211,7 +211,7 @@ class Map
      */
     protected function _getExtensionsByRequest($hash, $currentParams = array(), $hashesOnly = false)
     {
-        $options = $this->_loadLocalConfig();
+        $options = $this->_loadLocalConfig()->toArray();
         
         if(!empty($options['sysmap']['extensions'][$hash])) {
             $extensions = $options['sysmap']['extensions'][$hash];
@@ -447,8 +447,24 @@ class Map
     
     protected function _loadLocalConfig()
     {
-        $localConfigFile = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getOption('config');
+        $localConfigFile = \Zend\Controller\Front::getInstance()
+                ->getParam('bootstrap')->getOption('config');
         $localConfig = new \Zend\Config\Ini($localConfigFile, APPLICATION_ENV);
-        return $localConfig->toArray();
+        return $localConfig;
+    }
+    
+    protected function _saveLocalConfig($config)
+    {
+        $localConfigFile = \Zend\Controller\Front::getInstance()
+                ->getParam('bootstrap')->getOption('config');
+        $configWriter = new \Zend\Config\Writer\Ini();
+        
+        $localConfig = $this->_loadLocalConfig();
+        $localConfig->merge($config);
+        $localConfig->setConfig($localConfig);
+        $localConfig->setFilename($localConfigFile);
+        $configWriter->write();
+        
+        return $this;
     }
 }
