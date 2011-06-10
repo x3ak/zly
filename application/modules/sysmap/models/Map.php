@@ -2,7 +2,6 @@
 /**
  * Slys 2
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
- * 
  */
 
 /**
