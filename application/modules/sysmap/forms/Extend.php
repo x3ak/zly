@@ -27,7 +27,7 @@ class Extend extends \Zend\Form\Form
                ->setOrder(20);
         $this->addElement($submit);
 
-        $this->addElement('hidden', 'id');
+        $this->addElement('hidden', 'hash');
     }
 
     /**

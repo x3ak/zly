@@ -12,8 +12,9 @@ use \Slys\Application\Module as Module,
 
 class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Request\Requestable
 {
-    public function onRequest(\Slys\Api\Request $request) {
-        
+    public function onRequest(\Slys\Api\Request $request) 
+    {
+
         $mapModel = new Model\Map();
         
         switch ($request->getName()) {
