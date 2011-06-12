@@ -70,6 +70,11 @@
             <?php } else {?>
                 <div class="action-short-name"><?php echo $action->name; ?></div>
             <?php } ?>
+            <?php if(!empty($action->Qualifier)) {?>
+                <a href="<?php 
+                    echo $this->broker('url')->direct(array('action'=>'edit-extend','sysmap_id'=>$action->hash));
+                ?>">Add Extend</a>
+            <?php }?>
         </td>
         <td>
             

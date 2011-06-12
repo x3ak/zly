@@ -56,6 +56,9 @@ class AdminController extends \Zend\Controller\Action
     public function editExtendAction()
     {
         $form = new Form\Extend();
+        $sysmapId = $this->getRequest()->getParam('sysmap_id');
+        if($sysmapId)
+            $form->getElement('sysmap_id')->setValue($sysmapId);
 
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {

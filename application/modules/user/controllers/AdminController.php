@@ -148,6 +148,7 @@ class AdminController extends \Zend\Controller\Action
 
     /**
      * Setting display action
+     * @Qualifier \User\Form\Widget\UserBox
      */
     public function settingsAction()
     {

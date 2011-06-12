@@ -182,11 +182,21 @@ class Map
      */
     public function saveExtension($values)
     {
-        $this->_loadLocalConfig();
-        \Zend\Debug::dump($this->getSysmap());
+        $config = $this->_loadLocalConfig();
+        $parent = $this->getParentByHash($values['hash']);
+        foreach($config as $section) {
+            $actionExtensions = $section->sysmap->extensions->{$parent->hash};
+            if(!empty($actionExtensions)) {
+                unset($actionExtensions->{$values['hash']});
+            }
+            if(empty($section->sysmap->extensions->{$parent->hash})) {
+                unset($section->sysmap->extensions->{$parent->hash});
+            }
+        }
+        if(!empty($values['params']))
+            $config->{APPLICATION_ENV}->sysmap->extensions->{$values['sysmap_id']}->{$values['hash']} = $values['params'];
         
-        die;
-        $this->_saveConfig($localConfig);
+        $this->_saveConfig($config);
         return true;
     }
     
@@ -212,10 +222,10 @@ class Map
      */
     protected function _getExtensionsByRequest($hash, $currentParams = array(), $hashesOnly = false)
     {
-        $options = $this->_loadLocalConfig();
-        
-        if(!empty($options['sysmap']['extensions'][$hash])) {
-            $extensions = $options['sysmap']['extensions'][$hash];
+        $options = $this->_loadLocalConfig(APPLICATION_ENV);
+
+        if(!empty($options->sysmap->extensions->{$hash})) {
+            $extensions = $options->sysmap->extensions->{$hash};
                 
             $currentExtensions = array();
 
@@ -236,18 +246,18 @@ class Map
                         $currentExtensions[$hash] = $hash;
                     else {
                         $extObject = new \stdClass();
-                        $extObject->name = $extendParams['name'];
-                        $extObject->params = $extendParams['params'];
+                        $extObject->name = $extendParams->name;
+                        $extObject->params = $extendParams->params;
                         $extObject->hash = $hash;
                         $extObject->level = 4;
-                        $currentExtensions[$hash] = $extObject;                        
+                        $currentExtensions[$hash] = $extObject;
                     }
                 }
 
             } 
             return $currentExtensions;
         }
-        return array();                    
+        return array();
     }
     
     /**
@@ -446,10 +456,23 @@ class Map
 
     }
     
-    protected function _loadLocalConfig()
+    protected function _loadLocalConfig($section = null)
     {
         $localConfigFile = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getOption('config');
-        $localConfig = new \Zend\Config\Ini($localConfigFile, APPLICATION_ENV);
-        return $localConfig->toArray();
+        $options = array(
+          'allowModifications' => true
+        );
+        $localConfig = new \Zend\Config\Ini($localConfigFile, $section, $options);
+        return $localConfig;
+    }
+    
+    protected function _saveConfig($config)
+    {
+        $localConfigFile = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getOption('config');
+        $writer = new \Zend\Config\Writer\Ini();
+        $writer->setFilename($localConfigFile);
+        $writer->setConfig($config);
+        $writer->write();
+        return $this;
     }
 }
