@@ -13,7 +13,7 @@ class UserBox extends \Zend\Form\SubForm
 
     public function init()
     {
-        $element = new \Zend\Form\Element\FilteringSelect('box_type');
+        $element = new \Zend\Form\Element\Select('box_type');
         $element->setLabel('Box type:');
         $element->addMultiOption('simple', 'Simple');
         $element->addMultiOption('detailed', 'Detailed');
