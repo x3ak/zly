@@ -182,28 +182,30 @@ class Map
     {
         $config = $this->_loadLocalConfig();
         $parent = $this->getParentByHash($values['hash']);
+        
         if(!empty($parent)) {
             foreach($config as $section) {
-                $actionExtensions = $section->sysmap->extensions->{$parent->hash};
-                if(!empty($actionExtensions)) {
-                    unset($actionExtensions->{$values['hash']});
-                }
-                if(empty($section->sysmap->extensions->{$parent->hash})) {
-                    unset($section->sysmap->extensions->{$parent->hash});
+
+                if(!empty($section->sysmap->extensions->{$parent->hash}->{$values['hash']})) {
+                    unset($section->sysmap->extensions->{$parent->hash}->{$values['hash']});
                 }
             }
         }
+        
         if(!empty($values['params'])) {
+            $curHash = md5(implode('&',$values['params']));
             $options = array(
                 APPLICATION_ENV => array(
                 'sysmap'=>array(
                     'extensions'=>array(
                         $values['sysmap_id']=>array(
-                            md5(base64_encode($values['params']))=> array(
+                            $curHash => array(
                             'name' => $values['name'],
                             'params'=>$values['params']))))));
             
-            $config->merge(new \Zend\Config\Config($options));
+            $prevConfig = $config->toArray();
+            $merged = array_merge_recursive($prevConfig, $options);            
+            $config = new \Zend\Config\Config($merged);
         }
         
         $this->_saveConfig($config);
