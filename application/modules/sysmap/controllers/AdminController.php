@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Slys 2
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
@@ -10,28 +11,24 @@ namespace Sysmap;
 /**
  * Sysmap admin controller
  */
+class AdminController extends \Zend\Controller\Action {
 
-class AdminController extends \Zend\Controller\Action
-{ 
     /**
      * @var Sysmap_Model_Map 
      */
     protected $_mapModel;
-
     /**
      * Per page for list
      * @var int
      */
     protected $_perPage = 20;
 
-    public function init()
-    {
-        
+    public function init() {
+
         $this->_mapModel = new \Sysmap\Model\Map();
     }
 
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->_forward('list');
     }
 
@@ -43,37 +40,39 @@ class AdminController extends \Zend\Controller\Action
      *
      * @return void
      */
-    public function listAction()
-    {
-        
+    public function listAction() {
+
         $this->view->sysmapTree = $this->_mapModel->getSysmap();
     }
-
 
     /**
      * @return void
      */
-    public function editExtendAction()
-    {
-        $form = new Form\Extend();
+    public function editExtendAction() {
+        $form = new Form\Extend($this->_mapModel);
         $params = $this->getRequest()->getParams();
+
         $form->populate($params);
-        
+
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
                 $this->_mapModel->saveExtension($form->getValues());
-                return $this->broker('redirector')->gotoUrl( 
-                        $this->view->broker('url')->direct( 
-                                array('module' => 'sysmap', 'controller' => 'admin', 'action' => 'list'), null, true ) );
+                return $this->broker('redirector')->gotoUrl(
+                        $this->view->broker('url')->direct(
+                                array(
+                            'module' => 'sysmap',
+                            'controller' => 'admin',
+                            'action' => 'list'), null, true));
             }
         } else {
             $hash = $this->getRequest()->getParam('hash');
             if (!empty($hash)) {
-                $values = (array)$this->_mapModel->getNodeByHash($hash);
-                
+                $values = (array) $this->_mapModel->getNodeByHash($hash);
+                if($values['params'] instanceof \Zend\Config\Config)
+                    $values['params'] = $values['params']->toArray();
+
                 if (!empty($values)) {
-                    $values['sysmap_id'] = $this->_mapModel->getParentByHash($hash);
-                    
+                    $values['sysmap_id'] = $this->_mapModel->getParentByHash($hash)->hash;
                     $form->populate($values);
                 }
             }
@@ -82,8 +81,7 @@ class AdminController extends \Zend\Controller\Action
         $this->view->editExtensionForm = $form;
     }
 
-    public function deleteExtendAction()
-    {
+    public function deleteExtendAction() {
         $id = $this->getRequest()->getParam('id');
 
         if (empty($id) === false) {
@@ -93,6 +91,7 @@ class AdminController extends \Zend\Controller\Action
             }
         }
 
-        return $this->_helper->redirector->gotoUrl( $this->view->url( array('module' => 'sysmap', 'controller' => 'admin', 'action' => 'list-extends'), null, true ) );
+        return $this->_helper->redirector->gotoUrl($this->view->url(array('module' => 'sysmap', 'controller' => 'admin', 'action' => 'list-extends'), null, true));
     }
+
 }

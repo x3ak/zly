@@ -32,7 +32,6 @@ class Map
     
     public function __construct()
     {
-        $this->_configFile = APPLICATION_PATH.'/configs/sysmap.json';
         $cache = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getBroker()
                     ->load('cachemanager')->getCacheManager();
         
@@ -195,7 +194,15 @@ class Map
             }
         }
         if(!empty($values['params'])) {
-            $options = array('sysmap'=>array('extensions'=>array($values['sysmap_id']=>array($values['hash']=>$values['params']))));
+            $options = array(
+                APPLICATION_ENV => array(
+                'sysmap'=>array(
+                    'extensions'=>array(
+                        $values['sysmap_id']=>array(
+                            md5(base64_encode($values['params']))=> array(
+                            'name' => $values['name'],
+                            'params'=>$values['params']))))));
+            
             $config->merge(new \Zend\Config\Config($options));
         }
         
