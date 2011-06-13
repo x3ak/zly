@@ -56,7 +56,9 @@ class AdminController extends \Zend\Controller\Action
     public function editExtendAction()
     {
         $form = new Form\Extend();
-
+        $params = $this->getRequest()->getParams();
+        $form->populate($params);
+        
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
                 $this->_mapModel->saveExtension($form->getValues());
