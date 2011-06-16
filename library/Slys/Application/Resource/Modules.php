@@ -22,7 +22,7 @@
 namespace Slys\Application\Resource;
 
 class Modules extends \Zend\Application\Resource\Modules
-{
+{    
     /**
      * Constructor
      */
@@ -126,8 +126,34 @@ class Modules extends \Zend\Application\Resource\Modules
                         )
                     ));
 
-            $this->_bootstraps[$module] = $moduleBootstrap;
-            // Additional modulesof current modules
+            $bootstrapIt = false;
+            
+            if($moduleBootstrap instanceof \Slys\Application\Module\Installable 
+                    && !empty($moduleOptions['installed'])) {
+
+                $bootstrapIt = true;
+            } 
+            
+            if($moduleBootstrap instanceof \Slys\Application\Module\Enableable 
+                    && !empty($moduleOptions['enabled'])) {
+
+                $bootstrapIt = true;
+            } elseif($moduleBootstrap instanceof \Slys\Application\Module\Enableable 
+                    && empty($moduleOptions['enabled'])) {
+                $bootstrapIt = false;
+            }
+            
+            if(!$moduleBootstrap instanceof \Slys\Application\Module\Installable 
+                    && !$moduleBootstrap instanceof \Slys\Application\Module\Enableable) {
+
+                $bootstrapIt = true;
+            }
+            
+            if($bootstrapIt) {
+                $this->_bootstraps[$module] = $moduleBootstrap;
+            }
+            
+            // Additional modules of current module
             $moduleModulesDir = dirname($moduleDirectory) . '/modules';
             if (is_dir($moduleModulesDir) && is_readable($moduleModulesDir)) {
                 $front->addModuleDirectory($moduleModulesDir);
@@ -137,22 +163,14 @@ class Modules extends \Zend\Application\Resource\Modules
                 }
             }
         }
-       
-        if(!empty($this->_bootstraps))
-            foreach($this->_bootstraps as $key=>$bootstrap) {
-                $options = $bootstrap->getOptions();
-//                \Zend\Debug::dump($options, $key);
-                if($bootstrap instanceof \Slys\Application\Module\Installable && !empty($options['installed']) && !empty($options['enabled'])) {
-                        $bootstrap->bootstrap();
-                } elseif(!$bootstrap instanceof \Slys\Application\Module\Enableable && !empty($options['enabled'])) {
-                    $bootstrap->bootstrap();
-                }
+
+        foreach($this->_bootstraps as $key=>$bootstrap) { 
+            $bootstrap->bootstrap();
         }
-
-
+        
         return $this->_bootstraps;
     }
-    
+
     public function enableModule($moduleName, $enabled = true)
     {
         $options['enabled'] = $enabled;

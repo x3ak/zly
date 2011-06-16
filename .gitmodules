@@ -13,3 +13,9 @@
 [submodule "library/Doctrine/Extensions"]
 	path = library/Doctrine/Extensions
 	url = git://github.com/beberlei/DoctrineExtensions.git
+[submodule "library/Doctrine/Symfony/Component/Console"]
+	path = library/Doctrine/Symfony/Component/Console
+	url = git://github.com/symfony/Console.git
+[submodule "library/Doctrine/Symfony/Component/Yaml"]
+	path = library/Doctrine/Symfony/Component/Yaml
+	url = git://github.com/symfony/Yaml.git

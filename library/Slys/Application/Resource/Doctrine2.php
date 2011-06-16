@@ -33,12 +33,25 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
         } else {
             $cache = new \Doctrine\Common\Cache\ApcCache;
         }
+        
+        $boostrap = $this->getBootstrap()->getApplication();
+        if($boostrap instanceof \Zend\Application\Application)
+            $boostrap = $this->getBootstrap();
+        
+        if(!$boostrap->hasResource('modules')) 
+                return false;
+        
+        foreach($this->getBootstrap()->getApplication()->getResource('modules') as $name=>$module) {
+                
+            if($module->getResourceLoader()->hasResourceType('mappers')) {
+                $resourceTypes = $module->getResourceLoader()->getResourceTypes();
+                $entityPath = $resourceTypes['mappers']['path'];
 
-        foreach($front->getControllerDirectory() as $name=>$path) {
-            $entityPath = dirname($path).'/models/mappers';
-            if(is_dir($entityPath) && is_readable($entityPath)) {
-                $this->_entitiesPaths[$name] = $entityPath;
+                if(is_dir($entityPath) && is_readable($entityPath)) {
+                    $this->_entitiesPaths[$name] = $entityPath;
+                }
             }
+
         }
 
         $config = new \Doctrine\ORM\Configuration;

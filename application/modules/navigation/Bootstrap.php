@@ -15,6 +15,7 @@ use \Slys\Application\Module as Module,
     \Slys\Api\Request as Api;
 
 class Bootstrap extends \Zend\Application\Module\Bootstrap
+                implements Module\Enableable
 {
     protected function _initRegisterHelper()
     {
@@ -37,5 +38,15 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
     protected function _initPlugins()
     {
         \Zend\Controller\Front::getInstance()->registerPlugin(new Plugin\Init());
+    }
+    
+    public function enable()
+    {
+        return true;
+    }
+    
+    public function disable()
+    {
+        return true;
     }
 }
