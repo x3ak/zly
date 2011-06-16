@@ -5,8 +5,5 @@
 /application/modules/user/configs/module.ini.dist
 /application/configs/modules.ini
 /application/configs/local.ini
-/data/cache/zend_cache---controllers
-/data/cache/zend_cache---internal-metadatas---controllers
-/data/cache/zend_cache---internal-metadatas---map
-/data/cache/zend_cache---map
 /application/modules/sysmap/configs/local.ini
+/data/cache/*
