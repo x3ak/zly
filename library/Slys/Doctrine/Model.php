@@ -40,8 +40,7 @@ abstract class Model
     private function _setEntityManager()
     {
         $doctrine2 = \Zend\Controller\Front::getInstance()
-                        ->getParam('bootstrap')
-                        ->getResource('doctrine2');
+                        ->getParam('doctrine2');
 
         if(!empty($doctrine2) && $doctrine2 instanceof \Slys\Application\Resource\Doctrine2) {
             $this->_em = $doctrine2->getEntityManager();

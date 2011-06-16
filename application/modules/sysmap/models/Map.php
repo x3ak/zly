@@ -10,7 +10,7 @@
 
 namespace Sysmap\Model;
 
-class Map
+class Map extends \Slys\Doctrine\Model
 {    
     /**
      *
@@ -209,6 +209,7 @@ class Map
         }
         
         $this->_saveConfig($config);
+        $this->_cache->clean('all', array('extensions'));
         return true;
     }
     
@@ -222,6 +223,7 @@ class Map
                 }
             }
         }
+        $this->_cache->clean('all', array('extensions'));
         return $this;
     }
     
@@ -232,20 +234,26 @@ class Map
      * @param \Zend\Controller\Request\AbstractRequest $request
      * @return array
      */
-    protected function _getExtensionsByRequest($hash, $currentParams = array(), $hashesOnly = false)
+    protected function _getExtensionsByActionHash($hash, $currentParams = array(), $hashesOnly = false)
     {
-        $options = $this->_loadLocalConfig(APPLICATION_ENV);
 
-        if(!empty($options->sysmap->extensions->{$hash})) {
-            $extensions = $options->sysmap->extensions->{$hash};
+        if(!$this->_cache->test($hash)) {
+            $extensions = $this->getEntityManager()->getRepository('\Sysmap\Model\Mapper\Extend')
+                               ->findBy(array('actionhash'=>$hash));
+            $this->_cache->save($extensions, $hash, array('extensions'));
+        } else {
+            $extensions = $this->_cache->load($hash);
+        }
+
+        if(!empty($extensions)) {
                 
             $currentExtensions = array();
 
-            foreach($extensions as $hash=>$extendParams) {
+            foreach($extensions as $extension) {
                 
                 $toOutput = true;
                 
-                if(!empty($request)) {
+                if(!empty($request) && !empty($extension->params)) {
                     foreach($extendParams['params'] as $key=>$value) {
                         if(!isset($currentParams[$key]) 
                                 || (isset($currentParams[$key]) && $currentParams[$key] != $value)) {
@@ -255,14 +263,10 @@ class Map
                 }
                 if($toOutput) {
                     if($hashesOnly)
-                        $currentExtensions[$hash] = $hash;
+                        $currentExtensions[$extension->hash] = $extension->hash;
                     else {
-                        $extObject = new \stdClass();
-                        $extObject->name = $extendParams->name;
-                        $extObject->params = $extendParams->params;
-                        $extObject->hash = $hash;
-                        $extObject->level = 4;
-                        $currentExtensions[$hash] = $extObject;
+                        $extension->level = 4;
+                        $currentExtensions[$hash] = $extension;
                     }
                 }
 
@@ -323,7 +327,7 @@ class Map
         foreach($map as $mkey=>$module) {
             foreach($module->_childrens as $ckey=>$controller) {
                 foreach($controller->_childrens as $akey=>$action) {
-                   $action->_childrens = $this->_getExtensionsByRequest($action->hash);
+                   $action->_childrens = $this->_getExtensionsByActionHash($action->hash);
                 }
             }
         }
@@ -466,25 +470,5 @@ class Map
         
         return $controller;
 
-    }
-    
-    protected function _loadLocalConfig($section = null)
-    {
-        $localConfigFile = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getOption('config');
-        $options = array(
-          'allowModifications' => true
-        );
-        $localConfig = new \Zend\Config\Ini($localConfigFile, $section, $options);
-        return $localConfig;
-    }
-    
-    protected function _saveConfig($config)
-    {
-        $localConfigFile = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getOption('config');
-        $writer = new \Zend\Config\Writer\Ini();
-        $writer->setFilename($localConfigFile);
-        $writer->setConfig($config);
-        $writer->write();
-        return $this;
     }
 }

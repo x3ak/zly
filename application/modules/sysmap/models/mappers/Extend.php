@@ -17,25 +17,21 @@ namespace Sysmap\Model\Mapper;
 class Extend
 {
     /**
-     * @Id 
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @Id  
+     * @Column(length=50) 
      */
-    protected $id;
+    public $hash;
 
     /** @Column(length=50) */
-    protected $name;
-    
-    /** @Column(length=50) */
-    protected $hash;
+    public $name;   
 
     /** @Column(length=50) */
-    protected $actionhash;
+    public $actionhash;
 
     /** @Column(length=50) */
-    protected $qualifier;
+    public $qualifier;
     
     /** @array */
-    protected $params;
+    public $params;
 }
 

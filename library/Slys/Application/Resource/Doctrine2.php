@@ -38,10 +38,12 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
         if($boostrap instanceof \Zend\Application\Application)
             $boostrap = $this->getBootstrap();
         
-        if(!$boostrap->hasResource('modules')) 
-                return false;
+        $modules = $boostrap->getResource('modules');
         
-        foreach($this->getBootstrap()->getApplication()->getResource('modules') as $name=>$module) {
+        if(empty($modules))
+            return false;
+        
+        foreach($modules as $name=>$module) {
                 
             if($module->getResourceLoader()->hasResourceType('mappers')) {
                 $resourceTypes = $module->getResourceLoader()->getResourceTypes();
@@ -74,7 +76,8 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
             $connectionOptions = array('driver'=>'pdo_mysql');
 
         $this->_em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
-        $front->setParam('doctrine', $this->_em);
+        $front->setParam('doctrine2', $this);
+
         return $this;
     }
 
