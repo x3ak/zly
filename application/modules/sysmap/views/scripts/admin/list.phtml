@@ -1,6 +1,13 @@
-<?php 
-//\Zend\Debug::dump($this->sysmapTree); die;
-?>
+<div>
+    <a href="<?php echo $this->broker('url')->direct(array('action'=>'clean-cache'));?>">
+                Clean sysmap cache
+            </a>    
+</div>
+<div>
+    <a href="<?php echo $this->broker('url')->direct(array('action'=>'clean-extensions-cache'));?>">
+                Clean extensions cache
+            </a>    
+</div>
 <table class="sysmap-list">
     <tr>
         <th>

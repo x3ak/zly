@@ -30,6 +30,8 @@ class Map extends \Slys\Doctrine\Model
     
     protected $_configFile;
     
+    protected $_extendsCacheTag = 'extensions';
+    
     public function __construct()
     {
         $cache = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getBroker()
@@ -59,6 +61,26 @@ class Map extends \Slys\Doctrine\Model
         } else {
             return false;
         }
+    }
+    
+    /**
+     * Clean extensions cache
+     * 
+     * @return boolean
+     */
+    public function clearExtensionsCache()
+    {
+        return $this->_cache->clean('all', array($this->_extendsCacheTag));
+    }
+    
+    /**
+     * Clean complete sysmap cache
+     * 
+     * @return boolean
+     */
+    public function clearCache()
+    {
+        return $this->_cache->clean('all');
     }
     
     /**
@@ -180,36 +202,23 @@ class Map extends \Slys\Doctrine\Model
      */
     public function saveExtension($values)
     {
-        $config = $this->_loadLocalConfig();
-        $parent = $this->getParentByHash($values['hash']);
+        $this->getEntityManager()->beginTransaction();
+        $extend = $this->getEntityManager()->getRepository('\Sysmap\Model\Mapper\Extend')
+                                           ->findOneBy(array('hash'=>$values['hash']));
         
-        if(!empty($parent)) {
-            foreach($config as $section) {
-
-                if(!empty($section->sysmap->extensions->{$parent->hash}->{$values['hash']})) {
-                    unset($section->sysmap->extensions->{$parent->hash}->{$values['hash']});
-                }
-            }
+        if(empty($extend)) {
+            $extend = new Mapper\Extend();
+            $extend->actionhash = $values['sysmap_id'];
+            $extend->hash = md5($extend->actionhash.serialize($values['params']));
         }
-        
-        if(!empty($values['params'])) {
-            $curHash = md5(implode('&',$values['params']));
-            $options = array(
-                APPLICATION_ENV => array(
-                'sysmap'=>array(
-                    'extensions'=>array(
-                        $values['sysmap_id']=>array(
-                            $curHash => array(
-                            'name' => $values['name'],
-                            'params'=>$values['params']))))));
-            
-            $prevConfig = $config->toArray();
-            $merged = array_merge_recursive($prevConfig, $options);            
-            $config = new \Zend\Config\Config($merged);
-        }
-        
-        $this->_saveConfig($config);
-        $this->_cache->clean('all', array('extensions'));
+                                   
+        $extend->name = $values['name'];
+        if(isset($values['params']))
+            $extend->params = $values['params'];
+  
+        $this->getEntityManager()->persist($extend);
+        $this->getEntityManager()->flush();
+        $this->clearExtensionsCache();
         return true;
     }
     
@@ -223,7 +232,7 @@ class Map extends \Slys\Doctrine\Model
                 }
             }
         }
-        $this->_cache->clean('all', array('extensions'));
+        $this->clearExtensionsCache();
         return $this;
     }
     

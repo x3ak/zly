@@ -91,7 +91,28 @@ class AdminController extends \Zend\Controller\Action {
             }
         }
 
-        return $this->_helper->redirector->gotoUrl($this->view->url(array('module' => 'sysmap', 'controller' => 'admin', 'action' => 'list-extends'), null, true));
+        $this->_helper->redirector->gotoUrl($this->view->url(
+                array('module' => 'sysmap', 'controller' => 'admin', 'action' => 'list'), null, true));
+    }
+    
+    /**
+     * Clean sysmap extensions cache
+     */
+    public function cleanExtensionsCacheAction()
+    {
+        $this->_mapModel->clearExtensionsCache();
+        $this->broker('redirector')->gotoUrl($this->view->broker('url')->direct(
+                array('module' => 'sysmap', 'controller' => 'admin', 'action' => 'list'), null, true));
+    }
+    
+    /**
+     * Clean complete sysmap cache
+     */
+    public function cleanCacheAction()
+    {
+        $this->_mapModel->clearExtensionsCache();
+        $this->broker('redirector')->gotoUrl($this->view->broker('url')->direct(
+                array('module' => 'sysmap', 'controller' => 'admin', 'action' => 'list'), null, true));
     }
 
 }
