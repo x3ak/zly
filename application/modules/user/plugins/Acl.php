@@ -182,7 +182,7 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
 
         foreach($apiRequest->proceed()->getResponse()->getFirst() as $resource) {
             if($resource instanceof \Zend\Acl\Resource\GenericResource) {
-                $this->_acl->addResource($resource->getMapIdentifier());
+                $this->_acl->addResource($resource->getResourceId());
             }
         }
 

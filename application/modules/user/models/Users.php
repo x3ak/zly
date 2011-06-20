@@ -93,8 +93,8 @@ class Users extends \Slys\Doctrine\Model
     
     public function createDefaultUser($userName, $userPassword, $userRoleName, $guestRoleName) 
     {
-            //TODO: receive next node id from sysmap module 
-            $rootNode = '0-816563134a61e1b2c7cd7899b126bde4';
+            $apiRequest = new \Slys\Api\Request($this,  'sysmap.get-root-identifier');
+            $rootNode = $apiRequest->proceed()->getResponse()->getFirst();
               
             $guestRole = new Mapper\Role();
             $guestRole->setName($guestRoleName);

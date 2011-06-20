@@ -26,6 +26,10 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
                 $request->getResponse()->setData( $mapModel->getSysmap() );
                 break;
             
+            case 'sysmap.get-root-identifier':
+                $request->getResponse()->setData( new \Zend\Acl\Resource\GenericResource($mapModel->getRoot()->hash) );
+                break;
+            
             case 'sysmap.currently-active-items':
                 $params = $request->getParams();
 
