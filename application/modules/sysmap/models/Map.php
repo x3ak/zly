@@ -100,18 +100,26 @@ class Map extends \Slys\Doctrine\Model
             $request = $customRequest;
         }
         
-        $activeItems = array();
+        $activeItems = array(new \Zend\Acl\Resource\GenericResource($this->getRoot()->hash));
         
         $sysmap = $this->getSysmap();
-
-        $module = $sysmap[$request->getModuleName()];
-
-        $controller = $module->_childrens[$request->getControllerName()];
-        $action = $controller->_childrens[$request->getActionName()];
         
-        $activeItems[0] = new \Zend\Acl\Resource\GenericResource($this->getRoot()->hash);
-        $activeItems[1] = new \Zend\Acl\Resource\GenericResource($module->hash);
+        if(empty($sysmap[$request->getModuleName()]))
+            return $activeItems;
+        
+        $module = $sysmap[$request->getModuleName()];
+        $activeItems[1] = new \Zend\Acl\Resource\GenericResource($module->hash);      
+        
+        if(empty($module->_childrens[$request->getControllerName()]))
+            return $activeItems;
+        
+        $controller = $module->_childrens[$request->getControllerName()];
         $activeItems[2] = new \Zend\Acl\Resource\GenericResource($controller->hash);
+        
+        if(empty($controller->_childrens[$request->getActionName()]))
+            return $activeItems;
+        
+        $action = $controller->_childrens[$request->getActionName()];
         $activeItems[3] = new \Zend\Acl\Resource\GenericResource($action->hash);
         
         $extHashes = $this->_getExtensionsByActionHash($action->hash, $request->getParams(), true);
