@@ -39,6 +39,7 @@ class Extend extends \Zend\Form\Form
         $this->addElement($submit);
 
         $this->addElement('hidden', 'hash');
+        $this->addElement('hidden', 'id');
         $this->addElement('hidden', 'sysmap_id');
     }
 

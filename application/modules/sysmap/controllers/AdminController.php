@@ -66,8 +66,12 @@ class AdminController extends \Zend\Controller\Action {
             }
         } else {
             $hash = $this->getRequest()->getParam('hash');
-            if (!empty($hash)) {
-                $values = (array) $this->_mapModel->getNodeByHash($hash);
+            if (!empty($hash)) {                
+                
+                $values = $this->_mapModel->getNodeByHash($hash);
+                if($values instanceof Model\Mapper\Extend)
+                    $values = $values->toArray();
+
                 if($values['params'] instanceof \Zend\Config\Config)
                     $values['params'] = $values['params']->toArray();
 

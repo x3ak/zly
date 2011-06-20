@@ -63,6 +63,9 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
         $config->setQueryCacheImpl($cache);
         $config->setProxyDir('/slys/proxies');
         $config->setProxyNamespace('Slys\Proxies');
+        
+//        $logger = new \Doctrine\DBAL\Logging\EchoSQLLogger();
+//        $config->setSQLLogger($logger);
 
         if (APPLICATION_ENV == "development") {
             $config->setAutoGenerateProxyClasses(true);

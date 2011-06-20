@@ -87,7 +87,12 @@
             
         </td>
     </tr>
-     <?php foreach($action->_childrens as $extension) {?>
+     <?php foreach($action->_childrens as $extension) { ?>
+    <?php 
+    $paramsTitle = '';
+    foreach($extension->getParams() as $key=>$value)
+        $paramsTitle .= "\n   ".$key.' = '.$value;
+    ?>
     <tr>
         <td>
             
@@ -99,8 +104,8 @@
            
         </td>
         <td>
-            <a href="<?php echo $this->broker('url')->direct(array('action'=>'edit-extend','hash'=>$extension->hash));?>">
-                <?php echo $extension->name?>
+            <a title="Params: <?php echo $paramsTitle;?><?php echo "\nHash: \n".$extension->getHash(); ?>" href="<?php echo $this->broker('url')->direct(array('action'=>'edit-extend','hash'=>$extension->getHash()));?>">
+                <?php echo $extension->getName()?>
             </a>
         </td>
     </tr>

@@ -142,7 +142,7 @@ class Map extends \Slys\Doctrine\Model
                     }
                     
                     foreach($action->_childrens as $ext) {
-                        if($ext->hash == $hash) {
+                        if($ext->getHash() == $hash) {
                             return $ext;
                         }
                     }
@@ -171,7 +171,7 @@ class Map extends \Slys\Doctrine\Model
                         return $controller;
                     }
                     foreach($action->_childrens as $ext) {
-                        if($ext->hash == $hash) {
+                        if($ext->getHash() == $hash) {
                             return $action;
                         }
                     }
@@ -202,20 +202,18 @@ class Map extends \Slys\Doctrine\Model
      */
     public function saveExtension($values)
     {
-        $this->getEntityManager()->beginTransaction();
         $extend = $this->getEntityManager()->getRepository('\Sysmap\Model\Mapper\Extend')
-                                           ->findOneBy(array('hash'=>$values['hash']));
+                                           ->findOneBy(array('id'=>$values['id']));
         
         if(empty($extend)) {
             $extend = new Mapper\Extend();
-            $extend->actionhash = $values['sysmap_id'];
-            $extend->hash = md5($extend->actionhash.serialize($values['params']));
+            $extend->setActionhash($values['sysmap_id']);
+            $extend->setHash(md5($extend->getActionhash().serialize($values['params'])));
         }
                                    
-        $extend->name = $values['name'];
+        $extend->setName($values['name']);
         if(isset($values['params']))
-            $extend->params = $values['params'];
-  
+            $extend->setParams($values['params']);
         $this->getEntityManager()->persist($extend);
         $this->getEntityManager()->flush();
         $this->clearExtensionsCache();
@@ -261,8 +259,8 @@ class Map extends \Slys\Doctrine\Model
             foreach($extensions as $extension) {
                 
                 $toOutput = true;
-                
-                if(!empty($request) && !empty($extension->params)) {
+                $extParams = $extension->getParams();
+                if(!empty($request) && !empty($extParams)) {
                     foreach($extendParams['params'] as $key=>$value) {
                         if(!isset($currentParams[$key]) 
                                 || (isset($currentParams[$key]) && $currentParams[$key] != $value)) {
@@ -272,10 +270,10 @@ class Map extends \Slys\Doctrine\Model
                 }
                 if($toOutput) {
                     if($hashesOnly)
-                        $currentExtensions[$extension->hash] = $extension->hash;
+                        $currentExtensions[$extension->getHash()] = $extension->getHash();
                     else {
                         $extension->level = 4;
-                        $currentExtensions[$hash] = $extension;
+                        $currentExtensions[$extension->getHash()] = $extension;
                     }
                 }
 
@@ -340,7 +338,6 @@ class Map extends \Slys\Doctrine\Model
                 }
             }
         }
-
         $this->_saveSysmap($map);
         $this->_saveControllersCache($curContrl);
         $this->_reindexing = false;
