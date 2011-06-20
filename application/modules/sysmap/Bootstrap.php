@@ -18,10 +18,14 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
         $mapModel = new Model\Map();
         
         switch ($request->getName()) {
-            case 'sysmap.get-map-tree':
+            case 'sysmap.get-map-form-element':
                 $request->getResponse()->setData( $mapModel->getMapTreeElement() );
                 break;
 
+            case 'sysmap.get-map':
+                $request->getResponse()->setData( $mapModel->getSysmap() );
+                break;
+            
             case 'sysmap.currently-active-items':
                 $params = $request->getParams();
 
@@ -36,7 +40,10 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
                 $params = $request->getParams();
 
                 if (empty($params['identifier']) === false and is_string($params['identifier']) === true)
-                    $request->getResponse()->setData( $mapModel->getItemByHash($params['identifier']) );
+                    $node = $mapModel->getNodeByHash($params['identifier']);
+                    if(isset($node->_childrens))
+                        unset($node->_childrens);
+                    $request->getResponse()->setData( $node );
 
                 break;
 
@@ -44,7 +51,13 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
                 $params = $request->getParams();
 
                 if (empty($params['identifier']) === false and is_string($params['identifier']) === true)
-                    $request->getResponse()->setData( $mapModel->getItemParentsByHash($params['identifier']) );
+                    $parentsHashes = array();
+                    $parentsNodes = $mapModel->getParentByHash($params['identifier'], true);
+                   
+                    foreach($parentsNodes as $node) {
+                        $parentsHashes[] = new \Zend\Acl\Resource\GenericResource($node->hash);
+                    }
+                    $request->getResponse()->setData( $parentsHashes );
 
                 break;
         }

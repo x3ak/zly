@@ -27,7 +27,7 @@
 <?php foreach($this->sysmapTree as $module) {?>
     <tr>
         <td>
-            <?php echo $module->name ?>
+            <div title="Hash: <?php echo $module->hash; ?>"><?php echo $module->name ?></div>
         </td>
         <td>
            
@@ -45,6 +45,7 @@
             
         </td>
         <td>
+            <div title="Hash: <?php echo $controller->hash; ?>">
             <?php if(!empty($controller->shortDescr)) {?>
                 <div class="controller-full-name" title="<?php echo $controller->longDescr; ?>">
                     <?php echo $controller->shortDescr; ?> (<?php echo $controller->name;?>)
@@ -52,6 +53,7 @@
             <?php } else {?>
                 <div class="controller-short-name"><?php echo $controller->name; ?></div>
             <?php } ?>
+            </div>
         </td>
         <td>
             
@@ -70,6 +72,7 @@
            
         </td>
         <td>
+            <div title="Hash: <?php echo $action->hash; ?>">
             <?php if(!empty($action->shortDescr)) {?>
                 <div class="action-full-name" title="<?php echo $action->longDescr; ?>">
                     <?php echo $action->shortDescr; ?> (<?php echo $action->name;?>)
@@ -77,6 +80,7 @@
             <?php } else {?>
                 <div class="action-short-name"><?php echo $action->name; ?></div>
             <?php } ?>
+            </div>
             <?php if(!empty($action->Qualifier)) {?>
                 <a href="<?php 
                     echo $this->broker('url')->direct(array('action'=>'edit-extend','sysmap_id'=>$action->hash));

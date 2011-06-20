@@ -32,6 +32,8 @@ class Map extends \Slys\Doctrine\Model
     
     protected $_extendsCacheTag = 'extensions';
     
+    protected $_rootHash = 'aca94f0c15c66a28958493f69d2c8593';
+    
     public function __construct()
     {
         $cache = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getBroker()
@@ -42,7 +44,10 @@ class Map extends \Slys\Doctrine\Model
         } else {
             throw 'Sysmap module require own cache';
         }
-
+        
+        $this->_root = new \stdClass();
+        $this->_root->level = 0;
+        $this->_root->hash = $this->_rootHash;
     }
 
     /**
@@ -100,15 +105,16 @@ class Map extends \Slys\Doctrine\Model
         $sysmap = $this->getSysmap();
 
         $module = $sysmap[$request->getModuleName()];
-        $controller = $module->controllers[$request->getControllerName()];
-        $action = $controller->actions[$request->getActionName()];
+
+        $controller = $module->_childrens[$request->getControllerName()];
+        $action = $controller->_childrens[$request->getActionName()];
         
-        $activeItems[0] = new \Zend\Acl\Resource\GenericResource(md5('*.*.*'));
+        $activeItems[0] = new \Zend\Acl\Resource\GenericResource($this->getRoot()->hash);
         $activeItems[1] = new \Zend\Acl\Resource\GenericResource($module->hash);
         $activeItems[2] = new \Zend\Acl\Resource\GenericResource($controller->hash);
         $activeItems[3] = new \Zend\Acl\Resource\GenericResource($action->hash);
         
-        $extHashes = $this->_getExtensionsByRequest($action->hash, $request->getParams(), true);
+        $extHashes = $this->_getExtensionsByActionHash($action->hash, $request->getParams(), true);
         foreach($extHashes as $hash)
             $activeItems[] = new \Zend\Acl\Resource\GenericResource($hash);
         
@@ -149,35 +155,71 @@ class Map extends \Slys\Doctrine\Model
                 }
             }
         }
+        
+        return false;
     }
     
+   
     /**
-     * Return parent of extension by extension hash
+     * Return parent of sysmap node by it hash
+     * 
      * @param string $hash
+     * @package boolean $all - return all parents of current node
      * @return stdClass
      */
-    public function getParentByHash($hash)
+    public function getParentByHash($hash, $all = false)
     {
         $sysmap = $this->getSysmap();
         foreach($sysmap as $module) {
+            if($module->hash == $hash) {
+                return $this->getRoot();
+            }
             foreach($module->_childrens as $controller) {
                 
                 if($controller->hash == $hash) {
+                    if($all)
+                        return array(
+                            $this->getRoot(),
+                            $module
+                        );
                     return $module;
                 }
                 
                 foreach($controller->_childrens as $action) {
                     if($action->hash == $hash) {
+                        if($all)
+                            return array(
+                                $this->getRoot(),
+                                $module,
+                                $controller
+                            );
                         return $controller;
                     }
                     foreach($action->_childrens as $ext) {
                         if($ext->getHash() == $hash) {
+                            if($all)
+                                return array(
+                                    $this->getRoot(),
+                                    $module,
+                                    $controller,
+                                    $action
+                                );
                             return $action;
                         }
                     }
                 }
             }
         }        
+    }
+    
+    /**
+     * Return sysmap root node
+     * 
+     * @return object
+     */
+    public function getRoot()
+    {
+        return $this->_root;
     }
     
     /**
@@ -338,6 +380,10 @@ class Map extends \Slys\Doctrine\Model
                 }
             }
         }
+        
+        $root = new \stdClass();
+//        $root 
+        
         $this->_saveSysmap($map);
         $this->_saveControllersCache($curContrl);
         $this->_reindexing = false;
