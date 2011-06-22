@@ -8,9 +8,11 @@
  * @version $Id: Generator.php 761 2010-12-14 11:49:54Z deeper $
  * @license New BSD
  */
+namespace User\Model\DbTable;
+
 use Doctrine\ORM\EntityRepository;
 
-class User_Model_DbTable_Rule extends EntityRepository 
+class Rule extends EntityRepository 
 {
 
     /**
@@ -19,12 +21,17 @@ class User_Model_DbTable_Rule extends EntityRepository
      * @param array $resources
      * @return Doctrine_Collection
      */
-    public function getRoleRules($role, array $resources) {
-        return $this->createQuery('rule ru')
-                        ->leftJoin('ru.Role ro')
-                        ->addWhere('ro.name = ?', $role)
-                        ->whereIn('ru.resource_id', $resources)
-                        ->execute();
+    public function getRoleRules($role, array $resources) 
+    {
+        $qb = $this->createQueryBuilder('rule');
+        $resourcesPart = $qb->expr()->in('rule.resource_id', ':resources');
+        return $qb->innerJoin('rule.role', 'role')
+                  ->andWhere('role.name = :role')
+                  ->andWhere($resourcesPart)
+                  ->setParameter('role', $role)
+                  ->setParameter('resources', $resources)
+                  ->getQuery()
+                  ->execute();
     }
 
     /**

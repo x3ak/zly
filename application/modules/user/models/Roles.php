@@ -28,7 +28,7 @@ class Roles extends \Slys\Doctrine\Model
     public function getRulesByRoleAndResources($role, $resources)
     {
         return $this->getEntityManager()
-                    ->getRepository('User_Model_Mapper_Rule')
+                    ->getRepository('\User\Model\Mapper\Rule')
                     ->getRoleRules($role, $resources);
     }
 

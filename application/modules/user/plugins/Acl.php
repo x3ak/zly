@@ -206,9 +206,10 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
             return $this;
         
         $rules = $userModel->getRulesByRoleAndResources($role, $resources);
-        if($rules->count() > 0) {
+
+        if(!empty($rules)) {
             foreach($rules as $rule) {
-                $this->_acl->{$rule->rule}($role, $rule->resource_id);
+                $this->_acl->{$rule->getRule()}($role, $rule->getResourceId());
             }
 
         }

@@ -10,7 +10,7 @@
  */
 namespace User\Model\Mapper;
 /**
- * @Entity
+ * @Entity(repositoryClass="User\Model\DbTable\Rule")
  * @Table(name="user_rules")
  */
 class Rule
@@ -44,19 +44,19 @@ class Rule
         $this->id = $id;
     }
 
-    public function getRole_id() {
+    public function getRoleId() {
         return $this->role_id;
     }
 
-    public function setRole_id($role_id) {
+    public function setRoleId($role_id) {
         $this->role_id = $role_id;
     }
 
-    public function getResource_id() {
+    public function getResourceId() {
         return $this->resource_id;
     }
 
-    public function setResource_id($resource_id) {
+    public function setResourceId($resource_id) {
         $this->resource_id = $resource_id;
     }
 
