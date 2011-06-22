@@ -77,10 +77,10 @@ class IndexController extends \Zend\Controller\Action
             } else {
                 $userModel = new Model\Users();
                 $identity = $authAdapter->getResultRowObject(null, 'password');
-                $identity = $userModel->getUser($identity->id);
+                $identity = $userModel->getUser($identity->getId());
                 $this->_auth->getStorage()->write($identity);
-                $this->_helper->getHelper('FlashMessenger')->addMessage('You are successful logged!');
-                $this->_redirect($this->getRequest()->getRequestUri());
+                $this->broker('FlashMessenger')->addMessage('You are successful logged!');
+                $this->broker('redirector')->gotoUrl($this->getRequest()->getRequestUri());
             }
             $this->view->loginForm = $form;
         } else {
@@ -107,10 +107,11 @@ class IndexController extends \Zend\Controller\Action
      */
     protected function _getAuthAdapter($username, $password)
     {
-        $authAdapter = new \Slys\Authentication\Adapter\Doctrine($this->getFrontController()->getParam('doctrine'));
-        $authAdapter->setTableName('User_Model_Mapper_User u')
-                ->setIdentityColumn('u.login')
-                ->setCredentialColumn('u.password')
+        $userModel = new Model\Users();
+        $authAdapter = new \Slys\Authentication\Adapter\Doctrine($userModel->getEntityManager());
+        $authAdapter->setEntityName('\User\Model\Mapper\User')
+                ->setIdentityField('login')
+                ->setCredentialField('password')
                 ->setIdentity($username)
                 ->setCredential($password);
 

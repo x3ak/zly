@@ -47,7 +47,7 @@ class Users extends \Slys\Doctrine\Model
 
     public function getUser($id)
     {
-        return User_Model_DbTable_User::getInstance()->findOneById($id);
+        return $this->getEntityManager()->find('\User\Model\Mapper\User', $id);
     }
 
     public function getUsersPager($page = 1, $maxPerPage = 20)
