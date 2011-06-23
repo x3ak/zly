@@ -148,7 +148,7 @@ class Users extends \Slys\Doctrine\Model
             $this->getEntityManager()->flush();
             
             $rule = new Mapper\Rule();
-            $rule->setResource_id($rootNode);
+            $rule->setResourceId($rootNode);
             $rule->setRule('allow');
             $rule->setRole($userRole);
             $this->getEntityManager()->persist($rule);            
