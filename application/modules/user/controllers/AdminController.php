@@ -52,31 +52,29 @@ class AdminController extends \Zend\Controller\Action
      */
     public function editUserAction()
     {
-        $form = new User_Form_User();
-        $usersModel = new User_Model_Users();
-        $rolesModel = new User_Model_Roles();
+        $form = new Form\User();
+        $usersModel = new Model\Users();
+        $rolesModel = new Model\Roles();
 
         $id = $this->getRequest()->getParam('id');
 
         if (!empty($id)) {
             $user = $usersModel->getUser($id);
         } else {
-            $user = new User_Model_Mapper_User();
+            $user = new Model\Mapper\User();
         }
 
-        foreach ($rolesModel->getList() as $role)
-            $form->getElement('role_id')->addMultiOption($role->id, $role->name);
+        foreach ($rolesModel->getRoles() as $role)
+            $form->getElement('role_id')->addMultiOption($role->getId(), $role->getName());
 
         $form->populate($user->toArray());
 
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getParams())) {
             if ($this->getRequest()->getParam('password'))
                 $this->getRequest()->setParam('password', md5($this->getRequest()->getParam('password')));
-            $user->fromArray($this->getRequest()->getParams());
-            $user->save();
-            $this->_helper->getHelper('FlashMessenger')->addMessage('User successful saved.');
-            $this->_helper->getHelper('redirector')->goToRoute(array('module' => 'user', 'action' => 'users'), 'admin', true);
-
+            $usersModel->saveUser($user, $this->getRequest()->getParams());
+            $this->broker('FlashMessenger')->addMessage('User successful saved.');
+            $this->broker('redirector')->goToRoute(array('module' => 'user', 'action' => 'users'), 'admin', true);
             return;
         }
 
@@ -90,9 +88,9 @@ class AdminController extends \Zend\Controller\Action
     {
         $id = $this->getRequest()->getParam('id');
         if (!empty($id)) {
-            $usersModel = new User_Model_Users();
+            $usersModel = new Model\Users();
             $user = $usersModel->getUser($id);
-            $user->delete();
+            $usersModel->deleteUser();
         }
         $this->_helper->getHelper('FlashMessenger')->addMessage('User successful deleted.');
         $this->_helper->getHelper('redirector')->goToRoute(array('module' => 'user', 'action' => 'users'), 'admin', true);

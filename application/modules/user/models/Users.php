@@ -78,7 +78,25 @@ class Users extends \Slys\Doctrine\Model
             if(in_array($key, $ignoredFields))
                 unset($data[$key]);
         }
+        return $this->saveUser($user, $data);
+    }
+    
+    /**
+     * Save user data
+     * @param User_Model_Mapper_User $user
+     * @param array $data
+     * @return boolean
+     */
+    public function saveUser(Mapper\User $user, $data)
+    {
         $user->fromArray($data);
+        
+        if(!empty($data['role_id'])) {
+            $role = $this->getEntityManager()->find('\User\Model\Mapper\Role', $data['role_id']);
+            if(!empty($role))
+                $user->setRole($role);
+        }
+        $this->getEntityManager()->persist($role);
         $this->getEntityManager()->persist($user);
         return $this->getEntityManager()->flush();
     }
@@ -99,6 +117,17 @@ class Users extends \Slys\Doctrine\Model
         $user->password = md5($newPassword);
         $user->save();
         return true;
+    }
+    
+    /**
+     * Delete user row from DB
+     * @param Mapper\User $user
+     * @return boolean 
+     */
+    public function deleteUser(Mapper\User $user)
+    {
+        $this->getEntityManager()->remove($user);
+        return $this->getEntityManager()->flush();
     }
     
     public function createDefaultUser($userName, $userPassword, $userRoleName, $guestRoleName) 

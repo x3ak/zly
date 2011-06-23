@@ -231,6 +231,7 @@ class User
             if(isset($data[$var]))
             $this->{'set'.$filter->filter($var)}($data[$var]);
         }
+        
         return $this;
     }
 }
