@@ -47,11 +47,11 @@ class IndexController extends \Zend\Controller\Action
     public function userBoxAction()
     {
         $this->view->boxType = $this->getRequest()->getParam('box_type');
-        if (!Zend_Auth::getInstance()->hasIdentity()) {
+        if (!$this->_auth->hasIdentity()) {
             $this->loginAction();
             $this->render('login');
         } else {
-            $this->view->userIdentity = Zend_Auth::getInstance()->getIdentity();
+            $this->view->userIdentity = $this->_auth->getIdentity();
         }
     }
 
@@ -79,6 +79,7 @@ class IndexController extends \Zend\Controller\Action
                 $identity = $authAdapter->getResultRowObject(null, 'password');
                 $identity = $userModel->getUser($identity->getId());
                 $this->_auth->getStorage()->write($identity);
+
                 $this->broker('FlashMessenger')->addMessage('You are successful logged!');
                 $this->broker('redirector')->gotoUrl($this->getRequest()->getRequestUri());
             }

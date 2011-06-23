@@ -18,16 +18,31 @@ namespace User;
 class ProfileController extends \Zend\Controller\Action
 {
     /**
+     * Authentification service
+     * @var \Zend\Authentication\AuthenticationService 
+     */
+    protected $_auth;
+    
+    /**
+     * Controller resorces initialization
+     */
+    public function init()
+    {
+        $this->_auth = $this->getFrontController()->getPlugin('User\Plugin\Acl')->getAuthentificationService();
+    }
+    
+    /**
      * Display&Edit user profile form
      */
     public function indexAction()
     {
-        $identity = Zend_Auth::getInstance()->getIdentity();
-        $userId = $identity->id;
-        $userModel = new User_Model_Users();
+        $identity = $this->_auth->getIdentity();
+        $userId = $identity->getId();
+        $userModel = new Model\Users();
         $user = $userModel->getUser($userId);
-        $form = new User_Form_Profile();
+        $form = new Form\Profile();
         $form->populate($user->toArray());
+
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
             $result = $userModel->saveProfile($user, $form->getValues());
             if ($result) {

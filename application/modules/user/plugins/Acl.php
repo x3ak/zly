@@ -43,7 +43,7 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
     {
         $this->_acl = $acl;
         if(empty($authenticationService))
-        $this->_auth = new \Zend\Authentication\AuthenticationService();
+            $this->_auth = new \Zend\Authentication\AuthenticationService();
     }
 
     /**
@@ -120,10 +120,12 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
         $this->_initAcl();
         
         \Zend\View\Helper\Navigation\AbstractHelper::setDefaultAcl($this->_acl);
-
+        
         if($this->_auth->hasIdentity()) {
-            if (!empty($this->_auth->getIdentity()->Role->name))
-                $this->_currentRole = new \Zend\Acl\GenericRole(Zend_Auth::getInstance()->getIdentity()->Role->name);
+            $roleName = $this->_auth->getIdentity()->getRole()->getName();
+            if (!empty($roleName)) {
+                $this->_currentRole = new \Zend\Acl\Role\GenericRole($roleName);
+            }
         }
 
         if (empty($this->_currentRole)) {

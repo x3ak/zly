@@ -11,7 +11,7 @@
 namespace User\Model\Mapper;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="User\Model\DbTable\User")
  * @Table(name="user_users")
  */
 class User
@@ -98,11 +98,11 @@ class User
         $this->password = $password;
     }
 
-    public function getRole_id() {
+    public function getRoleId() {
         return $this->role_id;
     }
 
-    public function setRole_id($role_id) {
+    public function setRoleId($role_id) {
         $this->role_id = $role_id;
     }
 
@@ -186,19 +186,19 @@ class User
         $this->address = $address;
     }
 
-    public function getMobile_code() {
+    public function getMobileCode() {
         return $this->mobile_code;
     }
 
-    public function setMobile_code($mobile_code) {
+    public function setMobileCode($mobile_code) {
         $this->mobile_code = $mobile_code;
     }
 
-    public function getMobile_number() {
+    public function getMobileNumber() {
         return $this->mobile_number;
     }
 
-    public function setMobile_number($mobile_number) {
+    public function setMobileNumber($mobile_number) {
         $this->mobile_number = $mobile_number;
     }
 
@@ -208,6 +208,30 @@ class User
 
     public function setRole($role) {
         $this->role = $role;
+    }
+    
+    public function toArray()
+    {
+        $array = array();
+        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
+        
+        $vars = get_class_vars(get_class($this));
+        foreach(array_keys($vars) as $var) {
+            $array[$var] = $this->{'get'.$filter->filter($var)}();
+        }
+        return $array;
+    }
+    
+    public function fromArray($data)
+    {
+        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
+        
+        $vars = get_class_vars(get_class($this));
+        foreach(array_keys($vars) as $var) {
+            if(isset($data[$var]))
+            $this->{'set'.$filter->filter($var)}($data[$var]);
+        }
+        return $this;
     }
 }
 

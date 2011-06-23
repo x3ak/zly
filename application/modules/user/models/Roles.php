@@ -52,9 +52,12 @@ class Roles extends \Slys\Doctrine\Model
      * @param int $maxPerPage
      * @return Doctrine_Pager
      */
-    public function getRolesPager($page = 1, $maxPerPage = 20)
+    public function getRolesPaginator($pageNumber = 1, $itemCountPerPage = 20)
     {
-        return User_Model_DbTable_Role::getInstance()->getPager($page, $maxPerPage);
+        $repo = $this->getEntityManager()->getRepository('\User\Model\Mapper\Role');
+        $paginator = new \Zend\Paginator\Paginator($repo->getPaginatorAdapter());
+        $paginator->setCurrentPageNumber($pageNumber)->setItemCountPerPage($itemCountPerPage);
+        return $paginator;
     }
 
     /**

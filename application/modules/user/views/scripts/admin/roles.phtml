@@ -1,24 +1,23 @@
-<?php $this->adminCurrentSubmenu(); ?>
 <table class="admin-table">
 	<tr>
 		<th width="20">ID</th>
 		<th>Name</th>
 		<th width="10">Actions</th>
 	</tr>
-	<?php foreach ($this->pager->execute() as $item) {?>
+	<?php foreach ($this->pager as $item) {?>
 	<tr>
-		<td align="center"><?php echo $item->id; ?></td>
+		<td align="center"><?php echo $item->getId(); ?></td>
 		<td>
-                    <a class="edit-item" href="<?php echo $this->url(array('action'=>'edit-role','module'=>'user', 'id'=>$item->id));?>">
-                        <?php echo $item->name; ?>
+                    <a class="edit-item" href="<?php echo $this->broker('url')->direct(array('action'=>'edit-role','module'=>'user', 'id'=>$item->getId()));?>">
+                        <?php echo $item->getName(); ?>
                     </a>
                 </td>
 
 		<td align="center" nowrap="nowrap">
-			<a class="edit-item" href="<?php echo $this->url(array('action'=>'edit-role','module'=>'user', 'id'=>$item->id));?>">
+			<a class="edit-item" href="<?php echo $this->broker('url')->direct(array('action'=>'edit-role','module'=>'user', 'id'=>$item->getId()));?>">
 				Edit
 			</a>&nbsp;
-			<a  class="delete-item" href="<?php echo $this->url(array('action'=>'delete-role','module'=>'user', 'id'=>$item->id));?>">
+			<a  class="delete-item" href="<?php echo $this->broker('url')->direct(array('action'=>'delete-role','module'=>'user', 'id'=>$item->getId()));?>">
 				Delete
 			</a>
 		</td>

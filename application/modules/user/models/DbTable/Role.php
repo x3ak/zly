@@ -49,17 +49,13 @@ class Role extends EntityRepository
     }
 
     /**
-     * Return pager of current table
-     * @param int $page
-     * @param int $maxPerPage
-     * @return Doctrine_Pager
+     * Return paginator for User mapper
+     * @return \Slys\Paginator\Adapter\Doctrine2 
      */
-    public function getPager($page = 1, $maxPerPage = 20) {
-        $query = Doctrine_Query::create()
-                ->select('role.*')
-                ->from('User\Model\Mapper\Role role');
-
-        return new Doctrine_Pager($query, $page, $maxPerPage);
+    public function getPaginatorAdapter()
+    {
+        $query = $this->createQueryBuilder('role')->getQuery();
+        return new \Slys\Paginator\Adapter\Doctrine2($query);
     }
 
 }

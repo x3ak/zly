@@ -8,9 +8,11 @@
  * @version $Id: User.php 1232 2011-04-17 21:00:36Z deeper $
  * @license New BSD
  */
+namespace User\Model\DbTable;
+
 use Doctrine\ORM\EntityRepository;
 
-class User_Model_DbTable_User extends EntityRepository 
+class User extends EntityRepository
 {
 
     /**
@@ -18,16 +20,18 @@ class User_Model_DbTable_User extends EntityRepository
      * @param int $id
      * @return  User_Model_Mapper_User
      */
-    public function getUser($id) {
+    public function getUser($id)
+    {
         return Doctrine_Query::create()
-                        ->select()
-                        ->from('User_Model_Mapper_User user')
-                        ->leftJoin('user.Role role')
-                        ->addWhere('user.id = ?', array($id))
-                        ->fetchOne();
+                ->select()
+                ->from('User_Model_Mapper_User user')
+                ->leftJoin('user.Role role')
+                ->addWhere('user.id = ?', array($id))
+                ->fetchOne();
     }
 
-    public function getUsers() {
+    public function getUsers()
+    {
         $query = Doctrine_Query::create()
                 ->select('user.*, role.*')
                 ->from('User_Model_Mapper_User user')
@@ -36,13 +40,14 @@ class User_Model_DbTable_User extends EntityRepository
         return $query->execute();
     }
 
-    public function getPager($page = 1, $maxPerPage = 20) {
-        $query = Doctrine_Query::create()
-                ->select('user.*, role.*')
-                ->from('User_Model_Mapper_User user')
-                ->leftJoin('user.Role role');
-
-        return new Doctrine_Pager($query, $page, $maxPerPage);
+    /**
+     * Return paginator for User mapper
+     * @return \Slys\Paginator\Adapter\Doctrine2 
+     */
+    public function getPaginatorAdapter()
+    {
+        $query = $this->createQueryBuilder('user')->getQuery();
+        return new \Slys\Paginator\Adapter\Doctrine2($query);
     }
 
 }

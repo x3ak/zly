@@ -50,9 +50,18 @@ class Users extends \Slys\Doctrine\Model
         return $this->getEntityManager()->find('\User\Model\Mapper\User', $id);
     }
 
-    public function getUsersPager($page = 1, $maxPerPage = 20)
+    /**
+     * Return paginator for users list
+     * @param int $pageNumber
+     * @param int $itemCountPerPage
+     * @return \Zend\Paginator\Paginator 
+     */
+    public function getUsersPaginator($pageNumber = 1, $itemCountPerPage = 20)
     {
-        return User_Model_DbTable_User::getInstance()->getPager($page, $maxPerPage);
+        $repo = $this->getEntityManager()->getRepository('\User\Model\Mapper\User');
+        $paginator = new \Zend\Paginator\Paginator($repo->getPaginatorAdapter());
+        $paginator->setCurrentPageNumber($pageNumber)->setItemCountPerPage($itemCountPerPage);
+        return $paginator;
     }
 
     /**
@@ -61,7 +70,7 @@ class Users extends \Slys\Doctrine\Model
      * @param array $data
      * @return boolean
      */
-    public function saveProfile(User_Model_Mapper_User $user, $data)
+    public function saveProfile(Mapper\User $user, $data)
     {
         $ignoredFields = array('role_id', 'login', 'active','password');
 
@@ -70,7 +79,8 @@ class Users extends \Slys\Doctrine\Model
                 unset($data[$key]);
         }
         $user->fromArray($data);
-        return $user->save();
+        $this->getEntityManager()->persist($user);
+        return $this->getEntityManager()->flush();
     }
 
     /**

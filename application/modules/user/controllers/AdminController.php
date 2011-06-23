@@ -37,10 +37,10 @@ class AdminController extends \Zend\Controller\Action
     /**
      * Users list
      */
-    public function usersAction(User_Form_User $user = null)
+    public function usersAction()
     {
-        $usersModel = new User_Model_Users();
-        $this->view->pager = $usersModel->getUsersPager(
+        $usersModel = new Model\Users();
+        $this->view->pager = $usersModel->getUsersPaginator(
             $this->getRequest()->getParam('page', 1),
             $this->getRequest()->getParam('perPage', 20)
         );
@@ -100,10 +100,10 @@ class AdminController extends \Zend\Controller\Action
 
     public function rolesAction()
     {
-        $rolesModel = new User_Model_Roles();
-        $this->view->pager = $rolesModel->getRolesPager(
-                        $this->getRequest()->getParam('page', 1),
-                        $this->getRequest()->getParam('perPage', 20)
+        $rolesModel = new Model\Roles();
+        $this->view->pager = $rolesModel->getRolesPaginator(
+            $this->getRequest()->getParam('page', 1),
+            $this->getRequest()->getParam('perPage', 20)
         );
     }
 
