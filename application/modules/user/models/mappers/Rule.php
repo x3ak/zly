@@ -21,7 +21,7 @@ class Rule
     */
     protected $id;
 
-    /** @Column(type="integer", nullable=true) */    
+    /** @Column(type="integer") */    
     protected $role_id;
 
     /** @Column(length=255) */

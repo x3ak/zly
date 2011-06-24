@@ -90,10 +90,10 @@ class AdminController extends \Zend\Controller\Action
         if (!empty($id)) {
             $usersModel = new Model\Users();
             $user = $usersModel->getUser($id);
-            $usersModel->deleteUser();
+            $result = $usersModel->deleteUser($user);
         }
-        $this->_helper->getHelper('FlashMessenger')->addMessage('User successful deleted.');
-        $this->_helper->getHelper('redirector')->goToRoute(array('module' => 'user', 'action' => 'users'), 'admin', true);
+        $this->broker('FlashMessenger')->addMessage('User successful deleted.');
+        $this->broker('redirector')->goToRoute(array('module' => 'user', 'action' => 'users'), 'admin', true);
     }
 
     public function rolesAction()
@@ -111,8 +111,8 @@ class AdminController extends \Zend\Controller\Action
      */
     public function editRoleAction()
     {
-        $form = new User_Form_Role();
-        $rolesModel = new User_Model_Roles();
+        $form = new Form\Role();
+        $rolesModel = new Model\Roles();
 
         $role = $rolesModel->getRole($this->getRequest()->getParam('id'), true);
 
@@ -121,8 +121,8 @@ class AdminController extends \Zend\Controller\Action
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
             $result = $rolesModel->saveRole($role, $form->getValues());
             if($result)
-                $this->_helper->getHelper('FlashMessenger')->addMessage('Role successful saved.');
-            $this->_helper->getHelper('redirector')->goToRoute(array('module' => 'user', 'action' => 'roles'), 'admin', true);
+                $this->broker('FlashMessenger')->addMessage('Role successful saved.');
+            $this->broker('redirector')->goToRoute(array('module' => 'user', 'action' => 'roles'), 'admin', true);
             return;
         }
 
@@ -138,10 +138,10 @@ class AdminController extends \Zend\Controller\Action
         if (!empty($id)) {
             $rolesModel = new User_Model_Roles();
             $role = $rolesModel->getRole($id);
-            $role->delete();
+            $rolesModel->deleteRole($role);
         }
-        $this->_helper->getHelper('FlashMessenger')->addMessage('Role successful deleted.');
-        $this->_helper->getHelper('redirector')->goToRoute(array('module' => 'user', 'action' => 'roles'), 'admin', true);
+        $this->broker('FlashMessenger')->addMessage('Role successful deleted.');
+        $this->broker('redirector')->goToRoute(array('module' => 'user', 'action' => 'roles'), 'admin', true);
     }
 
     /**

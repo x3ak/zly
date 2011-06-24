@@ -47,7 +47,7 @@ class Map extends \Slys\Doctrine\Model
         
         $this->_root = new \stdClass();
         $this->_root->level = 0;
-        $this->_root->hash = $this->_rootHash;
+        $this->_root->hash = $this->_rootHash;        
     }
 
     /**
@@ -237,12 +237,16 @@ class Map extends \Slys\Doctrine\Model
     public function getMapTreeElement()
     {
         $sysmap = $this->getSysmap();
+        $root = $this->getRoot();    
+        $root->name = 'Everything an application';
+        $root->_childrens = $sysmap;
+        $rootedSysmap = array($root);
 
         $formElement = new \Slys\Form\Element\Tree('sysmap_id');
         $formElement->setValueKey('hash');
         $formElement->setTitleKey('name');
         $formElement->setChildrensKey('_childrens');
-        $formElement->setMultiOptions($sysmap);
+        $formElement->setMultiOptions($rootedSysmap);
         return $formElement;
     }
     

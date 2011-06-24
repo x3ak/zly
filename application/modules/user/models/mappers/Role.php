@@ -35,7 +35,7 @@ class Role
     protected $is_default;
     
     /**
-     * @OneToMany(targetEntity="User\Model\Mapper\Rule", mappedBy="role_id")
+     * @OneToMany(targetEntity="User\Model\Mapper\Rule", mappedBy="role")
      */
     protected $rules;
    
@@ -55,19 +55,19 @@ class Role
         $this->name = $name;
     }
 
-    public function getParent_id() {
+    public function getParentId() {
         return $this->parent_id;
     }
 
-    public function setParent_id($parent_id) {
+    public function setParentId($parent_id) {
         $this->parent_id = $parent_id;
     }
 
-    public function getIs_default() {
+    public function getIsDefault() {
         return $this->is_default;
     }
 
-    public function setIs_default($is_default) {
+    public function setIsDefault($is_default) {
         $this->is_default = $is_default;
     }
 
@@ -78,5 +78,32 @@ class Role
     public function setRules($rules) {
         $this->rules = $rules;
     }
+    
+    public function toArray()
+    {
+        $array = array();
+        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
+
+        $vars = get_class_vars(get_class($this));
+        foreach (array_keys($vars) as $var) {
+            $array[$var] = $this->{'get' . $filter->filter($var)}();
+        }
+        
+        return $array;
+    }
+
+    public function fromArray($data)
+    {
+        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
+
+        $vars = get_class_vars(get_class($this));
+        foreach (array_keys($vars) as $var) {
+            if (isset($data[$var]))
+                $this->{'set' . $filter->filter($var)}($data[$var]);
+        }
+
+        return $this;
+    }
+
 }
 

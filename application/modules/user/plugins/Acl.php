@@ -167,7 +167,7 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
         $roles = array();
         foreach($rolesRows as $roleRow) {
             $roles[$roleRow->getId()] = $roleRow;
-            if($roleRow->getIs_default())
+            if($roleRow->getIsDefault())
                 $this->_currentRole = new \Zend\Acl\Role\GenericRole($roleRow->getName());
         }
 

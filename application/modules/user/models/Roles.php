@@ -9,6 +9,10 @@ namespace User\Model;
 
 class Roles extends \Slys\Doctrine\Model
 {
+    /**
+     * Return collection of all roles
+     * @return array
+     */
     public function getRoles()
     {
         return $this->getEntityManager()
@@ -25,6 +29,12 @@ class Roles extends \Slys\Doctrine\Model
         return $this->getRoles();
     }
     
+    /**
+     * Return collection of rules for provided role and resources
+     * @param string $role
+     * @param string $resources
+     * @return array 
+     */
     public function getRulesByRoleAndResources($role, $resources)
     {
         return $this->getEntityManager()
@@ -36,13 +46,13 @@ class Roles extends \Slys\Doctrine\Model
      * Return user role by Id of empty if not found and request update
      * @param int $id
      * @param boolean $forUpdate
-     * @return User_Model_Mapper_User 
+     * @return \User\Model\Mapper\Role 
      */
     public function getRole($id, $forUpdate = false)
     {
-        $role = User_Model_DbTable_Role::getInstance()->getRole($id);
+        $role = $this->getEntityManager()->find('\User\Model\Mapper\Role', $id);
         if ($forUpdate && empty($role))
-            $role = new User_Model_Mapper_User();
+            $role = new Mapper\Role();
         return $role;
     }
 
@@ -61,37 +71,39 @@ class Roles extends \Slys\Doctrine\Model
     }
 
     /**
-     *
-     * @param User_Model_Mapper_Role $role
+     * Saving role
+     * @param Mapper\Role $role
      * @param array $values
      * @return boolean
      */
-    public function saveRole(User_Model_Mapper_Role $role, $values)
+    public function saveRole(Mapper\Role $role, $values)
     {
-        $values['resources'] = (array)$values['resources'];
+        $values['resources'] = (array)$values['resources']; 
         $role->fromArray($values);
-        foreach($role->Rules as $rule) {
-            if(!in_array($rule->resource_id, $values['resources'])) {
-                $rule->delete();
+
+        foreach($role->getRules() as $rule) {            
+            if(!in_array($rule->getResourceId(), $values['resources'])) {
+                $this->getEntityManager()->remove($rule);
             }
         }
+        $this->getEntityManager()->persist($role);               
         
-        $role->clearRelated('Rules');
-
         if(!empty($values['resources'])) {
             foreach($values['resources'] as $key=>$mapId) {
-                $rule = User_Model_DbTable_Rule::getInstance()->findByDql("resource_id = ? AND role_id = ?", array($mapId, $role->id));
-
-                if($rule->count() < 1) {
-                    $rule = new User_Model_Mapper_Rule();
-                    $rule->set('resource_id', $mapId);
-                    $rule->set('role_id', $role->id);
-                    $rule->set('rule', 'allow');
-                    $role->Rules->add($rule);
+                $rule = $this->getEntityManager()
+                             ->getRepository('\User\Model\Mapper\Rule')
+                             ->findOneBy(array('resource_id'=>$mapId, 'role_id'=>$role->getId()));  
+                if(empty($rule)) {
+                    $rule = new Mapper\Rule();
+                    $rule->setResourceId($mapId);
+                    $rule->setRule('allow');    
+                    $rule->setRoleId($role->getId());
+                    $rule->setRole($role);
+                    $this->getEntityManager()->persist($rule);                                                          
                 }
             }
         }
-
-        return $role->save();
+        
+        return $this->getEntityManager()->flush();
     }
 }
