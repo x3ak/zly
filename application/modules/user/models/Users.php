@@ -137,13 +137,13 @@ class Users extends \Slys\Doctrine\Model
               
             $guestRole = new Mapper\Role();
             $guestRole->setName($guestRoleName);
-            $guestRole->setIs_default(true);
+            $guestRole->setIsDefault(true);
             $this->getEntityManager()->persist($guestRole);
             $this->getEntityManager()->flush();
             
             $userRole = new Mapper\Role();
             $userRole->setName($userRoleName);
-            $userRole->setParent_id($guestRole->getId());
+            $userRole->setParentId($guestRole->getId());
             $this->getEntityManager()->persist($userRole);
             $this->getEntityManager()->flush();
             
