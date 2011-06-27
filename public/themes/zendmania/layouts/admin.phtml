@@ -1,0 +1,61 @@
+<?php echo $this->doctype() . PHP_EOL; ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <?php
+        $this->headLink()->appendStylesheet('/themes/default/css/admin.css');
+        echo $this->headTitle('SlyS Administration') . PHP_EOL .
+        $this->headMeta() . PHP_EOL .
+        $this->headLink() . PHP_EOL .
+        $this->headStyle() . PHP_EOL .
+        $this->headScript();
+        ?>
+    </head>
+    <body class="claro">
+        <div class="header">
+            <div id="header">
+                <div class="container">
+                    <div id="logo">
+                        <a href="<?php echo $this->url(array('module' => ''), 'admin', true); ?>">
+                            Administrator Panel
+                        </a>
+                    </div>
+                </div>
+                <div class="user-menu"><?php echo $this->layout()->usermenu; ?></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <?php if (!empty($this->layout()->left)) { ?>
+            <div class="left">
+                <div id="left"><?php echo $this->layout()->left; ?></div>
+            </div>
+        <?php } ?>
+        <div class="main-wrapper <?php if (!empty($this->layout()->left))
+            echo 'with-left'; ?>">
+
+            <div class="subwrapper">
+                <div class="breadcrumbs"><div class="main-breadcrumbs"><div class="left-breadcrumbs">
+                            <div class="right-breadcrumbs">
+                                <div class="breadcrumbs-link"><a class="breadcrumbs-home" href="/">&nbsp;</a></div>
+                                <div class="breadcrumbs-separator"></div>
+                                    <?php echo $this->navigation()
+                                            ->breadcrumbs()
+                                            ->setMinDepth(0)
+                                            ->setLinkLast(true)
+                                            ->setSeparator('<div class="breadcrumbs-separator"></div>'); ?>
+                            </div>
+                        </div></div></div>
+
+
+                <div class="main-content">
+                    <?php echo $this->layout()->top; ?>
+                    <?php echo $this->layout()->content; ?>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div id="footer">&copy; 2010 Optimum Web. Powered by <a href="#">SlyS</a>
+            <?php echo $this->layout()->footer; ?></div>
+        </div>
+    </body>
+</html>

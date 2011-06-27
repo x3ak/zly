@@ -1,0 +1,178 @@
+body {
+	background: #373E46 url(../images/background.png) center top no-repeat;
+	font-family: Tahoma;
+	font-size: 90%;
+	color: #DDE4E8;
+}
+
+a {
+	color: #fff;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+div.wrapper {
+	width: 1000px;
+	margin: 0 auto;
+	
+}
+
+div.clear-both {
+	clear: both;
+}
+
+div.main {
+	padding-top: 20px;
+}
+
+div.menu {
+	width: 200px;
+	float: left;	
+	margin-right: 10px;
+	color: #8899A0;
+}
+
+div.menu a {
+	font-size: 140%;
+	color: #8899A0;
+	display: block;
+	text-align: right;
+	line-height: 30px;
+}
+
+div.menu a.active {
+	text-decoration: underline;
+}
+
+div.menu a:hover {
+	color: #DDE4E7;
+}
+
+a.logo {
+	margin-left: 200px;
+}
+
+a.logo img {
+	border: none;
+}
+
+div.languages {
+	float: right;
+	width: 50px;
+	margin-right: 200px;
+	margin-top: 20px;
+}
+
+div.languages a.en {
+	display:block;
+	float: left;
+	width: 16px;
+	height: 11px;
+	background: url(../images/gb.png);
+	margin-right: 5px;
+}
+
+div.languages a.ru {
+	display:block;
+	float: left;
+	width: 16px;
+	height: 11px;
+	background: url(../images/ru.png);
+	margin-right: 5px;
+}
+
+div.content {
+	float: left;
+	width: 700px;
+	min-height: 400px;
+}
+
+div.slider {
+	padding-left: 256px;
+	height: 256px;
+	background: url(../images/slider2.png) no-repeat;
+}
+
+div.slider div.logo {
+	height: 256px;
+	width: 256px;
+	float: left;
+}
+
+div.slider div.title {
+	padding-top: 20px;
+	font-size: 170%;
+}
+
+div.slider div.subtitle {
+	font-size: 80%;
+	font-weight: bold;
+	color:#fff;
+}
+
+div.slider div.description {
+	margin-top: 20px;
+	font-size: 80%;
+	width: 300px;
+	color: #DDE4E7;
+}
+
+div.slider a.more {
+	margin-top: 20px;
+	color: #fff;
+	display: block;
+	float: left;
+}
+
+div.slider div.switcher {
+	width: 200px;
+	float: right;
+}
+
+div.slider div.switchers {
+	float: left;
+	width: 20px;
+	height: 20px;
+	background: url(../images/slider-switcher.png);
+	margin-left: 4px;
+	text-align: center;
+	line-height: 20px;
+	cursor: pointer;
+}
+
+div.slider div.switchers:hover {
+	background: url(../images/slider-switcher-hover.png);
+}
+
+div.content-wrapper {
+	font-size: 80%;
+	color: #DDE4E7;
+	width: 600px;
+}
+
+div.breadcrumbs {
+	margin-top: 4px;
+	margin-bottom: 20px;
+	font-size: 140%;
+	color: #8899A0;
+}
+
+
+
+div.breadcrumbs  a{
+	color: #8899A0;
+}
+
+div.breadcrumbs  a:hover{
+	color: #DDE4E7;
+}
+
+div.footer {
+	padding-top: 20px;
+	width: 400px;
+	margin: 0 auto;
+	color: #8899A0;
+}

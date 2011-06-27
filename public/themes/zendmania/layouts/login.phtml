@@ -1,0 +1,24 @@
+<?php echo $this->doctype() . PHP_EOL; ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+	<?php
+
+	$this->headLink()->appendStylesheet('/themes/default/css/login.css');
+
+	echo $this->headTitle('SlyS Administration Login') . PHP_EOL .
+		 $this->headMeta() . PHP_EOL .
+		 $this->headLink() . PHP_EOL .
+		 $this->headStyle() . PHP_EOL .
+		 //$this->dojo() . PHP_EOL .
+		 $this->headScript();
+	?>
+		
+	</head>
+
+	<body class="claro">
+		<div class="content">
+			<h2>Administrator login:</h2>
+			<?php echo $this->layout()->content; ?>
+		</div>
+	</body>
+</html>
