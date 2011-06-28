@@ -63,7 +63,8 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
         $driverImpl = $config->newDefaultAnnotationDriver($this->_entitiesPaths);
         $config->setMetadataDriverImpl($driverImpl);
         $config->setQueryCacheImpl($cache);
-        $config->setProxyDir('/slys/proxies');
+        $tempdir = sys_get_temp_dir();
+        $config->setProxyDir($tempdir.'/slys/proxies');
         $config->setProxyNamespace('Slys\Proxies');
 
 

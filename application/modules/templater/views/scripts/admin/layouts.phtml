@@ -7,27 +7,30 @@
         <th width="20">Published</th>
         <th width="10">Actions</th>
     </tr>
-    <?php foreach ($this->pager->execute() as $item) {
+    <?php foreach ($this->layouts as $item) {
  ?>
         <tr>
-            <td align="center"><?php echo $item->id; ?></td>
+            <td align="center"><?php echo $item->getId(); ?></td>
             <td>
-                <?php echo $this->link($item->title, $this->url(array('action' => 'edit-layout', 'id' => $item->id))); ?>
+                <a href="<?php echo $this->broker('url')->direct(array('action' => 'edit-layout', 'id' => $item->getId())); ?>"><?php echo $item->getTitle();?></a>
             </td>
-            <td align="center"><?php echo $item->name; ?></td>
-            <td align="center"><?php echo $item->Theme->title; ?></td>
-            <td align="center"><a href="<?php echo $this->url(array('action' => 'publish-layout',  'id' => $item->id)); ?>" class="icon16 <?php
-            if ($item->published)
-                echo 'icon-published'; else
-                echo 'icon-not-published'
-    ?>"></a></td>
+            <td align="center"><?php echo $item->getName(); ?></td>
+            <td align="center"><?php echo $item->getTheme()->getTitle(); ?></td>
+            <td align="center"><a href="<?php echo $this->broker('url')->broker(array('action' => 'publish-layout',  'id' => $item->getId())); ?>" class="icon16 
+            <?php if ($item->getPublished())
+                    echo 'icon-published'; 
+                  else
+                    echo 'icon-not-published' ?>"></a></td>
         <td align="center" nowrap="nowrap">
-            <?php echo $this->link('Widgets', $this->url(array('action' => 'widgets', 'layid' => $item->id)),
-                            array('class' => 'icon-layout_content')); ?>
-            <?php echo $this->link('Edit', $this->url(array('action' => 'edit-layout', 'id' => $item->id)),
-                            array('class' => 'edit-item')); ?>
-            <?php echo $this->link('Delete', $this->url(array('action' => 'delete-layout', 'id' => $item->id)),
-                    array('class' => 'delete-item'), 'Delete this layout?'); ?>
+            <a class="icon-layout_content" href="
+                      <?php echo $this->broker('url')->broker(array('action' => 'widgets', 'layid' => $item->id));?>">
+            Widgets</a>
+            <a class="edit-item" href="
+                      <?php echo $this->broker('url')->broker(array('action' => 'edit-layout', 'id' => $item->id));?>">
+            Edit</a>
+            <a class="delete-item" href="
+                      <?php echo $this->broker('url')->broker(array('action' => 'delete-layout', 'id' => $item->id));?>">
+            Delete</a>
         </td>
     </tr>
 <?php } ?>

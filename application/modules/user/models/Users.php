@@ -132,37 +132,37 @@ class Users extends \Slys\Doctrine\Model
     
     public function createDefaultUser($userName, $userPassword, $userRoleName, $guestRoleName) 
     {
-            $apiRequest = new \Slys\Api\Request($this,  'sysmap.get-root-identifier');
-            $rootNode = $apiRequest->proceed()->getResponse()->getFirst();
-              
-            $guestRole = new Mapper\Role();
-            $guestRole->setName($guestRoleName);
-            $guestRole->setIs_default(true);
-            $this->getEntityManager()->persist($guestRole);
-            $this->getEntityManager()->flush();
-            
-            $userRole = new Mapper\Role();
-            $userRole->setName($userRoleName);
-            $userRole->setParent_id($guestRole->getId());
-            $this->getEntityManager()->persist($userRole);
-            $this->getEntityManager()->flush();
-            
-            $rule = new Mapper\Rule();
-            $rule->setResourceId($rootNode);
-            $rule->setRule('allow');
-            $rule->setRole($userRole);
-            $this->getEntityManager()->persist($rule);            
-            $this->getEntityManager()->flush();
-            
-            $user = new Mapper\User();
-            $user->setActive(true);
-            $user->setPassword(md5($userPassword));
-            $user->setLogin($userName);
-            $user->setRole($userRole);
-            $this->getEntityManager()->persist($user);
-            $this->getEntityManager()->flush();
-            
-            return $this;
+        $apiRequest = new \Slys\Api\Request($this,  'sysmap.get-root-identifier');
+        $rootNode = $apiRequest->proceed()->getResponse()->getFirst();
+
+        $guestRole = new Mapper\Role();
+        $guestRole->setName($guestRoleName);
+        $guestRole->setIs_default(true);
+        $this->getEntityManager()->persist($guestRole);
+        $this->getEntityManager()->flush();
+
+        $userRole = new Mapper\Role();
+        $userRole->setName($userRoleName);
+        $userRole->setParent_id($guestRole->getId());
+        $this->getEntityManager()->persist($userRole);
+        $this->getEntityManager()->flush();
+
+        $rule = new Mapper\Rule();
+        $rule->setResourceId($rootNode);
+        $rule->setRule('allow');
+        $rule->setRole($userRole);
+        $this->getEntityManager()->persist($rule);            
+        $this->getEntityManager()->flush();
+
+        $user = new Mapper\User();
+        $user->setActive(true);
+        $user->setPassword(md5($userPassword));
+        $user->setLogin($userName);
+        $user->setRole($userRole);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+
+        return $this;
     }
     
 }

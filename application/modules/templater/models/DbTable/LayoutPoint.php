@@ -8,18 +8,12 @@
  * @version $Id: Generator.php 985 2011-01-06 08:23:52Z deeper $
  * @license New BSD
  */
-class Templater_Model_DbTable_LayoutPoint extends Doctrine_Table
-{
+namespace Templater\Model\DbTable;
 
-    /**
-     * Returns an instance of this class.
-     * 
-     * @return Templater_Model_DbTable_LayoutPoint
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('Templater_Model_Mapper_LayoutPoint');
-    }
+use Doctrine\ORM\EntityRepository;
+
+class LayoutPoint extends EntityRepository
+{
 
     /**
      * Remove from DB layout points which not in new points set
@@ -29,11 +23,17 @@ class Templater_Model_DbTable_LayoutPoint extends Doctrine_Table
      */
     public function deleteUnusedPoints($layId, array $newPoints)
     {
-        $points = $this->createQuery('lp')
-                       ->whereNotIn('lp.map_id', $newPoints)
-                       ->addWhere('lp.layout_id = ?', array($layId))
-                       ->execute();
-        return $points->delete();
+        $qb = $this->createQueryBuilder('lp');
+        $newPoints = $qb->expr()->in('lp.map_id', $newPoints);
+
+        $points = $qb
+                     ->where('lp.layout_id = ?', $layId)
+                     ->where($newPoints)
+                     ->getQuery()
+                     ->execute();
+        foreach($points as $point)
+            $this->getEntityManager()->remove($point);
+        return $this->getEntityManager()->flush();
     }
 }
 

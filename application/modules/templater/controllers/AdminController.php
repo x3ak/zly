@@ -59,9 +59,8 @@ class AdminController extends \Zend\Controller\Action
                         ->addMessage($exception->getMessage());
             }
             
-            $this->_helper->getHelper('FlashMessenger')
-                    ->addMessage('Theme successful saved.');
-            $this->_redirect($this->_helper->url->url(array('action'=>'themes','module'=>'templater'),'admin'));
+            $this->broker('FlashMessenger')->addMessage('Theme successful saved.');
+            $this->broker('redirector')->goToRoute(array('action'=>'themes','module'=>'templater'), 'admin', true);
         }
         $this->view->editThemeForm = $form;
     }
@@ -75,13 +74,12 @@ class AdminController extends \Zend\Controller\Action
         try {
             $result = $model->deleteTheme($this->getRequest()->getParam('id'));
             if ($result)
-            $this->_helper->getHelper('FlashMessenger')
+            $this->broker('FlashMessenger')
                     ->addMessage('Theme successful deleted.');
         } catch(Exception $exception) {
-            $this->_helper->getHelper('FlashMessenger')
-                    ->addMessage($exception->getMessage());
+            $this->broker('FlashMessenger')->addMessage($exception->getMessage());
         }
-        $this->_redirect($this->_helper->url->url(array('action'=>'themes','module'=>'templater'),'admin'));
+        $this->broker('redirector')->goToRoute(array('action'=>'themes','module'=>'templater'), 'admin', true);
     }
 
     /**
@@ -94,14 +92,14 @@ class AdminController extends \Zend\Controller\Action
     public function layoutsAction()
     {
         $tplId = $this->getRequest()->getParam('tpl', null);
-        $layoutsModel = new Mode\Layouts();
+        $layoutsModel = new Model\Layouts();
         $where = array();
         if (!empty($tplId))
             $where['theme_id'] = $tplId;
-            $this->view->pager = $layoutsModel->getLayoutsPager(
-            $this->getRequest()->getParam('page', 1),
-            $this->getRequest()->getParam('perPage', 20),
-            $where
+            $this->view->layouts = $layoutsModel->getLayoutsPaginator(
+                $this->getRequest()->getParam('page', 1),
+                $this->getRequest()->getParam('perPage', 20),
+                $where
         );
     }
 
@@ -111,16 +109,15 @@ class AdminController extends \Zend\Controller\Action
      */
     public function editLayoutAction()
     {
-        $layoutModel = new Mode\Layouts();
+        $layoutModel = new Model\Layouts();
         $layout = $layoutModel->getLayout($id = $this->getRequest()->getParam('id'), true);
-        $form = new Templater_Form_Layout();
+        $form = new Form\Layout();
         $form->populate($layout->toArray());
 
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
             $layoutModel->saveLayout($layout, $form->getValues());
-            $this->_helper->getHelper('FlashMessenger')
-                    ->addMessage('Layout successful saved.');
-            $this->_redirect($this->_helper->url->url(array('action'=>'layouts','module'=>'templater'),'admin'));
+            $this->broker('FlashMessenger')->addMessage('Layout successful saved.');
+            $this->broker('redirector')->goToRoute(array('action'=>'layouts','module'=>'templater'), 'admin', true);
         }
         $this->view->editLayoutForm = $form;
     }
@@ -134,14 +131,12 @@ class AdminController extends \Zend\Controller\Action
         try{
             $result = $model->deleteLayout($this->getRequest()->getParam('id'), $this->getRequest());
             if ($result)
-                $this->_helper->getHelper('FlashMessenger')
-                        ->addMessage('Layout successful deleted.');
+                $this->broker('FlashMessenger')->addMessage('Layout successful deleted.');
         } catch(Exception $exception) {
-            $this->_helper->getHelper('FlashMessenger')
-                    ->addMessage($exception->getMessage());
+            $this->broker('FlashMessenger')->addMessage($exception->getMessage());
         }
         
-        $this->_redirect($this->_helper->url->url(array('action'=>'layouts','module'=>'templater'),'admin'));
+        $this->broker('redirector')->goToRoute(array('action'=>'layouts','module'=>'templater'), 'admin', true);
     }
 
   

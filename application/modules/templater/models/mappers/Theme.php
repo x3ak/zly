@@ -76,7 +76,7 @@ class Theme
         $this->layouts = $layouts;
     }
     
-        public function toArray()
+    public function toArray()
     {
         $array = array();
         $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');

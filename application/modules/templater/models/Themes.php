@@ -107,30 +107,34 @@ class Themes extends \Slys\Doctrine\Model
             $theme->setCurrent(false);
         }
         $this->getEntityManager()->persist($theme);
-        $this->getEntityManager()->flush();
+        $result = $this->getEntityManager()->flush();
 
         if (!empty($values['import_layouts'])) {
             $layoutsModel->importFromTheme($theme, true);
         }
 
         if($current === true) {
-
+            
+            $apiRequest = new \Slys\Api\Request($this,  'sysmap.get-root-identifier');
+            $rootNode = $apiRequest->proceed()->getResponse()->getFirst();
+ 
             $front = false;
-            foreach($theme->Layouts as $layout) {
-                /* @var $layout Templater_Model_Mapper_Layout */
-                foreach($layout->Points as $point) {
-                    if($point->map_id == '0-816563134a61e1b2c7cd7899b126bde4')
-                            $front = true;
+            foreach($theme->getLayouts() as $layout) {
+                /* @var $layout \Templater\Model\Mapper\Layout */
+                foreach($layout->getPoints() as $point) {
+                    if($point->getMapId() == $rootNode->getResourceId())
+                        $front = true;
                 }
             }
 
             if($front) {
                 $this->disableAllThemes();
-                $theme->current = true;
-                $result = $theme->save();
+                $theme->getCurrent(true);
+                $this->getEntityManager()->persist($theme);
+                $result = $this->getEntityManager()->flush();
             } else {
-                throw new Zend_Exception('Theme can\'t be activated because, '.
-                        'published default public and administrator layouts not found for this theme');
+                throw new \Zend\Layout\Exception('Theme can\'t be activated because, '.
+                        'published default layouts not found for this theme');
             }
         }
 
@@ -163,12 +167,14 @@ class Themes extends \Slys\Doctrine\Model
      */
     public function deleteTheme($id)
     {
-        $theme = Templater_Model_DbTable_Theme::getInstance()->findOneBy('id', $id);
+        $theme = $this->getEntityManager()
+                      ->getRepository('\Templater\Model\Mapper\Theme')->find($id);
         if(empty($theme))
             return false;
-        if($theme->current == true)
+        if($theme->getCurrent() == true)
             throw new Zend_Exception('You can\'t delete active theme.');
-        return $theme->delete();
+        $this->getEntityManager()->remove($theme);
+        return $this->getEntityManager()->flush();
     }
 
 }

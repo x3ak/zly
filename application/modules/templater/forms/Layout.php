@@ -6,7 +6,11 @@
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @version    $Id: Layout.php 1134 2011-01-28 14:31:15Z deeper $
  */
-class Templater_Form_Layout extends Zend_Form
+namespace Templater\Form;
+
+use \Zend\Form\Element as Element;
+
+class Layout extends \Zend\Form\Form
 {
     /**
      * Form initialization
@@ -17,62 +21,62 @@ class Templater_Form_Layout extends Zend_Form
         $this->setLegend('New layout');
         $this->addDecorator('fieldset');
         $this->setMethod('POST');
-        $element = new Zend_Form_Element_Text('title');
+        $element = new Element\Text('title');
         $element->setLabel('Title:')
                 ->setRequired(true);
         $this->addElement($element);
 
-        $themeModel = new Model\Themes();
-        $themes = $themeModel->getThemesPager(1, 10000);
+        $themeModel = new \Templater\Model\Themes();
+        $themes = $themeModel->getThemesPaginator(1, 10000);
 
         $themesList = array();
-        foreach ($themes->execute() as $theme) {
-            $themesList[$theme->id] = $theme->title;
+        foreach ($themes as $theme) {
+            $themesList[$theme->getId()] = $theme->getTitle();
         }
 
-        $element = new Zend_Form_Element_Select('theme_id');
+        $element = new Element\Select('theme_id');
         $element->setLabel('Theme:')
                 ->addMultiOptions($themesList)
                 ->setRequired(true);
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Text('name');
+        $element = new Element\Text('name');
         $element->setLabel('Layout file:')
                 ->setRequired(true);
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Checkbox('published');
+        $element = new Element\Checkbox('published');
         $element->setLabel('Published:');
         $this->addElement($element);
 
-        $apiRequest = new Slys_Api_Request($this, 'sysmap.get-map-tree');
+        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-form-element');
         $navigator = $apiRequest->proceed()->getResponse()->getFirst();
 
-        if($navigator instanceof Slys_Form_Element_Tree) {
+        if($navigator instanceof \Slys\Form\Element\Tree) {
             $navigator->setName('map_id');
             $navigator->setMultiple(true);
             $this->addElement($navigator);
         }
 
-        $element = new Zend_Form_Element_Hidden('module');
+        $element = new Element\Hidden('module');
         $element->removeDecorator('Label')
                 ->removeDecorator('HtmlTag')
                 ->setValue($this->_defaultValue);
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Hidden('controller');
+        $element = new Element\Hidden('controller');
         $element->removeDecorator('Label')
                 ->setValue($this->_defaultValue)
                 ->removeDecorator('HtmlTag');
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Hidden('action');
+        $element = new Element\Hidden('action');
         $element->removeDecorator('Label')
                 ->setValue($this->_defaultValue)
                 ->removeDecorator('HtmlTag');
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Submit('submit');
+        $element = new Element\Submit('submit');
         $element->setLabel('Save')
                 ->setIgnore(true);
         $this->addElement($element);

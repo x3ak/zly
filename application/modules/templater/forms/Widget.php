@@ -7,7 +7,11 @@
  *
  * @version    $Id: Widget.php 1065 2011-01-20 10:04:22Z deeper $
  */
-class Templater_Form_Widget extends Zend_Dojo_Form
+namespace Templater\Form;
+
+use \Zend\Form\Element as Element;
+
+class Widget extends \Zend\Form\Form
 {
     /**
      * Form initialization

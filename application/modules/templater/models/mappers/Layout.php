@@ -26,9 +26,9 @@ class Layout
     protected $title;
     /** @Column(length=255) */
     protected $name;
-    /** @Column(type="integer", nullable=true) */
+    /** @Column(type="integer") */
     protected $theme_id;
-    /** @Column(length=1000) */
+    /** @Column(length=1000, nullable=true) */
     protected $params;
     /** @Column(type="boolean") */
     protected $published;
@@ -130,6 +130,29 @@ class Layout
         $this->points = $points;
     }
 
+    public function toArray()
+    {
+        $array = array();
+        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
 
+        $vars = get_class_vars(get_class($this));
+        foreach (array_keys($vars) as $var) {
+            $array[$var] = $this->{'get' . $filter->filter($var)}();
+        }
+        return $array;
+    }
+
+    public function fromArray($data)
+    {
+        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
+
+        $vars = get_class_vars(get_class($this));
+        foreach (array_keys($vars) as $var) {
+            if (isset($data[$var]))
+                $this->{'set' . $filter->filter($var)}($data[$var]);
+        }
+
+        return $this;
+    }
 }
 
