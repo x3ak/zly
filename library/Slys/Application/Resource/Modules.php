@@ -149,9 +149,8 @@ class Modules extends \Zend\Application\Resource\Modules
                 $bootstrapIt = true;
             }
             
-            if($bootstrapIt) {
-                $this->_bootstraps[$module] = $moduleBootstrap;
-            }
+            $moduleBootstrap->_boostrapIt = $bootstrapIt;
+            $this->_bootstraps[$module] = $moduleBootstrap;
             
             // Additional modules of current module
             $moduleModulesDir = dirname($moduleDirectory) . '/modules';
@@ -165,7 +164,8 @@ class Modules extends \Zend\Application\Resource\Modules
         }
 
         foreach($this->_bootstraps as $key=>$bootstrap) { 
-            $bootstrap->bootstrap();
+            if($bootstrap->_boostrapIt === true)
+                $bootstrap->bootstrap();
         }
         
         return $this->_bootstraps;
