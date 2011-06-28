@@ -288,6 +288,35 @@ class Map extends \Slys\Doctrine\Model
         return $this;
     }
     
+    public function initSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->dropSchema($classes);    
+        $tool->createSchema($classes);
+        return $this;
+    }
+    
+    public function updateSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->updateSchema($classes);
+        return $this;
+    }
+    
+    protected function _getShemaClasses()
+    {
+        $em = $this->getEntityManager();
+        $classes = array(
+          $em->getClassMetadata('Sysmap\Model\Mapper\Extend')
+        );
+        
+        return $classes;
+    }
+    
     /**
      * Return extension hash of provided action and request
      * 

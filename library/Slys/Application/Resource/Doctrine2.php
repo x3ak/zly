@@ -27,11 +27,13 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
     public function init()
     {
         $front = $this->getBootstrap()->getBroker()->load('frontcontroller')->getFrontController();
-
-        if (APPLICATION_ENV == "development") {
-            $cache = new \Doctrine\Common\Cache\ArrayCache;
+        $connectionOptions = $this->getOptions();
+        
+        if (!empty($connectionOptions['cache'])) {
+            $cacheClass = '\Doctrine\Common\Cache\\'.ucfirst($connectionOptions['cache']).'Cache';
+            $cache = new $cacheClass();
         } else {
-            $cache = new \Doctrine\Common\Cache\ApcCache;
+            $cache = new \Doctrine\Common\Cache\ArrayCache;
         }
         
         $boostrap = $this->getBootstrap()->getApplication();
@@ -74,7 +76,7 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
             $config->setAutoGenerateProxyClasses(false);
         }
 
-        $connectionOptions = $this->getOptions();
+        
 
         if($connectionOptions === null)
             $connectionOptions = array('driver'=>'pdo_mysql');
