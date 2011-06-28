@@ -7,23 +7,27 @@
  *
  * @version    $Id: Theme.php 867 2010-12-22 12:44:26Z deeper $
  */
-class Templater_Form_Theme extends Zend_Dojo_Form
+namespace Templater\Form;
+
+use \Zend\Form\Element as Element;
+
+class Theme extends \Zend\Form\Form
 {
 
     public function init()
     {
         $this->setMethod('POST');
-        $element = new Zend_Dojo_Form_Element_TextBox('title');
+        $element = new Element\Text('title');
         $element->setLabel('Title:');
         $element->setRequired(true);
         $this->addElement($element);
 
-        $element = new Zend_Dojo_Form_Element_FilteringSelect('name');
+        $element = new Element\Select('name');
         $element->setLabel('Directory:');
         $element->setRequired(true);
         $this->addElement($element);
 
-        $element = new Zend_Dojo_Form_Element_RadioButton('current');
+        $element = new Element\Radio('current');
         $element->setSeparator('&nbsp;');
         $element->setLabel('Current:');
         $element->setValue(false);
@@ -31,14 +35,14 @@ class Templater_Form_Theme extends Zend_Dojo_Form
         $element->setRequired(true);
         $this->addElement($element);
 
-        $element = new Zend_Dojo_Form_Element_RadioButton('import_layouts');
+        $element = new Element\Radio('import_layouts');
         $element->setSeparator('&nbsp;');
         $element->setLabel('Import layouts:');
         $element->setValue(false);
         $element->setMultiOptions(array('1' => 'Yes', '0' => 'No'));
         $this->addElement($element);
 
-        $element = new Zend_Dojo_Form_Element_SubmitButton('submit');
+        $element = new Element\Submit('submit');
         $element->setLabel('Save');
         $element->setIgnore(true);
         $this->addElement($element);

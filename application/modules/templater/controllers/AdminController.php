@@ -33,8 +33,8 @@ class AdminController extends \Zend\Controller\Action
      */
     public function themesAction()
     {
-        $themesModel = new Templater_Model_Themes();
-        $this->view->pager = $themesModel->getThemesPager(
+        $themesModel = new Model\Themes();
+        $this->view->themes = $themesModel->getThemesPaginator(
             $this->getRequest()->getParam('page', 1),
             $this->getRequest()->getParam('perPage', 20)
         );
@@ -46,7 +46,7 @@ class AdminController extends \Zend\Controller\Action
      */
     public function editThemeAction()
     {
-        $themesModel = new Templater_Model_Themes();
+        $themesModel = new Model\Themes();
         $theme = $themesModel->getTheme(
                         $this->getRequest()->getParam('id'), true);
 
@@ -71,7 +71,7 @@ class AdminController extends \Zend\Controller\Action
      */
     public function deleteThemeAction()
     {
-        $model = new Templater_Model_Themes();
+        $model = new Model\Themes();
         try {
             $result = $model->deleteTheme($this->getRequest()->getParam('id'));
             if ($result)
@@ -94,7 +94,7 @@ class AdminController extends \Zend\Controller\Action
     public function layoutsAction()
     {
         $tplId = $this->getRequest()->getParam('tpl', null);
-        $layoutsModel = new Templater_Model_Layouts();
+        $layoutsModel = new Mode\Layouts();
         $where = array();
         if (!empty($tplId))
             $where['theme_id'] = $tplId;
@@ -111,7 +111,7 @@ class AdminController extends \Zend\Controller\Action
      */
     public function editLayoutAction()
     {
-        $layoutModel = new Templater_Model_Layouts();
+        $layoutModel = new Mode\Layouts();
         $layout = $layoutModel->getLayout($id = $this->getRequest()->getParam('id'), true);
         $form = new Templater_Form_Layout();
         $form->populate($layout->toArray());
@@ -130,7 +130,7 @@ class AdminController extends \Zend\Controller\Action
      */
     public function deleteLayoutAction()
     {
-        $model = new Templater_Model_Layouts();
+        $model = new Mode\Layouts();
         try{
             $result = $model->deleteLayout($this->getRequest()->getParam('id'), $this->getRequest());
             if ($result)
@@ -154,7 +154,7 @@ class AdminController extends \Zend\Controller\Action
      */
     public function widgetsAction()
     {
-        $widgetsModel = new Templater_Model_Widgets();
+        $widgetsModel = new Model\Widgets();
         $this->view->pager = $widgetsModel->getWidgetsPager(
                         $this->getRequest()->getParam('page', 1),
                         $this->getRequest()->getParam('perPage', 20)
@@ -167,8 +167,8 @@ class AdminController extends \Zend\Controller\Action
      */
     public function editWidgetAction()
     {
-        $form = new Templater_Form_Widget();
-        $widgetsModel = new Templater_Model_Widgets();
+        $form = new Form\Widget();
+        $widgetsModel = new Model\Widgets();
         $widget = $widgetsModel->getWidget($this->getRequest()->getParam('id'), true);
         $form->populate($widget->toArray());
 
@@ -186,7 +186,7 @@ class AdminController extends \Zend\Controller\Action
      */
     public function deleteWidgetAction()
     {
-        $widgetsModel = new Templater_Model_Widgets();
+        $widgetsModel = new Model\Widgets();
         $result = $widgetsModel->deleteWidget($this->getRequest()->getParam('id'));
         if($result)
             $this->_helper->getHelper('FlashMessenger')

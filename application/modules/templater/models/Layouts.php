@@ -5,7 +5,9 @@
  *
  * @version    $Id: Layouts.php 1134 2011-01-28 14:31:15Z deeper $
  */
-class Templater_Model_Layouts
+namespace Templater\Model;
+
+class Layouts extends \Slys\Doctrine\Model
 {
 
     /**

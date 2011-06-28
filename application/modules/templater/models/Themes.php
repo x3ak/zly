@@ -5,7 +5,9 @@
  *
  * @version    $Id: Themes.php 1134 2011-01-28 14:31:15Z deeper $
  */
-class Templater_Model_Themes
+namespace Templater\Model;
+
+class Themes extends \Slys\Doctrine\Model
 {
 
     /**
@@ -14,23 +16,23 @@ class Templater_Model_Themes
      */
     public function getlist()
     {
-        return Doctrine_Query::create()
-            ->select('tpl.*')
-            ->from('Templater_Model_Mapper_Theme tpl')
-            ->execute();
+        return $this->getEntityManager()
+                    ->getRepository('Templater\Model\Mapper\Theme')
+                    ->findAll();
     }
 
     /**
-     * Return themes paginator
-     *
-     * @param int $page
-     * @param int $maxPerPage
-     * @return Doctrine_Pager
+     * Return paginator for themes list
+     * @param int $pageNumber
+     * @param int $itemCountPerPage
+     * @return \Zend\Paginator\Paginator 
      */
-    public function getThemesPager($page = 1, $maxPerPage = 20)
+    public function getThemesPaginator($pageNumber = 1, $itemCountPerPage = 20)
     {
-        return Templater_Model_DbTable_Theme::getInstance()
-            ->getPager($page, $maxPerPage);
+        $repo = $this->getEntityManager()->getRepository('Templater\Model\Mapper\Theme');
+        $paginator = new \Zend\Paginator\Paginator($repo->getPaginatorAdapter());
+        $paginator->setCurrentPageNumber($pageNumber)->setItemCountPerPage($itemCountPerPage);
+        return $paginator;
     }
 
     /**
@@ -42,13 +44,14 @@ class Templater_Model_Themes
     public function getTheme($id = null, $forUpdate = false)
     {
         if (!empty($id))
-            $theme = Templater_Model_DbTable_Theme::getInstance()
-                    ->findOneById($id);
+            $theme = $this->getEntityManager()
+                          ->getRepository('\Templater\Model\Mapper\Theme')
+                          ->findOneBy(array('id'=>$id));
         else
             $theme = false;
 
         if (empty($theme) && $forUpdate)
-            $theme = new Templater_Model_Mapper_Theme();
+            $theme = new Mapper\Theme();
 
         return $theme;
     }
@@ -75,11 +78,11 @@ class Templater_Model_Themes
      * @param Templater_Model_Mapper_Theme $theme
      * @return Templater_Form_Theme
      */
-    public function getThemeEditForm(Templater_Model_Mapper_Theme $theme)
+    public function getThemeEditForm(Mapper\Theme $theme)
     {
         $themesDirs = $this->getThemesDirectoriesFromFS();
 
-        $form = new Templater_Form_Theme();
+        $form = new \Templater\Form\Theme();
         if (empty($theme->id))
             $form->getElement('import_layouts')->setValue(true);
 
@@ -94,17 +97,17 @@ class Templater_Model_Themes
      * @param array $values
      * @return boolean
      */
-    public function saveTheme(Templater_Model_Mapper_Theme $theme, array $values)
+    public function saveTheme(Mapper\Theme $theme, array $values)
     {
         $theme->fromArray($values);
-        $layoutsModel = new Templater_Model_Layouts();
+        $layoutsModel = new Layouts();
         $current = false;
-        if ($theme->current == true) {
+        if ($theme->getCurrent() == true) {
             $current = true;
-            $theme->current = false;
+            $theme->setCurrent(false);
         }
-
-        $result = $theme->save();
+        $this->getEntityManager()->persist($theme);
+        $this->getEntityManager()->flush();
 
         if (!empty($values['import_layouts'])) {
             $layoutsModel->importFromTheme($theme, true);
@@ -140,10 +143,10 @@ class Templater_Model_Themes
      */
     public function getThemesDirectoriesFromFS()
     {
-        $options = Zend_Controller_Front::getInstance()
+        $options = \Zend\Controller\Front::getInstance()
                 ->getParam("bootstrap")
                 ->getOption('templater');
-        $dirIterator = new DirectoryIterator($options['directory']);
+        $dirIterator = new \DirectoryIterator($options['directory']);
         $result = array();
         foreach ($dirIterator as $dir) {
             if ($dir->isDir()

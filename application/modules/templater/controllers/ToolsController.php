@@ -16,12 +16,11 @@ class ToolsController extends \Zend\Controller\Action
     /**
      * Display flash system messages
      *
-     * @widget Display flash messages
-     * @form Templater_Form_FlashMessage
+     * @Qualifier Templater_Form_FlashMessage
      */
     public function displayFlashMessagesAction()
     {
-        $messages = $this->_helper->getHelper('FlashMessenger')->getMessages();
+        $messages = $this->broker('FlashMessenger')->getMessages();
         $this->view->messages = $messages;
     }
 }

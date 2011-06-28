@@ -22,7 +22,7 @@ class Templater_Form_Layout extends Zend_Form
                 ->setRequired(true);
         $this->addElement($element);
 
-        $themeModel = new Templater_Model_Themes();
+        $themeModel = new Model\Themes();
         $themes = $themeModel->getThemesPager(1, 10000);
 
         $themesList = array();

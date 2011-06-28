@@ -8,33 +8,21 @@
  * @version $Id: Theme.php 1224 2011-04-04 13:58:41Z deeper $
  * @license New BSD
  */
-class Templater_Model_DbTable_Theme extends Doctrine_Table
+namespace Templater\Model\DbTable;
+
+use Doctrine\ORM\EntityRepository;
+
+class Theme extends EntityRepository
 {
 
     /**
-     * Returns an instance of this class.
-     * 
-     * @return Templater_Model_DbTable_Theme
+     * Return paginator for User mapper
+     * @return \Slys\Paginator\Adapter\Doctrine2 
      */
-    public static function getInstance()
+    public function getPaginatorAdapter()
     {
-        return Doctrine_Core::getTable('Templater_Model_Mapper_Theme');
-    }
-
-    /**
-     * Themes pager
-     * @param int $page
-     * @param int $maxPerPage
-     * @return Doctrine_Pager
-     */
-    public function getPager($page = 1, $maxPerPage = 20)
-    {
-        $query = Doctrine_Query::create()
-            ->select('tpl.*, lay.*')
-            ->from('Templater_Model_Mapper_Theme tpl')
-            ->leftJoin('tpl.Layouts lay');
-
-        return new Doctrine_Pager($query, $page, $maxPerPage);
+        $query = $this->createQueryBuilder('theme')->getQuery();
+        return new \Slys\Paginator\Adapter\Doctrine2($query);
     }
     
     /**
@@ -43,7 +31,7 @@ class Templater_Model_DbTable_Theme extends Doctrine_Table
      */
     public function getCurrentTheme()
     {
-       return $this->findOneByCurrent(true);
+       return $this->findOneBy(array('current'=>true));
     }
 
     /**
@@ -53,12 +41,11 @@ class Templater_Model_DbTable_Theme extends Doctrine_Table
      */
     public function getThemeWithLayouts($id)
     {
-        $query = Doctrine_Query::create()
-                ->select('tpl.*, lay.*')
-                ->from('Templater_Model_Mapper_Theme tpl')
-                ->leftJoin('tpl.Layouts lay')
-                ->addWhere('tpl.id = ?', array($id));
-        return $query->fetchOne();
+        return $this->createQueryBuilder('theme')
+                    ->leftJoin('theme.Layouts', 'lay')
+                    ->where('theme.id = ?', array($id))
+                    ->getQuery()
+                    ->getSingleResult();
     }
 }
 
