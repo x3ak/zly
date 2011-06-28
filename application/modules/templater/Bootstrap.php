@@ -13,7 +13,9 @@ use \Slys\Application\Module as Module,
     \Slys\Api\Request as Api;
 
 class Bootstrap extends \Zend\Application\Module\Bootstrap 
-                implements Module\Installable, Module\Updateable
+                implements Module\Installable, 
+                           Module\Updateable, 
+                           Module\Enableable
 {
     
     /**
@@ -41,6 +43,20 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
         }
     }
     
+    public function enable()
+    {
+        $modulesPlugin = $this->getBroker()->load('modules');
+        $modulesPlugin->enableModule('templater');
+        return true;
+    }
+    
+    public function disable()
+    {
+        $modulesPlugin = $this->getBroker()->load('modules');
+        $modulesPlugin->enableModule('templater', false);
+        return true;
+    }
+    
     public function install()
     {
         $options = $this->getOptions();
@@ -66,7 +82,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
     {
         $options = $this->getOptions();
 
-        if(!empty($options['installed'])) {
+        if(empty($options['installed'])) {
             throw new \Exception('Module not installed');
         }
         $mapModel = new Model\Themes();

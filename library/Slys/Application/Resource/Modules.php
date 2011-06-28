@@ -23,13 +23,6 @@ namespace Slys\Application\Resource;
 
 class Modules extends \Zend\Application\Resource\Modules
 {    
-    /**
-     * Constructor
-     */
-    public function __construct($options = null)
-    {
-        parent::__construct($options);
-    }
 
     /**
      * Initialize modules

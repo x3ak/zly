@@ -42,23 +42,22 @@
                 <?php } ?>  
             </td>
             <td>
-                
                 <?php if($bootstrap instanceof \Slys\Application\Module\Installable) {                    
                     if(!$bootstrap->hasOption('installed') || (boolean)$bootstrap->getOption('installed') == false) { ?>
-                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'install','item'=>$moduleName));?>">Install</a>
+                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'install','item'=>$moduleName));?>">Install</a>
                     <?php } elseif($bootstrap->hasOption('installed') && (boolean)$bootstrap->getOption('installed') == true) { ?>
-                        <a href="#">Uninstall</a>
+                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'uninstall','item'=>$moduleName));?>">Uninstall</a>
                     <?php  } }?>
                         
                 <?php if($bootstrap instanceof \Slys\Application\Module\Updateable) { ?>
-                    <a href="#">Update</a> 
+                    <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'update','item'=>$moduleName));?>">Update</a>
                 <?php }?>
                     
                 <?php if($bootstrap instanceof \Slys\Application\Module\Enableable) { ?>
                     <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) { ?>    
-                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'disable','item'=>$moduleName));?>">Disable</a> 
+                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'disable','item'=>$moduleName));?>">Disable</a> 
                     <?php } else { ?>
-                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'enable','item'=>$moduleName));?>">Enable</a> 
+                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'enable','item'=>$moduleName));?>">Enable</a> 
                     <?php } ?>    
                 <?php } ?>  
                         

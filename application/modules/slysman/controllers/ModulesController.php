@@ -57,13 +57,14 @@ class ModulesController extends \Zend\Controller\Action
     /**
      * 
      */
-    public function installAction()
+    public function proceedAction()
     {
         $module = $this->getRequest()->getParam('item');
+        $deed = $this->getRequest()->getParam('deed');
 
         $bootstrap = $this->modulesBootstraps[$module];
         if( $bootstrap instanceof \Slys\Application\Module\Installable) {
-            $result = $bootstrap->install();
+            $result = $bootstrap->{$deed}();
             if($result instanceof \Zend\Controller\Request\AbstractRequest) {
                 $this->_forward(
                         $result->getActionName(), 
@@ -79,74 +80,8 @@ class ModulesController extends \Zend\Controller\Action
         }
         
         $this->view->result = $result;
-    }
-    
-    
-    /**
-     * 
-     */
-    public function enableAction()
-    {
-        $module = $this->getRequest()->getParam('item');
-
-        $bootstrap = $this->modulesBootstraps[$module];
-        if( $bootstrap instanceof \Slys\Application\Module\Installable) {
-            $result = $bootstrap->enable();
-            if($result instanceof \Zend\Controller\Request\AbstractRequest) {
-                $this->_forward(
-                        $result->getActionName(), 
-                        $result->getControllerName(), 
-                        $result->getModuleName(), 
-                        $result->getParams()
-                );
-            } else {
-                $this->_redirect($this->broker('url')->direct('index','modules','slysman'));
-                return true;
-            }
-
-        }
-        
-        $this->view->result = $result;
-    }
-    
-    /**
-     * 
-     */
-    public function updateAction()
-    {
-        $stack = array();
-        foreach($this->modulesBootstrap as $moduleName=>$bootstrap) {
-            if($bootstrap instanceof \Slys\Application\Module\Updateable) {                
-                $stack[$moduleName]['bootstrap'] = $bootstrap;
-                if($this->getRequest()->isPost()) {
-                    $modules = $this->getRequest()->getPost('modules');
-                    if(in_array($moduleName, $modules))
-                        $stack[$moduleName]['result'] = $bootstrap->update();
-                }
-            }
-        }
-        $this->view->stack = $stack;
-    }
-    
-    /**
-     * 
-     */
-    public function uninstallAction()
-    {
-        $stack = array();
-        foreach($this->modulesBootstrap as $moduleName=>$bootstrap) {
-            if($bootstrap instanceof \Slys\Application\Module\Installable) {
-                $stack[$moduleName]['bootstrap'] = $bootstrap;
-                if($this->getRequest()->isPost()) {
-                    $modules = $this->getRequest()->getPost('modules');
-                    if(in_array($moduleName, $modules))
-                        $stack[$moduleName]['result'] = $bootstrap->uninstall();
-                }
-            }
-        }
-        $this->view->stack = $stack;
-    }
-    
+    }   
+  
     /**
      *
      * @param \Zend\Application\Module\Bootstrap $bootstrap
