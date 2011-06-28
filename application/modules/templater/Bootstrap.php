@@ -12,7 +12,8 @@ namespace Templater;
 use \Slys\Application\Module as Module, 
     \Slys\Api\Request as Api;
 
-class Bootstrap extends \Zend\Application\Module\Bootstrap implements Module\Installable, Module\Updateable
+class Bootstrap extends \Zend\Application\Module\Bootstrap 
+                implements Module\Installable, Module\Updateable
 {
     
     /**
@@ -42,17 +43,37 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Module\Ins
     
     public function install()
     {
-        return 'Templater installed';
+        $options = $this->getOptions();
+
+        if(!empty($options['installed'])) {
+            throw new \Exception('Module already installed');
+        }
+        $mapModel = new Model\Themes();
+        $mapModel->initSchema();
+        $modulesPlugin = $this->getBroker()->load('modules');
+        $modulesPlugin->installModule('templater');
+        return true;
     }
     
     public function update()
     {
-        return 'Templater updated';
+        $themeModule = new Model\Themes();
+        $themeModule->updateSchema();
+        return true;
     }
     
     public function uninstall()
     {
-        return 'Templater uninstalled';
+        $options = $this->getOptions();
+
+        if(!empty($options['installed'])) {
+            throw new \Exception('Module not installed');
+        }
+        $mapModel = new Model\Themes();
+        $mapModel->dropSchema();
+        $modulesPlugin = $this->getBroker()->load('modules');
+        $modulesPlugin->installModule('templater', false);
+        return true;
     }
 
 }

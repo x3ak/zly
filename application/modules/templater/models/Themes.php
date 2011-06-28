@@ -176,5 +176,47 @@ class Themes extends \Slys\Doctrine\Model
         $this->getEntityManager()->remove($theme);
         return $this->getEntityManager()->flush();
     }
+    
+    public function initSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->dropSchema($classes);    
+        $tool->createSchema($classes);
+        return $this;
+    }
+    
+    public function updateSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->updateSchema($classes);
+        return $this;
+    }
+    
+    public function dropSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->dropSchema($classes);
+        return $this;
+    }
+    
+    protected function _getShemaClasses()
+    {
+        $em = $this->getEntityManager();
+        $classes = array(
+          $em->getClassMetadata('Templater\Model\Mapper\Layout'),
+          $em->getClassMetadata('Templater\Model\Mapper\LayoutPoint'),
+          $em->getClassMetadata('Templater\Model\Mapper\Theme'),
+          $em->getClassMetadata('Templater\Model\Mapper\Widget'),
+          $em->getClassMetadata('Templater\Model\Mapper\WidgetPoint'),
+        );
+        
+        return $classes;
+    }
 
 }

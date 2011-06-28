@@ -10,7 +10,8 @@ namespace Sysmap;
 use \Slys\Application\Module as Module, 
     \Slys\Api as Api;
 
-class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Request\Requestable
+class Bootstrap extends \Zend\Application\Module\Bootstrap 
+                implements Api\Request\Requestable, Module\Installable, Module\Updateable
 {
     public function onRequest(\Slys\Api\Request $request) 
     {
@@ -66,4 +67,40 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap implements Api\Reques
                 break;
         }
     }
+    
+    public function install()
+    {
+        $options = $this->getOptions();
+
+        if(!empty($options['installed'])) {
+            throw new \Exception('Module already installed');
+        }
+        $mapModel = new Model\Map();
+        $mapModel->initSchema();
+        $modulesPlugin = $this->getBroker()->load('modules');
+        $modulesPlugin->installModule('sysmap');
+        return true;
+    }
+    
+    public function uninstall() 
+    {
+        $options = $this->getOptions();
+
+        if(empty($options['installed'])) {
+            throw new \Exception('Module not installed');
+        }
+        $mapModel = new Model\Map();
+        $mapModel->dropSchema();
+        $modulesPlugin = $this->getBroker()->load('modules');
+        $modulesPlugin->installModule('sysmap', false);
+        return true;
+    }
+    
+    public function update() 
+    {
+        $mapModel = new Model\Map();
+        $mapModel->dropSchema();
+        return true;
+    }
+
 }
