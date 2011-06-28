@@ -81,7 +81,8 @@ class Layout extends EntityRepository
      */
     public function getPaginatorAdapter()
     {
-        $query = $this->createQueryBuilder('layout')->getQuery();
+        $query = $this->createQueryBuilder('layout')->select('layout', 'theme')
+                      ->leftJoin('layout.theme', 'theme')->getQuery();
         return new \Slys\Paginator\Adapter\Doctrine2($query);
     }
 
