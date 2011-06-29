@@ -99,7 +99,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
     public function update() 
     {
         $mapModel = new Model\Map();
-        $mapModel->dropSchema();
+        $mapModel->updateSchema();
         return true;
     }
 

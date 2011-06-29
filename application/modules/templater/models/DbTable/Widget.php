@@ -18,17 +18,6 @@ class Widget extends EntityRepository
         return $query->execute();
     }
 
-    public function getPager($page = 1, $maxPerPage = 20)
-    {
-        $query = Doctrine_Query::create()
-                        ->select('wd.*, lay.*, tpl.*')
-                        ->from('Templater_Model_Mapper_Widget wd')
-                        ->leftJoin('wd.Layout lay')
-                        ->leftJoin('lay.Theme tpl');
-
-        return new Doctrine_Pager($query, $page, $maxPerPage);
-    }
-
     public function getLayoutWithWidgetsbyNameAndRequest($layoutName, $mapIds = array())
     {
         $ids = array();
@@ -68,7 +57,11 @@ class Widget extends EntityRepository
      */
     public function getPaginatorAdapter()
     {
-        $query = $this->createQueryBuilder('theme')->getQuery();
+        $query = $this->createQueryBuilder('wd')
+                      ->select('wd','lay','theme')
+                      ->leftJoin('wd.layout', 'lay')
+                      ->leftJoin('lay.theme', 'theme')
+                      ->getQuery();
         return new \Slys\Paginator\Adapter\Doctrine2($query);
     }
 }

@@ -89,6 +89,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
         $mapModel->dropSchema();
         $modulesPlugin = $this->getBroker()->load('modules');
         $modulesPlugin->installModule('templater', false);
+        $this->disable();
         return true;
     }
 

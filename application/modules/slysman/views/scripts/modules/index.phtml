@@ -1,6 +1,5 @@
 <?php echo $this->broker('headLink')->appendStylesheet('/slysman/public/files/css/install.css'); ?>
 <h2>Application Modules </h2>
-<?php echo $this->modulesForm->getElement('action'); ?>
 <table border="1" cellspacing="0" cellpadding="3">
     <tr>
         <th></th>
@@ -38,28 +37,31 @@
 
             <td align="center">
                 <?php if($bootstrap instanceof \Slys\Application\Module\Enableable) { ?>
-                    <?php if($bootstrap->hasOption('enabled')) echo (int)$moduleOptions['enabled'];?>
+                    <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) echo 'enabled'; else echo 'disabled  ';?>
                 <?php } ?>  
             </td>
-            <td>
-                <?php if($bootstrap instanceof \Slys\Application\Module\Installable) {                    
-                    if(!$bootstrap->hasOption('installed') || (boolean)$bootstrap->getOption('installed') == false) { ?>
-                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'install','item'=>$moduleName));?>">Install</a>
-                    <?php } elseif($bootstrap->hasOption('installed') && (boolean)$bootstrap->getOption('installed') == true) { ?>
-                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'uninstall','item'=>$moduleName));?>">Uninstall</a>
-                    <?php  } }?>
-                        
-                <?php if($bootstrap instanceof \Slys\Application\Module\Updateable) { ?>
-                    <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'update','item'=>$moduleName));?>">Update</a>
-                <?php }?>
-                    
-                <?php if($bootstrap instanceof \Slys\Application\Module\Enableable) { ?>
-                    <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) { ?>    
-                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'disable','item'=>$moduleName));?>">Disable</a> 
-                    <?php } else { ?>
-                        <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'enable','item'=>$moduleName));?>">Enable</a> 
-                    <?php } ?>    
-                <?php } ?>  
+            <td>                
+                
+            <?php if($bootstrap instanceof \Slys\Application\Module\Installable) {                    
+                if(!$bootstrap->hasOption('installed') || (boolean)$bootstrap->getOption('installed') == false) { ?>
+                    <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'install','item'=>$moduleName));?>">Install</a>
+                <?php } elseif($bootstrap->hasOption('installed') && (boolean)$bootstrap->getOption('installed') == true) { ?>
+                    <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'uninstall','item'=>$moduleName));?>">Uninstall</a>
+                <?php  } }?>
+
+            <?php if($bootstrap instanceof \Slys\Application\Module\Updateable 
+                    && ($bootstrap instanceof \Slys\Application\Module\Installable && (boolean)$bootstrap->getOption('installed') == true)) { ?>
+                <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'update','item'=>$moduleName));?>">Update</a>
+            <?php }?>
+
+            <?php if($bootstrap instanceof \Slys\Application\Module\Enableable 
+                    && ($bootstrap instanceof \Slys\Application\Module\Installable && (boolean)$bootstrap->getOption('installed') == true)) { ?>
+                <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) { ?>    
+                    <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'disable','item'=>$moduleName));?>">Disable</a> 
+                <?php } else { ?>
+                    <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'enable','item'=>$moduleName));?>">Enable</a> 
+                <?php } ?>    
+            <?php } ?>  
                         
             </td>
         </tr>
@@ -68,5 +70,3 @@
         }
     ?>
 </table>
-<?php echo $this->modulesForm->getElement('modules'); ?>
-<?php echo $this->modulesForm->getElement('submit'); ?>

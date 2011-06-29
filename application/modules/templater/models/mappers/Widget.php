@@ -97,7 +97,7 @@ class Widget
 
     public function getPlaceholder()
     {
-        return $this->palceholder;
+        return $this->placeholder;
     }
 
     public function setPlaceholder($placeholder)
