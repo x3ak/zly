@@ -58,20 +58,26 @@ class Widgets extends \Slys\Doctrine\Model
      */
     public function saveWidget(Mapper\Widget $widget, $values)
     {
-        $this->getEntityManager()->getRepository('\Templater\Model\Mapper\WidgetPoint')
-             ->deleteUnusedPoints($widget->getId(), $values['widget_points']);
-
-        $widget->fromArray($values);
+        $widget->fromArray($values);     
+        
+        if($widget->getId()) {
+            $this->getEntityManager()->getRepository('\Templater\Model\Mapper\WidgetPoint')
+                ->deleteUnusedPoints($widget->getId(), $values['widget_points']);
+        }
+        
+        $this->getEntityManager()->persist($widget);
 
         if(!empty($values['widget_points'])) {
             foreach($values['widget_points'] as $key=>$mapId) {
-                $point = $this->_repository->findOneBy(array('map_id' => $mapId, 'widget_id'=>$widget->getId()));
                 
+                if($widget->getId())
+                    $point = $this->_repository->findOneBy(array('map_id' => $mapId, 'widget_id'=>$widget->getId()));
+
                 if(empty($point)) {
                     $point = new Mapper\WidgetPoint();
                     $point->setMapId($mapId);
+                    $point->setWidgetId($widget->getId());
                     $this->getEntityManager()->persist($point);
-                    $widget->getWidgetPoints()->add($point);
                 }
             }
         }

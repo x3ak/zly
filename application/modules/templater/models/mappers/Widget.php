@@ -22,8 +22,6 @@ class Widget
     protected $id;
     /** @Column(length=255) */
     protected $name;
-    /** @Column(length=255) */
-    protected $map_id;
     /** @Column(type="boolean") */
     protected $published;
     /** @Column(type="integer", nullable=true) */
@@ -31,7 +29,7 @@ class Widget
     /** @Column(type="integer", nullable=true) */
     protected $ordering;  
     /** @Column(length=255) */
-    protected $palceholder;
+    protected $placeholder;
     /**
      * @ManyToOne(targetEntity="Templater\Model\Mapper\Layout")
      * @JoinColumn(name="layout_id", referencedColumnName="id", unique=false)
@@ -40,7 +38,7 @@ class Widget
     /**
      * @OneToMany(targetEntity="Templater\Model\Mapper\WidgetPoint", mappedBy="widget")
      */
-    protected $widget_points; 
+    protected $points; 
     
     public function getId()     
     {
@@ -97,14 +95,14 @@ class Widget
         $this->ordering = $ordering;
     }
 
-    public function getPalceholder()
+    public function getPlaceholder()
     {
         return $this->palceholder;
     }
 
-    public function setPalceholder($palceholder)
+    public function setPlaceholder($placeholder)
     {
-        $this->palceholder = $palceholder;
+        $this->placeholder = $placeholder;
     }
 
     public function getLayout()
@@ -117,14 +115,14 @@ class Widget
         $this->layout = $layout;
     }
 
-    public function getWidgetPoints()
+    public function getPoints()
     {
-        return $this->widget_points;
+        return $this->points;
     }
 
-    public function setWidgetPoints($widget_points)
+    public function setPoints($widget_points)
     {
-        $this->widget_points = $widget_points;
+        $this->points = $widget_points;
     }
 
     public function toArray()
