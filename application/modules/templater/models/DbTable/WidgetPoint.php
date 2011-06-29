@@ -8,32 +8,33 @@
  * @version $Id: Generator.php 985 2011-01-06 08:23:52Z deeper $
  * @license New BSD
  */
-class Templater_Model_DbTable_WidgetPoint extends Doctrine_Table
+namespace Templater\Model\DbTable;
+
+use Doctrine\ORM\EntityRepository;
+
+class WidgetPoint extends EntityRepository
 {
-
     /**
-     * Returns an instance of this class.
-     * 
-     * @return Templater_Model_DbTable_WidgetPoint
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('Templater_Model_Mapper_WidgetPoint');
-    }
-
-    /**
-     * Remove from DB layout points which not in new points set
+     * Remove from DB widget points which not in new points set
      * @param int $layId
      * @param array $newPoints
      * @return boolean
      */
     public function deleteUnusedPoints($wdId, array $newPoints)
     {
-        $points = $this->createQuery('point')
-                       ->whereNotIn('point.map_id', $newPoints)
-                       ->addWhere('point.widget_id = ?', array($wdId))
-                       ->execute();
-        return $points->delete();
+        $qb = $this->createQueryBuilder('wp');
+        $pointsPart = $qb->expr()->in('wp.map_id', ':points');
+
+        $query = $qb ->andWhere('wp.widget_id = :wdId')
+                     ->andWhere($pointsPart)
+                     ->setParameter('wdId', $wdId)
+                     ->setParameter('points', $newPoints)
+                     ->getQuery();
+ 
+        $points = $query->execute();
+        foreach($points as $point)
+            $this->getEntityManager()->remove($point);
+        return $this->getEntityManager()->flush();
     }
 }
 

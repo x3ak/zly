@@ -55,6 +55,7 @@ class Layout extends \Zend\Form\Form
         if($navigator instanceof \Slys\Form\Element\Tree) {
             $navigator->setName('map_id');
             $navigator->setMultiple(true);
+            $navigator->setRequired();
             $this->addElement($navigator);
         }
 

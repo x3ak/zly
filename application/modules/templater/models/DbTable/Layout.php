@@ -94,8 +94,10 @@ class Layout extends EntityRepository
     public function getLayoutWithLayoutPoints($layId)
     {
         return $this->createQueryBuilder('lay')
-                    ->leftJoin('lay.points lp')
-                    ->where('lay.id = ?', array($layId))
+                    ->select('lay','lp')
+                    ->leftJoin('lay.points', 'lp')
+                    ->where('lay.id = :layId')
+                    ->setParameter('layId', $layId)
                     ->getQuery()
                     ->getSingleResult();
     }

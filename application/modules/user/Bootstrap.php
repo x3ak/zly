@@ -30,12 +30,23 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
     
     public function uninstall()
     {
+        $options = $this->getOptions();
+
+        if(empty($options['installed'])) {
+            throw new \Exception('Module not installed');
+        }
+        $mapModel = new Model\Users();
+        $mapModel->dropSchema();
+        $modulesPlugin = $this->getBroker()->load('modules');
+        $modulesPlugin->installModule('user', false);
         return true;
     }
     
     public function update()
     {
-        return 'User updated';
+        $mapModel = new Model\Users();
+        $mapModel->updateSchema();
+        return true;
     }
     
     

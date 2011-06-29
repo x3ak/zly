@@ -16,20 +16,20 @@
             </td>
             <td align="center"><?php echo $item->getName(); ?></td>
             <td align="center"><?php echo $item->getTheme()->getTitle(); ?></td>
-            <td align="center"><a href="<?php echo $this->broker('url')->broker(array('action' => 'publish-layout',  'id' => $item->getId())); ?>" class="icon16 
+            <td align="center"><a href="<?php echo $this->broker('url')->direct(array('action' => 'publish-layout',  'id' => $item->getId())); ?>" class="icon16 
             <?php if ($item->getPublished())
                     echo 'icon-published'; 
                   else
                     echo 'icon-not-published' ?>"></a></td>
         <td align="center" nowrap="nowrap">
             <a class="icon-layout_content" href="
-                      <?php echo $this->broker('url')->broker(array('action' => 'widgets', 'layid' => $item->id));?>">
+                      <?php echo $this->broker('url')->direct(array('action' => 'widgets', 'layid' => $item->getId()));?>">
             Widgets</a>
             <a class="edit-item" href="
-                      <?php echo $this->broker('url')->broker(array('action' => 'edit-layout', 'id' => $item->id));?>">
+                      <?php echo $this->broker('url')->direct(array('action' => 'edit-layout', 'id' => $item->getId()));?>">
             Edit</a>
             <a class="delete-item" href="
-                      <?php echo $this->broker('url')->broker(array('action' => 'delete-layout', 'id' => $item->id));?>">
+                      <?php echo $this->broker('url')->direct(array('action' => 'delete-layout', 'id' => $item->getId()));?>">
             Delete</a>
         </td>
     </tr>

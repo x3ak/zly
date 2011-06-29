@@ -62,13 +62,14 @@ class Themes extends \Slys\Doctrine\Model
      */
     public function disableAllThemes()
     {
-        $activeThemes = Templater_Model_DbTable_Theme::getInstance()
-                ->findByDql('current = ?', array(true));
+        $activeThemes = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Theme')
+                ->findBy(array('current'=>true));
 
         foreach ($activeThemes as $theme) {
-            $theme->current = false;
-            $theme->save();
+            $theme->setCurrent(false);
+            $this->getEntityManager()->persist($theme);
         }
+        $this->getEntityManager()->flush();
         return true;
     }
 
@@ -126,10 +127,10 @@ class Themes extends \Slys\Doctrine\Model
                         $front = true;
                 }
             }
-
+            
             if($front) {
                 $this->disableAllThemes();
-                $theme->getCurrent(true);
+                $theme->setCurrent(true);
                 $this->getEntityManager()->persist($theme);
                 $result = $this->getEntityManager()->flush();
             } else {

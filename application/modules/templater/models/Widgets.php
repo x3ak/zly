@@ -5,9 +5,22 @@
  *
  * @version    $Id: Widgets.php 1056 2011-01-19 14:38:17Z deeper $
  */
-class Templater_Model_Widgets
+namespace Templater\Model;
+
+class Widgets extends \Slys\Doctrine\Model
 {
 
+    /**
+     * Widgets repository
+     * @var \Templater\Model\DbTable\Widget
+     */
+    protected $_repository;
+    
+    public function __construct()
+    {
+        $this->_repository = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Widget');
+    }
+    
     /**
      * Return list of all widgets
      *
@@ -15,8 +28,7 @@ class Templater_Model_Widgets
      */
     public function getlist()
     {
-        return Templater_Model_DbTable_Widget::getInstance()
-            ->getWidgets();
+        return $this->_repository->findAll();
     }
 
     /**
@@ -29,13 +41,12 @@ class Templater_Model_Widgets
     public function getWidget($id, $forEdit = false)
     {
         if (empty($id) && $forEdit)
-            $widget = new Templater_Model_Mapper_Widget();
+            $widget = new Mapper\Widget();
         else
-            $widget = Templater_Model_DbTable_Widget::getInstance()
-                    ->getWidgetWithWidgetPoints($id);
+            $widget = $this->_repository->getWidgetWithWidgetPoints($id);
 
         if (empty($widget) && $forEdit)
-            $widget = new Templater_Model_Mapper_Widget();
+            $widget = new Mapper\Widget();
 
         return $widget;
     }
@@ -45,99 +56,43 @@ class Templater_Model_Widgets
      * @param array $values
      * @return boolean
      */
-    public function saveWidget(Templater_Model_Mapper_Widget $widget, $values)
+    public function saveWidget(Mapper\Widget $widget, $values)
     {
-        
-        Templater_Model_DbTable_WidgetPoint::getInstance()
-            ->deleteUnusedPoints($widget->id, $values['widget_points']);
+        $this->getEntityManager()->getRepository('\Templater\Model\Mapper\WidgetPoint')
+             ->deleteUnusedPoints($widget->getId(), $values['widget_points']);
 
         $widget->fromArray($values);
 
         if(!empty($values['widget_points'])) {
             foreach($values['widget_points'] as $key=>$mapId) {
-                $point = Templater_Model_DbTable_WidgetPoint::getInstance()->findByDql("map_id = ? AND widget_id = ?", array($mapId, $widget->id));
+                $point = $this->_repository->findOneBy(array('map_id' => $mapId, 'widget_id'=>$widget->getId()));
                 
-                if($point->count() < 1) {
-                    $point = new Templater_Model_Mapper_WidgetPoint();
-                    $point->set('map_id', $mapId);
-                    $widget->WidgetPoints->add($point);
+                if(empty($point)) {
+                    $point = new Mapper\WidgetPoint();
+                    $point->setMapId($mapId);
+                    $this->getEntityManager()->persist($point);
+                    $widget->getWidgetPoints()->add($point);
                 }
             }
         }
-
-        return $widget->save();
+        
+        return $this->getEntityManager()->flush();
     }
 
     /**
-     * Return pager of widgets
-     *
-     * @param int $page
-     * @param int $maxPerPage
-     * @return Doctrine_Pager
+     * Return paginator for widgets list
+     * @param int $pageNumber
+     * @param int $itemCountPerPage
+     * @return \Zend\Paginator\Paginator 
      */
-    public function getWidgetsPager($page = 1, $maxPerPage = 20)
+    public function getWidgetsPaginator($pageNumber = 1, $itemCountPerPage = 20)
     {
-        return Templater_Model_DbTable_Widget::getInstance()
-            ->getPager($page, $maxPerPage);
+        $repo = $this->getEntityManager()->getRepository('Templater\Model\Mapper\Widget');
+        $paginator = new \Zend\Paginator\Paginator($repo->getPaginatorAdapter());
+        $paginator->setCurrentPageNumber($pageNumber)->setItemCountPerPage($itemCountPerPage);
+        return $paginator;
     }
-
-    /**
-     * Return widget params form
-     *
-     * @param string $module
-     * @param string $controller
-     * @param string $action
-     * @return Zend_Form|boolean
-     */
-    public function getWidgetParamForm($providerName)
-    {
-        if (class_exists($providerName)) {
-            $widget = new $providerName();
-            return $widget->getParamsForm();
-        }
-        else
-            return false;
-    }
-
-    /**
-     * Return description of widget action
-     *
-     * @param string $module
-     * @param string $controller
-     * @param string $action
-     * @return string
-     */
-    public function _getWidgetName($providerName)
-    {
-        return Slys_Esb::getInstance()
-            ->getProvider($providerName)
-            ->getName();
-    }
-
-    /**
-     * Return array of actions which support widgets
-     *
-     * @param string $module
-     * @return array
-     */
-    public function _getActiveWidgets($module = null)
-    {
-        $providers = Slys_Esb::getInstance()
-                ->getProviders('Templater_Esb_Api_Widget');
-
-        $controllers = array();
-        $providers = $providers->getByName($module);
-        foreach ($providers as $provider) {
-            $controllers[] = array(
-                'name' => $provider->getName(),
-                'description' => $provider->getName() .
-                '<div class="select-option-description">' .
-                $provider->getDescription() . '</div>',
-                'value' => $provider->getClass());
-        }
-        return $controllers;
-    }
-
+    
      /**
      * Delete Widget
      * @param int $id

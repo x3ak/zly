@@ -16,10 +16,7 @@ class Layouts extends \Slys\Doctrine\Model
      */
     public function getlist()
     {
-        return Doctrine_Query::create()
-            ->select('lay.*')
-            ->from('Templater_Model_Mapper_Layout lay')
-            ->execute();
+        return $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Layout')->findAll();
     }
 
     /**
@@ -67,37 +64,42 @@ class Layouts extends \Slys\Doctrine\Model
         $options = \Zend\Controller\Front::getInstance()
                 ->getParam("bootstrap")
                 ->getOption('templater');
-
-        $path = $options['directory'] . DIRECTORY_SEPARATOR .
+        
+        $path = realpath($options['directory'] . DIRECTORY_SEPARATOR .
             $theme->getName(). DIRECTORY_SEPARATOR .
-            $options['layout']['directory'];
+            $options['layout']['directory']);
+        if(empty($path))
+            return false;
 
         $layouts = $this->getLayoutsFiles($path);
-
+        
+        $apiRequest = new \Slys\Api\Request($this,  'sysmap.get-root-identifier');
+        $rootNode = $apiRequest->proceed()->getResponse()->getFirst();
+            
         if($import)
             foreach (array_keys($layouts) as $name) {
                 $exist = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Layout')
                         ->findOneBy(array('theme_id'=>$theme->getId(), 'name'=>$name));
-
-                if ($exist) {
+               
+                if (empty($exist)) {
                     $layout = new Mapper\Layout();
-                    $layout->name = $name;
-                    $layout->theme_id = $theme->id;
-                    $layout->title = ucfirst($name);
-                    $layout->published = true;
-                    $layout->save();
-
+                    $layout->setName($name);
+                    $layout->setTheme($theme);
+                    $layout->setTitle(ucfirst($name));
+                    $layout->setPublished(true);
+                    $this->getEntityManager()->persist($layout);
+                    
                     if ($name == $options['layout']['default']) {
 
                         $layPoint = new Mapper\LayoutPoint();
-                        $layPoint->set('map_id', '0-816563134a61e1b2c7cd7899b126bde4');
-                        $layPoint->set('layout_id', $layout->id);
-                        $layPoint->save();
+                        $layPoint->setMapId($rootNode->getResourceId());
+                        $layPoint->setLayout($layout);
+                        $this->getEntityManager()->persist($layPoint);
                     }
-                    
-                    $layout->free();
                 }
             }
+        
+        $this->getEntityManager()->flush();
         return $layouts;
     }
 
@@ -126,7 +128,7 @@ class Layouts extends \Slys\Doctrine\Model
      * @return boolean
      */
     public function saveLayout(Mapper\Layout $layout, $values)
-    {
+    {    
         $layout->fromArray($values);
         
         $id = $layout->getId();

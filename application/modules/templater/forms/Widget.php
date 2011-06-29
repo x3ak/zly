@@ -14,74 +14,80 @@ use \Zend\Form\Element as Element;
 class Widget extends \Zend\Form\Form
 {
     /**
+     * @var \Templater\Model\Themes 
+     */
+    protected $_model;
+    /**
      * Form initialization
      */
     public function init()
     {
         $this->setMethod('POST');
 
-        $themeModel = new Templater_Model_Themes();
-        $themes = $themeModel->getThemesPager(1, 10000);
+        $themes = $this->_model->getlist();
 
         $themesList = array();
-        foreach ($themes->execute() as $theme) {
+        foreach ($themes as $theme) {
             $layoutsList = array();
 
-            foreach ($theme->Layouts as $layout)
-                $layoutsList[$layout->id] = $layout->title;
+            foreach ($theme->getLayouts() as $layout)
+                $layoutsList[$layout->getId()] = $layout->getTitle();
 
-            $themesList[$theme->title] = $layoutsList;
+            $themesList[$theme->getTitle()] = $layoutsList;
         }
 
-        $element = new Zend_Form_Element_Select('layout_id');
+        $element = new Element\Select('layout_id');
         $element->setLabel('Theme layout:')
                 ->addMultiOptions($themesList)
                 ->addDecorator('fieldset')
                 ->setRequired(true);
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Text('name');
+        $element = new Element\Text('name');
         $element->setLabel('Widget name:')
                 ->setRequired(true);
         $this->addElement($element);
 
 
-        $element = new Zend_Form_Element_Text('placeholder');
+        $element = new Element\Text('placeholder');
         $element->setLabel('Position:')
                 ->setRequired(true);
         $this->addElement($element);
 
         $this->addDisplayGroup(array('placeholder','name'), 'place', array('order' => 2, 'legend' => 'Display options:'));
 
-        $apiRequest = new Slys_Api_Request($this, 'sysmap.get-map-tree');
+        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-form-element');
         $sysmapElement = $apiRequest->proceed()->getResponse()->getFirst();
 
-        $actionNavigator = clone $sysmapElement;
-        
-        if ($actionNavigator instanceof Slys_Form_Element_Tree) {
-            $actionNavigator->setName('map_id');
-            $actionNavigator->setLabel('Widget content provider action:');
-            $actionNavigator->addDisableCondition('level', new Zend_Validate_LessThan(3));
-            $this->addElement($actionNavigator);
-        }
+        if(!empty($sysmapElement)) {
+            $actionNavigator = clone $sysmapElement;
 
-        $displayNavigator = clone $sysmapElement;
-        
-        if ($displayNavigator instanceof Slys_Form_Element_Tree) {
-            $displayNavigator->setName('widget_points');
-            $displayNavigator->setLabel('Widget display pages:');
-            $displayNavigator->setMultiple(true);
-            $this->addElement($displayNavigator);
+            if ($actionNavigator instanceof \Slys\Form\Element\Tree) {
+                $actionNavigator->setName('map_id');
+                $actionNavigator->setRequired();
+                $actionNavigator->setLabel('Widget content provider action:');
+                $actionNavigator->addDisableCondition('level', new \Zend\Validator\LessThan(3));
+                $this->addElement($actionNavigator);
+            }
+
+            $displayNavigator = clone $sysmapElement;
+
+            if ($displayNavigator instanceof \Slys\Form\Element\Tree) {
+                $displayNavigator->setName('widget_points');
+                $displayNavigator->setLabel('Widget display pages:');
+                $displayNavigator->setRequired();
+                $displayNavigator->setMultiple(true);
+                $this->addElement($displayNavigator);
+            }
         }
-        
-        $element = new Zend_Form_Element_Text('ordering');
-        $element->addValidator(new Zend_Validate_Int())
+        $element = new Element\Text('ordering');
+        $element->addValidator(new \Zend\Validator\Int())
                 ->setRequired(true)
                 ->setLabel('Ordering:')
                 ->setAttrib('style', 'width:50px;');
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Checkbox('published');
+        $element = new Element\Checkbox('published');
         $element->setLabel('Published:');
         $this->addElement($element);
 
@@ -89,25 +95,25 @@ class Widget extends \Zend\Form\Form
                 array('legend' => 'Publishing options:'));
 
 
-        $element = new Zend_Form_Element_Hidden('module');
+        $element = new Element\Hidden('module');
         $element->removeDecorator('Label')
                 ->removeDecorator('HtmlTag')
                 ->setValue($this->_defaultValue);
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Hidden('controller');
+        $element = new Element\Hidden('controller');
         $element->removeDecorator('Label')
                 ->setValue($this->_defaultValue)
                 ->removeDecorator('HtmlTag');
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Hidden('action');
+        $element = new Element\Hidden('action');
         $element->removeDecorator('Label')
                 ->setValue($this->_defaultValue)
                 ->removeDecorator('HtmlTag');
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Submit('submit');
+        $element = new Element\Submit('submit');
         $element->setLabel('Save');
 
         $element->setIgnore(true);
@@ -134,6 +140,11 @@ class Widget extends \Zend\Form\Form
         }
 
         return parent::populate($values);
+    }
+    
+    public function setModel($model) 
+    {
+        $this->_model = $model;
     }
 
 }

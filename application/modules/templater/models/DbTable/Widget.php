@@ -3,31 +3,18 @@
 /**
  * SlyS
  * 
- * This is a class generated with Zend_CodeGenerator.
- * 
  * @version $Id: Widget.php 1231 2011-04-17 17:49:48Z deeper $
  * @license New BSD
  */
-class Templater_Model_DbTable_Widget extends Doctrine_Table
+namespace Templater\Model\DbTable;
+
+use Doctrine\ORM\EntityRepository;
+
+class Widget extends EntityRepository
 {
-
-    /**
-     * Returns an instance of this class.
-     * 
-     * @return Templater_Model_Mapper_Widget
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('Templater_Model_Mapper_Widget');
-    }
-
     public function getWidgets()
     {
-        $query = Doctrine_Query::create()
-                        ->select('wd.*')
-                        ->from('Templater_Model_Mapper_Widget wd')
-                        ->leftJoin('wd.Layout lay');
-
+        $this->createQueryBuilder('wd')->select('wd','lay')->leftJoin('wd.layout lay');
         return $query->execute();
     }
 
@@ -73,6 +60,16 @@ class Templater_Model_DbTable_Widget extends Doctrine_Table
                     ->leftJoin('wd.WidgetPoints wp')
                     ->addWhere('wd.id = ?', array($wdId))
                     ->fetchOne();
+    }
+    
+    /**
+     * Return paginator for widget mapper
+     * @return \Slys\Paginator\Adapter\Doctrine2 
+     */
+    public function getPaginatorAdapter()
+    {
+        $query = $this->createQueryBuilder('theme')->getQuery();
+        return new \Slys\Paginator\Adapter\Doctrine2($query);
     }
 }
 

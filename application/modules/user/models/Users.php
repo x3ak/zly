@@ -28,6 +28,15 @@ class Users extends \Slys\Doctrine\Model
         return $this;
     }
     
+    public function dropSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->dropSchema($classes);
+        return $this;
+    }
+    
     protected function _getShemaClasses()
     {
         $em = $this->getEntityManager();

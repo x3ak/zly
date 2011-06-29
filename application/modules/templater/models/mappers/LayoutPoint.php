@@ -42,7 +42,7 @@ class LayoutPoint
 
     public function getMapId()
     {
-        return $this->mapId;
+        return $this->map_id;
     }
 
     public function setMapId($map_id)

@@ -150,9 +150,9 @@ class AdminController extends \Zend\Controller\Action
     public function widgetsAction()
     {
         $widgetsModel = new Model\Widgets();
-        $this->view->pager = $widgetsModel->getWidgetsPager(
-                        $this->getRequest()->getParam('page', 1),
-                        $this->getRequest()->getParam('perPage', 20)
+        $this->view->widgets = $widgetsModel->getWidgetsPaginator(
+            $this->getRequest()->getParam('page', 1),
+            $this->getRequest()->getParam('perPage', 20)
         );
     }
 
@@ -162,16 +162,15 @@ class AdminController extends \Zend\Controller\Action
      */
     public function editWidgetAction()
     {
-        $form = new Form\Widget();
+        $form = new Form\Widget(array('model'=> new Model\Themes()));
         $widgetsModel = new Model\Widgets();
         $widget = $widgetsModel->getWidget($this->getRequest()->getParam('id'), true);
         $form->populate($widget->toArray());
 
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getParams())) {
             $result = $widgetsModel->saveWidget($widget, $form->getValues());
-            $this->_helper->getHelper('FlashMessenger')
-                    ->addMessage('Widget successful saved.');
-             $this->_redirect($this->_helper->url->url(array('action'=>'widgets','module'=>'templater'),'admin'));
+            $this->broker('FlashMessenger')->addMessage('Widget successful saved.');
+            $this->broker('redirector')->goToRoute(array('action'=>'widgets','module'=>'templater'), 'admin', true);
         }
         $this->view->editWidgetForm = $form;
     }
@@ -184,9 +183,8 @@ class AdminController extends \Zend\Controller\Action
         $widgetsModel = new Model\Widgets();
         $result = $widgetsModel->deleteWidget($this->getRequest()->getParam('id'));
         if($result)
-            $this->_helper->getHelper('FlashMessenger')
-                    ->addMessage('Widget successful deleted.');
-        $this->_redirect($this->_helper->url->url(array('action'=>'widgets','module'=>'templater'),'admin'));
+            $this->broker('FlashMessenger')->addMessage('Widget successful saved.');
+        $this->broker('redirector')->goToRoute(array('action'=>'widgets','module'=>'templater'), 'admin', true);
     }
 
 }

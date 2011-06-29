@@ -3,8 +3,6 @@
 /**
  * SlyS
  * 
- * This is a class generated with Zend_CodeGenerator.
- * 
  * @version $Id: Theme.php 1224 2011-04-04 13:58:41Z deeper $
  * @license New BSD
  */
@@ -16,7 +14,7 @@ class Theme extends EntityRepository
 {
 
     /**
-     * Return paginator for User mapper
+     * Return paginator for theme mapper
      * @return \Slys\Paginator\Adapter\Doctrine2 
      */
     public function getPaginatorAdapter()

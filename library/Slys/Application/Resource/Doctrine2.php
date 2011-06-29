@@ -64,8 +64,12 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
         $config->setMetadataDriverImpl($driverImpl);
         $config->setQueryCacheImpl($cache);
         $tempdir = sys_get_temp_dir();
-        $config->setProxyDir($tempdir.'/slys/proxies');
-        $config->setProxyNamespace('Slys\Proxies');
+        $proxydir = dirname(APPLICATION_PATH).'/data/cache/doctrine/proxies';
+        if(!is_dir($proxydir)) {
+            mkdir($proxydir, 0777, true);
+        }
+        $config->setProxyDir($proxydir);
+        $config->setProxyNamespace('Doctrine\Proxy');
 
 
         if (APPLICATION_ENV == "development") {
