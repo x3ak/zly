@@ -14,28 +14,10 @@ class Widget extends EntityRepository
 {
     public function getWidgets()
     {
-        $this->createQueryBuilder('wd')->select('wd','lay')->leftJoin('wd.layout lay');
+        $this->createQueryBuilder('wd')
+             ->select('wd','lay')
+             ->leftJoin('wd.layout lay');
         return $query->execute();
-    }
-
-    public function getLayoutWithWidgetsbyNameAndRequest($layoutName, $mapIds = array())
-    {
-        $ids = array();
-
-        foreach((array)$mapIds as $mapId) {
-            if($mapId instanceof Sysmap_Model_Mapper_Sysmap)
-                $ids[] = $mapId->hash;
-        }
-
-        $query = Doctrine_Query::create()
-                        ->select('lay.*, w.*, wp.*, wt.* ')
-                        ->from('Templater_Model_Mapper_Layout lay')
-                        ->innerJoin('lay.Widgets w')
-                        ->innerJoin('w.WidgetPoints wp')
-                        ->whereIn('wp.map_id', $ids)
-                        ->addOrderBy('wp.map_id DESC');
-
-        return $query->fetchOne();
     }
 
     /**
@@ -45,10 +27,14 @@ class Widget extends EntityRepository
      */
     public function getWidgetWithWidgetPoints($wdId)
     {
-        return $this->createQuery('wd')
-                    ->leftJoin('wd.WidgetPoints wp')
-                    ->addWhere('wd.id = ?', array($wdId))
-                    ->fetchOne();
+        $query = $this->createQueryBuilder('wd')
+                      ->select('wd','wp')
+                      ->leftJoin('wd.points', 'wp')
+                      ->andWhere('wd.id = :wdid')
+                      ->setParameter('wdid', $wdId)
+                      ->getQuery();
+        
+        return $query->getSingleResult();
     }
     
     /**

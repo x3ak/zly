@@ -64,7 +64,10 @@ class Widgets extends \Slys\Doctrine\Model
             $this->getEntityManager()->getRepository('\Templater\Model\Mapper\WidgetPoint')
                 ->deleteUnusedPoints($widget->getId(), $values['widget_points']);
         }
-        
+        $layout = $this->getEntityManager()
+                       ->getRepository('\Templater\Model\Mapper\Layout')
+                       ->find($widget->getLayoutId());
+        $widget->setLayout($layout);
         $this->getEntityManager()->persist($widget);
 
         if(!empty($values['widget_points'])) {

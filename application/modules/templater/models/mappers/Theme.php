@@ -27,7 +27,7 @@ class Theme
     /** @Column(type="boolean") */
     protected $current;    
     /**
-     * @OneToMany(targetEntity="Templater\Model\Mapper\Layout", mappedBy="theme")
+     * @OneToMany(targetEntity="Templater\Model\Mapper\Layout", mappedBy="theme", cascade={"remove"})
      */
     protected $layouts;
     

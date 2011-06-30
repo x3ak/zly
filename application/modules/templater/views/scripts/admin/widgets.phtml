@@ -1,7 +1,7 @@
 <table class="admin-table">
     <tr>
         <th width="20">ID</th>
-        <th>Action</th>
+        <th>Widget Name</th>
         <th>Position</th>
         <th>Layout</th>
         <th width="150">Theme</th>
@@ -13,17 +13,17 @@
         <tr>
             <td align="center"><?php echo $item->getId(); ?></td>
             <td>
-                    <a href="<?php echo $this->broker('url')->direct(array('action' => 'edit-widget', 'id' => $item->getId())); ?>"></a>
+                    <a href="<?php echo $this->broker('url')->direct(array('action' => 'edit-widget', 'id' => $item->getId())); ?>"><?php echo $item->getName();?></a>
             </td>
             <td align="center"><?php echo $item->getPlaceholder(); ?></td>
             <td align="center"><?php echo $item->getLayout()->getTitle(); ?></td>
             <td align="center"><?php echo $item->getLayout()->getTheme()->getTitle(); ?></td>
-            <td align="center"><a href="<?php echo $this->url(array('action' => 'publish-widget', 'module' => 'templater', 'id' => $item->getId()), 'admin', true); ?>" class="icon16 <?php if($item->getPublished()) echo 'icon-published'; else echo 'icon-not-published'?>"></a></td>
+            <td align="center"><a href="<?php echo $this->broker('url')->direct(array('action' => 'publish-widget', 'module' => 'templater', 'id' => $item->getId()), 'admin', true); ?>" class="icon16 <?php if($item->getPublished()) echo 'icon-published'; else echo 'icon-not-published'?>"></a></td>
             <td align="center"><?php echo $item->getOrdering(); ?></td>
             <td align="center" nowrap="nowrap">
                 
-                <a href="<?php echo $this->url(array('action' => 'edit-widget', 'id' => $item->getId()));?>">Edit</a>
-                <a href="<?php echo $this->url(array('action' => 'delete-widget', 'id' => $item->getId()));?>">Delete</a>
+                <a href="<?php echo $this->broker('url')->direct(array('action' => 'edit-widget', 'id' => $item->getId()));?>">Edit</a>
+                <a href="<?php echo $this->broker('url')->direct(array('action' => 'delete-widget', 'id' => $item->getId()));?>">Delete</a>
         </td>
     </tr>
 <?php } ?>

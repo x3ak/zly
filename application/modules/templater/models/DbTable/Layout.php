@@ -101,6 +101,26 @@ class Layout extends EntityRepository
                     ->getQuery()
                     ->getSingleResult();
     }
+    
+    public function getLayoutWithWidgetsbyNameAndRequest($layoutName, $mapIds = array())
+    {
+        $ids = array();
+
+        foreach((array)$mapIds as $mapId) {
+            if($mapId instanceof \Zend\Acl\Resource\GenericResource)
+                $ids[] = $mapId->getResourceId();
+        }
+        $qb = $this->createQueryBuilder('lay');
+        $idsParts = $qb->expr()->in('lp.map_id', ':ids');
+        $query = $qb->select('lay', 'w', 'wp', 'wt')
+                    ->innerJoin('lay.widgets w')
+                    ->innerJoin('w.points wp')
+                    ->andWhere($idsParts)
+                    ->addOrderBy('wp.map_id','DESC')
+                    ->setParameter('ids');
+
+        return $query->fetchOne();
+    }
 
 }
 

@@ -36,7 +36,7 @@ class Widget
      */
     protected $layout;
     /**
-     * @OneToMany(targetEntity="Templater\Model\Mapper\WidgetPoint", mappedBy="widget")
+     * @OneToMany(targetEntity="Templater\Model\Mapper\WidgetPoint", mappedBy="widget", cascade={"remove"})
      */
     protected $points; 
     
