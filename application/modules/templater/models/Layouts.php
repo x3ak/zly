@@ -36,6 +36,16 @@ class Layouts extends \Slys\Doctrine\Model
         else
             return $layout;
     }
+    
+    /**
+     * @return  \Templater\Model\Mapper\Layout
+     */
+    public function getDefaultLayout()
+    {
+        return $this->getEntityManager()
+                    ->getRepository('\Templater\Model\Mapper\Layout')
+                    ->getDefaultLayout();
+    }
 
     /**
      * Return layouts list pager

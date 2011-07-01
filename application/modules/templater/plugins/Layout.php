@@ -61,24 +61,24 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
      *
      * @return void
      */
-    public function dispatchLoopStartup(Zend_Controller_Request_Abstract $request)
+    public function dispatchLoopStartup(\Zend\Controller\Request\AbstractRequest $request)
     {
-        $config = new Zend_Config($this->getOptions());
+        $config = new \Zend\Config\Config($this->getOptions());
         $themeSettings = $config->toArray();
-        $apiRequest = new Slys_Api_Request($this, 'sysmap.currently-active-items', array('request'=>$request));
+        $apiRequest = new \Slys\Api\Request($this, 'sysmap.currently-active-items', array('request'=>$request));
         $mapIdentifiers = $apiRequest->proceed()->getResponse()->getFirst();
 
         /**
          * Get current layout from config
          */
         if(empty($mapIdentifiers)) {
-            $currentLayout = Templater_Model_DbTable_Layout::getInstance()->getDefaultLayout();
+            $currentLayout = \Templater\Model\DbTable_Layout::getInstance()->getDefaultLayout();
         } else {
             $currentLayout = Templater_Model_DbTable_Layout::getInstance()
                                 ->getCurrentLayout($mapIdentifiers);
         }
         
-        $frontController = Zend_Controller_Front::getInstance();
+        $frontController = \Zend\Controller\Front::getInstance();
 
               
         /**
