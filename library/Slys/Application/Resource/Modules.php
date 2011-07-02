@@ -32,7 +32,7 @@ class Modules extends \Zend\Application\Resource\Modules
      */
     public function init()
     {
-        
+        \Zend\Debug::dump('modules');
         $appOptions = $this->getBootstrap()->getApplication()->getOptions();
         $bootstrap = $this->getBootstrap();
         $bootstrap->bootstrap('FrontController');

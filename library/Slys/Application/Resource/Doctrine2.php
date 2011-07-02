@@ -7,7 +7,8 @@ namespace Slys\Application\Resource;
 
 class Doctrine2 extends \Zend\Application\Resource\AbstractResource
 {
-      /**
+    
+    /**
      * Entity Manager
      *
      * @var \Doctrine\EntityManager
@@ -19,14 +20,15 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
      * @var array
      */
     protected $_entitiesPaths = array();
+    
+    protected $_started = false;
 
     /**
      * Resource initialization
      * @return Slys\Application\Resource\Doctrine2
      */
     public function init()
-    {
-        $front = $this->getBootstrap()->getBroker()->load('frontcontroller')->getFrontController();
+    {        
         $connectionOptions = $this->getOptions();
         
         if (!empty($connectionOptions['cache'])) {
@@ -87,8 +89,8 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
             $connectionOptions = array('driver'=>'pdo_mysql');
 
         $this->_em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
+        $front = $this->getBootstrap()->getBroker()->load('frontcontroller')->getFrontController();
         $front->setParam('doctrine2', $this);
-
         return $this;
     }
 

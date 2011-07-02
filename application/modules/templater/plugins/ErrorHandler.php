@@ -4,7 +4,9 @@
  * application errors, and forward to an error handler.
  *
  */
-class Templater_Plugin_ErrorHandler extends Zend_Controller_Plugin_Abstract
+namespace Templater\Plugin;
+
+class ErrorHandler extends \Zend\Controller\Plugin\AbstractPlugin
 {
     /**
      * Const - No controller exception; controller does not exist
@@ -116,7 +118,7 @@ class Templater_Plugin_ErrorHandler extends Zend_Controller_Plugin_Abstract
     public function getErrorHandlerModule()
     {
         if (null === $this->_errorModule) {
-            $this->_errorModule = Zend_Controller_Front::getInstance()->getDispatcher()->getDefaultModule();
+            $this->_errorModule = \Zend\Controller\Front::getInstance()->getDispatcher()->getDefaultModule();
         }
         return $this->_errorModule;
     }
@@ -170,7 +172,7 @@ class Templater_Plugin_ErrorHandler extends Zend_Controller_Plugin_Abstract
      * 
      * @param Zend_Controller_Request_Abstract $request 
      */
-    public function preDispatch(Zend_Controller_Request_Abstract $request)
+    public function preDispatch(\Zend\Controller\Request\AbstractRequest $request)
     {
         $this->_initialRequest = clone $request;
     }
@@ -181,7 +183,7 @@ class Templater_Plugin_ErrorHandler extends Zend_Controller_Plugin_Abstract
      *
      * @param Zend_Controller_Request_Abstract $request
      */
-    public function postDispatch(Zend_Controller_Request_Abstract $request)
+    public function postDispatch(\Zend\Controller\Request\AbstractRequest $request)
     {
         $exceptions = $this->getLastExceptions();
 
@@ -216,7 +218,7 @@ class Templater_Plugin_ErrorHandler extends Zend_Controller_Plugin_Abstract
      * @param  Zend_Controller_Request_Abstract $request
      * @return void
      */
-    protected function _handleError(Zend_Controller_Request_Abstract $request, $exceptions = array())
+    protected function _handleError(\Zend\Controller\Request\AbstractRequest $request, $exceptions = array())
     {
 
         $response = $this->getResponse();

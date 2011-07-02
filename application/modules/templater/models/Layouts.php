@@ -9,14 +9,26 @@ namespace Templater\Model;
 
 class Layouts extends \Slys\Doctrine\Model
 {
-
+    /**
+     * Widgets repository
+     * @var \Templater\Model\DbTable\Layout
+     */
+    protected $_repository;
+    
+    public function __construct()
+    {
+        \Zend\Debug::dump(\Zend\Controller\Front::getInstance()
+                        ->getParam('doctrine2'));
+        $this->_repository = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Layout');
+    }
+    
     /**
      * Return all layouts collection
      * @return Doctrine_Collection
      */
     public function getlist()
     {
-        return $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Layout')->findAll();
+        return $this->_repository->findAll();
     }
 
     /**
@@ -29,7 +41,7 @@ class Layouts extends \Slys\Doctrine\Model
         if(empty($id))
             return new Mapper\Layout();
 
-        $layout = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Layout')->getLayoutWithLayoutPoints($id);
+        $layout = $this->_repository->getLayoutWithLayoutPoints($id);
 
         if(empty($layout))
             return new Mapper\Layout();
@@ -38,13 +50,23 @@ class Layouts extends \Slys\Doctrine\Model
     }
     
     /**
+     * Return layout which registered like default
      * @return  \Templater\Model\Mapper\Layout
      */
     public function getDefaultLayout()
     {
-        return $this->getEntityManager()
-                    ->getRepository('\Templater\Model\Mapper\Layout')
+        return $this->_repository
                     ->getDefaultLayout();
+    }
+    
+    /**
+     * Return layout which assigned to provided systemap nodes
+     * @return \Templater\Model\Mapper\Layout 
+     */
+    public function getCurrentLayout($identifiers)
+    {
+        return $this->_repository
+                    ->getCurrentLayout($identifiers);
     }
 
     /**
@@ -56,8 +78,7 @@ class Layouts extends \Slys\Doctrine\Model
      */
     public function getLayoutsPaginator($pageNumber = 1, $itemCountPerPage = 20, array $where = array())
     {
-        $repo = $this->getEntityManager()->getRepository('Templater\Model\Mapper\Layout');
-        $paginator = new \Zend\Paginator\Paginator($repo->getPaginatorAdapter());
+        $paginator = new \Zend\Paginator\Paginator($this->_repository->getPaginatorAdapter());
         $paginator->setCurrentPageNumber($pageNumber)->setItemCountPerPage($itemCountPerPage);
         return $paginator;
     }
@@ -88,7 +109,7 @@ class Layouts extends \Slys\Doctrine\Model
             
         if($import)
             foreach (array_keys($layouts) as $name) {
-                $exist = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Layout')
+                $exist = $this->_repository
                         ->findOneBy(array('theme_id'=>$theme->getId(), 'name'=>$name));
                
                 if (empty($exist)) {
@@ -179,7 +200,7 @@ class Layouts extends \Slys\Doctrine\Model
      */
     public function deleteLayout(Mapper\Layout $layout, \Zend\Controller\Request\AbstractRequest $request)
     {
-        $currentLayout = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Layout')
+        $currentLayout = $this->_repository
                 ->getCurrentLayout($request);
         if($currentLayout->getId() == $layout->getId())
             throw new \Zend\Layout\Exception('You can\'t delete current layout');
@@ -187,4 +208,8 @@ class Layouts extends \Slys\Doctrine\Model
         return $this->getEntityManager()->flush();
     }
 
+    public function getLayoutWithWidgetsbyNameAndRequest($layoutName, $mapIds = array()) 
+    {
+        return $this->_repository->getLayoutWithWidgetsbyNameAndRequest($layoutName, $mapIds);
+    }
 }

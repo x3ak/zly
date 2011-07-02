@@ -24,6 +24,11 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
      * @var Zend_Layout
      */
     protected $_layout;
+    
+    /**
+     * @var \Templater\Model\Layouts 
+     */
+    protected $_model;
 
     /**
      * Constructor
@@ -32,6 +37,7 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
     public function __construct($options = array())
     {
         $this->setOptions($options);
+        $this->_model = new \Templater\Model\Layouts();
     }
 
     /**
@@ -72,10 +78,9 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
          * Get current layout from config
          */
         if(empty($mapIdentifiers)) {
-            $currentLayout = \Templater\Model\DbTable_Layout::getInstance()->getDefaultLayout();
+            $currentLayout = $this->_model->getDefaultLayout();
         } else {
-            $currentLayout = Templater_Model_DbTable_Layout::getInstance()
-                                ->getCurrentLayout($mapIdentifiers);
+            $currentLayout = $this->_model->getCurrentLayout($mapIdentifiers);
         }
         
         $frontController = \Zend\Controller\Front::getInstance();
@@ -84,15 +89,13 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
         /**
          * Set current layout
          */
-        
-        if (!$frontController->hasPlugin('Zend_Layout_Controller_Plugin_Layout')) {
-            $frontController->getParam('bootstrap')
-                ->registerPluginResource('layout')
-                ->bootstrap('layout');
+        if (!$frontController->hasPlugin('\Zend\Layout\Controller\Plugin\Layout')) {
+            $layoutResource = $frontController->getParam('bootstrap')->getBroker()->load('layout');
+            $layoutResource->init();            
         }
-        
+            
         $this->_layout = $frontController
-            ->getPlugin('Zend_Layout_Controller_Plugin_Layout')
+            ->getPlugin('Zend\Layout\Controller\Plugin\Layout')
             ->getLayout();
 
         if (empty($currentLayout)) {
@@ -101,10 +104,10 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
         }
 
         $layoutPath = $config->directory . DIRECTORY_SEPARATOR .
-                $currentLayout->Theme->name . DIRECTORY_SEPARATOR .
+                $currentLayout->getTheme()->getName() . DIRECTORY_SEPARATOR .
                 $themeSettings['layout']['directory'];
 
-        $layoutName = $currentLayout->name;
+        $layoutName = $currentLayout->getName();
         $layoutFile = realpath($layoutPath . DIRECTORY_SEPARATOR . $layoutName . '.phtml');
 
         if (file_exists($layoutFile)) {
@@ -112,11 +115,11 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
             $this->_layout->setLayout($layoutName);
 
             $frontController->setParam('noErrorHandler', true);
-            $frontController->registerPlugin(new Templater_Plugin_ErrorHandler(), 98);
-
+            $frontController->registerPlugin(new \Templater\Plugin\ErrorHandler(), 98);
+            
             if(!$request->isXmlHttpRequest())
-                Zend_Controller_Action_HelperBroker::addHelper(
-                    new Templater_Library_Controller_Action_Helper_Widget($this->getOptions()));
+                $this->getHelperBroker()->register('Widget',
+                    new \Templater\Library\Controller\Action\Helper\Widget($this->getOptions()));
         } else {
             throw new Zend_Exception('Layout "' . $layoutPath .
                     DIRECTORY_SEPARATOR . $layoutName . '" established for this page not found');

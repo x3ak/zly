@@ -113,5 +113,5 @@ class Widgets extends \Slys\Doctrine\Model
         $widget->assignIdentifier($id);
         return $widget->delete();
     }
-
+    
 }

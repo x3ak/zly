@@ -31,19 +31,21 @@ class Layout extends EntityRepository
     public function getCurrentLayout($identifiers)
     {
         $qb = $this->createQueryBuilder('lay');
-        $query = $qb->leftJoin('lay.Theme tpl')
-                    ->leftJoin('lay.Points lp')
-                    ->where('lay.published = ?', array(true))
-                    ->where('tpl.current = ?', array(true))
+        $query = $qb->leftJoin('lay.theme', 'tpl')
+                    ->leftJoin('lay.points','lp')
+                    ->andWhere('lay.published = :published')
+                    ->andWhere('tpl.current = :current')
+                    ->setParameters(array('published'=>true, 'current'=>true))
                     ->orderBy('lp.map_id','DESC');
 
         $layoutParts = array();
         foreach($identifiers as $identifier) {
-            $layoutParts[] = $identifier->getMapIdentifier();
+            if($identifier instanceof \Zend\Acl\Resource\GenericResource)
+            $layoutParts[] = $identifier->getResourceId();
         }
 
         $layoutParts = $qb->expr()->in('lp.map_id', $layoutParts);
-        $query->where($layoutParts);
+        $query->andWhere($layoutParts);
 
         $layout = $query->getQuery()->getSingleResult();
 
@@ -66,12 +68,18 @@ class Layout extends EntityRepository
 
         $defaultLayoutName = $defaults['layout'][$defLayName];
 
+        $params = array(
+            'published' => true,
+            'current' => true,
+            'name' => $defaultLayoutName
+        );
         $query = $this->createQueryBuilder('lay')
-            ->leftJoin('lay.Theme tpl')
-            ->where('lay.published = ?', array(true))
-            ->where('tpl.current = ?', array(true))
-            ->where('lay.name = ?', array($defaultLayoutName))
-             ->getQuery();
+            ->leftJoin('lay.Theme', 'tpl')
+            ->andWhere('lay.published = :published')
+            ->andWhere('tpl.current = current')
+            ->andWhere('lay.name = :name')
+            ->setParameters(array('published'=>true))
+            ->getQuery();
         return $query->getSingleResult();
     }
 
