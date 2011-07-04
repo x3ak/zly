@@ -28,6 +28,8 @@ class Widget
     protected $layout_id;    
     /** @Column(type="integer", nullable=true) */
     protected $ordering;  
+    /** @Column(length=35) */
+    protected $map_id;
     /** @Column(length=255) */
     protected $placeholder;
     /**

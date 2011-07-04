@@ -133,10 +133,10 @@ class Widget extends \Zend\Form\Form
         if (!empty($values['id']))
             $this->setLegend('Edit Widget');
 
-        if(!empty($values['WidgetPoints'])) {
-            $points = $values['WidgetPoints'];
+        if(!empty($values['points'])) {
+            $points = $values['points'];
             foreach($points as $point)
-                $values['widget_points'][] = $point['map_id'];
+                $values['widget_points'][] = $point->getMapId();
         }
 
         return parent::populate($values);

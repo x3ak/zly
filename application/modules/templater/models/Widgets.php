@@ -74,12 +74,13 @@ class Widgets extends \Slys\Doctrine\Model
             foreach($values['widget_points'] as $key=>$mapId) {
                 
                 if($widget->getId())
-                    $point = $this->_repository->findOneBy(array('map_id' => $mapId, 'widget_id'=>$widget->getId()));
+                    $point = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\WidgetPoint')
+                            ->findOneBy(array('map_id' => $mapId, 'widget_id'=>$widget->getId()));
 
                 if(empty($point)) {
                     $point = new Mapper\WidgetPoint();
                     $point->setMapId($mapId);
-                    $point->setWidgetId($widget->getId());
+                    $point->setWidget($widget);
                     $this->getEntityManager()->persist($point);
                 }
             }

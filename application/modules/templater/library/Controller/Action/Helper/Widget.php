@@ -158,24 +158,24 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
 
                 if (\Zend\Controller\Front::getInstance()->hasPlugin('User\Plugin\Acl'))
                     $acl = \Zend\Controller\Front::getInstance()->getPlugin('User\Plugin\Acl');
-
-                if (!empty($layoutEntity->Widgets))
-                    foreach ($layoutEntity->Widgets as $widget) {
+                $widgets = $layoutEntity->getWidgets();
+                if (!empty($widgets))
+                    foreach ($widgets as $widget) {
 
                         if (!isset($acl)
                                 || !$acl instanceof \User\Plugin\Acl
-                                || !$acl->isAllowed($widget->map_id)
-                                || !$widget->published) {
+                                || !$acl->isAllowed($widget->getMapId())
+                                || !$widget->getPublished()) {
                             continue;
                         }
-                        $apiRequest = new Slys_Api_Request($this, 'sysmap.get-item-by-identifier',
-                                        array('identifier' => $widget->map_id));
+                        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-item-by-identifier',
+                                        array('identifier' => $widget->getMapId()));
                         $mapItem = $apiRequest->proceed()->getResponse()->getFirst();
-                        if (!$mapItem instanceof Sysmap_Model_Mapper_Sysmap)
+                        if (!$mapItem instanceof \Zend\Acl\Resource\GenericResource)
                             continue;
                         $widgetRequest = $mapItem->toRequest();
 
-                        $this->_pushStack($widget->id, $widgetRequest, $widget->placeholder, (array) $widgetRequest->getParams());
+                        $this->_pushStack($widget->id, $widgetRequest, $widget->getPlaceholder(), (array) $widgetRequest->getParams());
                     }
             }
         }
@@ -188,13 +188,13 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
      * @param string $placeholder
      * @param array $params 
      */
-    protected function _pushStack($id, Zend_Controller_Request_Abstract $widget, $placeholder, $params = array()) {
+    protected function _pushStack($id, \Zend\Controller\Request\AbstractRequest $request, $placeholder, $params = array()) {
         $params[$this->_widgetIdName] = md5($id);
-        $camelFilter = new Zend_Filter_Word_CamelCaseToDash('-');
-        $blockRequest = new Zend_Controller_Request_Simple(
-                        strtolower($camelFilter->filter($widget->getActionName())),
-                        strtolower($camelFilter->filter($widget->getControllerName())),
-                        strtolower($camelFilter->filter($widget->getModuleName())),
+        $camelFilter = new \Zend\Filter\Word\CamelCaseToDash('-');
+        $blockRequest = new \Zend\Controller\Request\Simple(
+                        strtolower($camelFilter->filter($request->getActionName())),
+                        strtolower($camelFilter->filter($request->getControllerName())),
+                        strtolower($camelFilter->filter($request->getModuleName())),
                         array_merge($params, array($this->_marker => $placeholder))
         );
 
