@@ -88,11 +88,11 @@ class Layout extends \Zend\Form\Form
         if(!empty($values['id']))
             $this->setLegend('Edit layout');
 
-        if(!empty($values['Points'])) {
-            $points = $values['Points'];
-            unset($values['Points']);
+        if(!empty($values['points'])) {
+            $points = $values['points'];
+            unset($values['points']);
             foreach($points as $point)
-                $values['map_id'][] = $point['map_id'];
+                $values['map_id'][] = $point->getMapId();
         }
 
         return parent::populate($values);

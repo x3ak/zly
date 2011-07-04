@@ -178,10 +178,10 @@ class Layouts extends \Slys\Doctrine\Model
                 $repo = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\LayoutPoint');
                 $layPoint = $repo->findOneBy(array('map_id'=>$mapId, 'layout_id'=>$layout->getId()));
                 
-                if($layPoint) {
+                if(empty($layPoint)) {
                     $layPoint = new Mapper\LayoutPoint();
                     $layPoint->setMapId($mapId);
-                    $layPoint->setLayoutId($layout->getId());
+                    $layPoint->setLayout($layout);
                     $this->getEntityManager()->persist($layPoint);
                 } 
             }

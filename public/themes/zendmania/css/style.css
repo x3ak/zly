@@ -14,6 +14,10 @@ a:hover {
 	text-decoration: underline;
 }
 
+input {
+    border: 1px solid #DDE4E7;
+}
+
 div.wrapper {
 	width: 1200px;
 	margin: 0 auto;

@@ -1,35 +1,37 @@
-<?php echo $this->doctype() . PHP_EOL; ?>
+<?php echo $this->broker('doctype')->direct() . PHP_EOL; ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <?php
-        $this->headLink()->appendStylesheet('/themes/default/css/admin.css');
-        echo $this->headTitle('SlyS Administration') . PHP_EOL .
-        $this->headMeta() . PHP_EOL .
-        $this->headLink() . PHP_EOL .
-        $this->headStyle() . PHP_EOL .
-        $this->headScript();
-        ?>
-    </head>
+	<head>
+	<?php
+
+	$this->broker('headLink')->direct()->appendStylesheet('/themes/default/css/admin.css');
+
+	echo $this->broker('headTitle')->direct('SlyS Default Frontend') . PHP_EOL .
+		 $this->broker('headMeta')->direct() . PHP_EOL .
+		 $this->broker('headLink')->direct() . PHP_EOL .
+		 $this->broker('headStyle')->direct() . PHP_EOL .
+		 //$this->dojo() . PHP_EOL .
+		 $this->broker('headScript')->direct();
+	?>
     <body class="claro">
         <div class="header">
             <div id="header">
                 <div class="container">
                     <div id="logo">
-                        <a href="<?php echo $this->url(array('module' => ''), 'admin', true); ?>">
+                        <a href="<?php echo $this->broker('url')->direct(array('module' => '', 'action'=>''), 'admin', true); ?>">
                             Administrator Panel
                         </a>
                     </div>
                 </div>
-                <div class="user-menu"><?php echo $this->layout()->usermenu; ?></div>
+                <div class="user-menu"><?php echo $this->broker('layout')->getLayout()->usermenu; ?></div>
             </div>
             <div class="clear"></div>
         </div>
-        <?php if (!empty($this->layout()->left)) { ?>
+        <?php if (!empty($this->broker('layout')->getLayout()->left)) { ?>
             <div class="left">
-                <div id="left"><?php echo $this->layout()->left; ?></div>
+                <div id="left"><?php echo $this->broker('layout')->getLayout()->left; ?></div>
             </div>
         <?php } ?>
-        <div class="main-wrapper <?php if (!empty($this->layout()->left))
+        <div class="main-wrapper <?php if (!empty($this->broker('layout')->getLayout()->left))
             echo 'with-left'; ?>">
 
             <div class="subwrapper">
@@ -37,25 +39,27 @@
                             <div class="right-breadcrumbs">
                                 <div class="breadcrumbs-link"><a class="breadcrumbs-home" href="/">&nbsp;</a></div>
                                 <div class="breadcrumbs-separator"></div>
-                                    <?php echo $this->navigation()
+                                    <?php 
+                                    echo $this->broker('navigation')
                                             ->breadcrumbs()
                                             ->setMinDepth(0)
                                             ->setLinkLast(true)
-                                            ->setSeparator('<div class="breadcrumbs-separator"></div>'); ?>
+                                            ->setSeparator('<div class="breadcrumbs-separator"></div>'); 
+                                    ?>
                             </div>
                         </div></div></div>
 
 
                 <div class="main-content">
-                    <?php echo $this->layout()->top; ?>
-                    <?php echo $this->layout()->content; ?>
+                    <?php echo $this->broker('layout')->getLayout()->top; ?>
+                    <?php echo $this->broker('layout')->getLayout()->content; ?>
                     <div class="clear"></div>
                 </div>
             </div>
         </div>
         <div class="footer">
-            <div id="footer">&copy; 2010 Optimum Web. Powered by <a href="#">SlyS</a>
-            <?php echo $this->layout()->footer; ?></div>
+            <div id="footer">&copy; 2011 Zedmania. Powered by <a href="#">SlyS Platform 2</a>
+            <?php echo $this->broker('layout')->getLayout()->footer; ?></div>
         </div>
     </body>
 </html>
