@@ -21,7 +21,17 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
      */
     protected $_entitiesPaths = array();
     
+    /**
+     *
+     * @var boolean 
+     */
     protected $_started = false;
+    
+    /**
+     *
+     * @var \Slys\Application\Resource\Modules
+     */
+    protected $_modules;
 
     /**
      * Resource initialization
@@ -38,16 +48,14 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
             $cache = new \Doctrine\Common\Cache\ArrayCache;
         }
         
-        $boostrap = $this->getBootstrap()->getApplication();
-        if($boostrap instanceof \Zend\Application\Application)
-            $boostrap = $this->getBootstrap();
+        $application = $this->getBootstrap();
         
-        $modules = $boostrap->getResource('modules');
-        
-        if(empty($modules))
+        $this->_modules = $application->getBroker()->load('modules');
+
+        if(empty($this->_modules))
             return false;
         
-        foreach($modules as $name=>$module) {
+        foreach($this->_modules->getExecutedBootstraps() as $name=>$module) {
                 
             if($module->getResourceLoader()->hasResourceType('mappers')) {
                 $resourceTypes = $module->getResourceLoader()->getResourceTypes();
@@ -89,7 +97,7 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
             $connectionOptions = array('driver'=>'pdo_mysql');
 
         $this->_em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
-        $front = $this->getBootstrap()->getBroker()->load('frontcontroller')->getFrontController();
+        $front = $this->getBootstrap()->getApplication()->getBroker()->load('frontcontroller')->getFrontController();
         $front->setParam('doctrine2', $this);
         return $this;
     }

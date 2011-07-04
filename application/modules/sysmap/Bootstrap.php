@@ -67,7 +67,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
                 break;
         }
     }
-    
+
     public function install()
     {
         $options = $this->getOptions();

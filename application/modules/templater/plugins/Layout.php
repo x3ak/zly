@@ -82,9 +82,9 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
         } else {
             $currentLayout = $this->_model->getCurrentLayout($mapIdentifiers);
         }
-        
-        $frontController = \Zend\Controller\Front::getInstance();
 
+        
+        $frontController = \Zend\Controller\Front::getInstance();        
               
         /**
          * Set current layout
@@ -100,7 +100,7 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
 
         if (empty($currentLayout)) {
             $this->_layout->disableLayout();
-            throw new Zend_Exception('No active layouts for theme found or no active theme found');
+            throw new \Zend\Layout\Exception('No active layouts for theme found or no active theme found');
         }
 
         $layoutPath = $config->directory . DIRECTORY_SEPARATOR .
@@ -109,8 +109,9 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
 
         $layoutName = $currentLayout->getName();
         $layoutFile = realpath($layoutPath . DIRECTORY_SEPARATOR . $layoutName . '.phtml');
-
+        
         if (file_exists($layoutFile)) {
+            
             $this->_layout->setLayoutPath($layoutPath);
             $this->_layout->setLayout($layoutName);
 

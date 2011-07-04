@@ -10,8 +10,4 @@
 
 class Bootstrap extends \Zend\Application\Bootstrap
 {
-    protected function _initAutoloader()
-    {
-
-    }
 }

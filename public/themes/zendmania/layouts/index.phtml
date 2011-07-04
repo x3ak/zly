@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Zendmania.com</title>
-<link rel="stylesheet" href="css/style.css" type="text/css"  />
+<link rel="stylesheet" href="/themes/zendmania/css/style.css" type="text/css"  />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
 	<div class="wrapper">
 		<div class="header">
-			<a class="logo" href="/"><img src="images/logo.png" /></a>
+			<a class="logo" href="/"><img src="/themes/zendmania/images/logo.png" /></a>
 			<div class="languages">
 				<a class="en" href="#"></a>
 				<a class="ru" href="#"></a>
@@ -23,6 +23,7 @@
 				<a href="#">Portfolio</a>
 				<a href="#">About Us</a>
 			</div>
+                    <!-- 
 			<div class="content">	
 				<div class="breadcrumbs">-> <a href="#">Projects</a> -> SlyS Platform</div>
 				<div class="slider">
@@ -44,16 +45,23 @@
 				</div>
 				<div class="content-wrapper">
 					<h3>Welcome to our website.</h3>
-     The command of developers ZendMania is engaged in designing and an application creation based on Zend Framework.
+    The command of developers ZendMania is engaged in designing and an application creation based on Zend Framework.
      On the basis of our experience we have created some projects which purpose is to facilitate work as programmers Zend Framework (SlyS Platform)
 	 and customers exacting to quality and expansibility of applications of sale of the goods (MarketPlace) and administrations of websites (SlyS CMS).
      We will be very glad if you use our projects and take part to working out on the terms of Open Source.
-				</div>
+         
+				</div>-->
+            <?php echo $this->broker('layout')->getLayout()->content; ?>
 			</div>
 			<div class="clear-both"></div>
 		</div>
 		<div class="footer">
-			&copy; Zend Mania 2009-2011. Powered by <a class="footer-link" href="/slys/">Slys Platform 2</div>
+                    <div>
+                        &copy; Zend Mania 2009-2011. Powered by <a class="footer-link" href="/slys2">Slys Platform 2
+                    </div>
+                    <div>
+                        <!--VlexoFree_LinkBack-->
+                    </div>
 		</div>
 	</div>
 </body>

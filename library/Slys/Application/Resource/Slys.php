@@ -30,31 +30,13 @@ class Slys extends \Zend\Application\Resource\AbstractResource
     public function init()
     {
 
-
-        $this->getBootstrap()->getBroker()->load('view');
-        $this->getBootstrap()->bootstrap('view');
+        $view = $this->getBootstrap()->getBroker()->load('view');
+        
+        if(empty($this->getBootstrap()->view))
+            $view = $this->getBootstrap()->bootstrap('view');
+        
         $view = $this->getBootstrap()->view;
         $view->broker()->setClassLoader(new \Slys\View\HelperLoader());
-  
-
-        $router = $this->getBootstrap()
-                       ->getBroker()
-                       ->load('frontController')
-                       ->getFrontController()
-                       ->getRouter();
-        
-        if(!$router->hasRoute('admin'))
-            $router->addRoute(
-                'admin',
-                new \Zend\Controller\Router\Route\Route(
-                    'admin/:module/:action/*',
-                    array(
-                        'controller' => 'admin',
-                        'action' => 'index',
-                        'module'=>'default'
-                   )
-                )
-            );
 
         return $this;
     }

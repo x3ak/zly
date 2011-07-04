@@ -24,7 +24,6 @@ class WidgetPoint extends EntityRepository
     {
         $qb = $this->createQueryBuilder('wp');
         $pointsPart = $qb->expr()->in('wp.map_id', ':points');
-        \Zend\Debug::dump($wdId); die;
         $query = $qb 
                      ->leftJoin('wp.widget', 'wd')
                      ->andWhere('wd.id = :wdId')

@@ -44,14 +44,28 @@ class Layout extends EntityRepository
             $layoutParts[] = $identifier->getResourceId();
         }
 
-        $layoutParts = $qb->expr()->in('lp.map_id', $layoutParts);
-        $query->andWhere($layoutParts);
+        $layoutPartsSql = $qb->expr()->in('lp.map_id', $layoutParts);
+        $query->andWhere($layoutPartsSql);
 
-        $layout = $query->getQuery()->getSingleResult();
+        $layouts = $query->getQuery()->execute();
 
-        if(empty($layout))
-            return $this->getDefaultLayout();
-        return $layout;
+        $currentLayout = array(-1,0);
+
+        foreach($layouts as $layout) {
+            $points = $layout->getPoints();
+            foreach($points as $point) {
+                $key = array_search($point->getMapId(), $layoutParts);
+
+                if($key !== false) {
+                    if($currentLayout[0] < $key) {
+                        $currentLayout[1] = $layout;
+                        $currentLayout[0] = $key;
+                    }
+                }
+            }
+        }
+
+        return $currentLayout[1];
     }
 
     /**
@@ -119,15 +133,14 @@ class Layout extends EntityRepository
                 $ids[] = $mapId->getResourceId();
         }
         $qb = $this->createQueryBuilder('lay');
-        $idsParts = $qb->expr()->in('lp.map_id', ':ids');
-        $query = $qb->select('lay', 'w', 'wp', 'wt')
-                    ->innerJoin('lay.widgets w')
-                    ->innerJoin('w.points wp')
+        $idsParts = $qb->expr()->in('wp.map_id', $ids);
+        $query = $qb->select('lay', 'w', 'wp')
+                    ->innerJoin('lay.widgets','w')
+                    ->innerJoin('w.points', 'wp')
                     ->andWhere($idsParts)
-                    ->addOrderBy('wp.map_id','DESC')
-                    ->setParameter('ids');
+                    ->addOrderBy('wp.map_id','DESC');
 
-        return $query->fetchOne();
+        return current($query->getQuery()->execute());
     }
 
 }

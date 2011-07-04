@@ -17,8 +17,6 @@ class Layouts extends \Slys\Doctrine\Model
     
     public function __construct()
     {
-        \Zend\Debug::dump(\Zend\Controller\Front::getInstance()
-                        ->getParam('doctrine2'));
         $this->_repository = $this->getEntityManager()->getRepository('\Templater\Model\Mapper\Layout');
     }
     

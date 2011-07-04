@@ -27,10 +27,10 @@ class Slys_Application_Resource_Debug
     {
         $options = $this->getOptions();
         if(!empty($options['enabled'])) {
-            $this->getBootstrap()->bootstrap('FrontController');
+            $this->getBootstrap()->bootstrap('frontcontroller');
 
 
-            $front = $this->getBootstrap()->getResource('FrontController');
+            $front = $this->getBootstrap()->getResource('frontcontroller');
             $autoloader = Zend_Loader_Autoloader::getInstance();
             $autoloader->registerNamespace('ZFDebug');
 
@@ -46,7 +46,7 @@ class Slys_Application_Resource_Debug
             $debug = new ZFDebug_Controller_Plugin_Debug($options);
 
             $this->getBootstrap()->bootstrap('frontController');
-            $frontController = $this->getBootstrap()->getResource('frontController');
+            $frontController = $this->getBootstrap()->getResource('frontcontroller');
             $frontController->registerPlugin($debug);
 
 

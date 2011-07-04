@@ -11,5 +11,4 @@ namespace Slysman;
 
 class Bootstrap extends \Zend\Application\Module\Bootstrap
 {
-
 }

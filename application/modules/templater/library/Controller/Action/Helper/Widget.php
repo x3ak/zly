@@ -48,7 +48,7 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
      */
     public function __construct($options = array()) {
         $this->setOptions($options);
-        $this->_layoutModel = new \Templater\Model\Widgets();
+        $this->_layoutModel = new \Templater\Model\Layouts();
     }
 
     /**
@@ -156,14 +156,14 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
                 $layoutEntity = $this->_layoutModel
                         ->getLayoutWithWidgetsbyNameAndRequest($layout->getLayout(), $mapIdentifiers);
 
-                if (Zend_Controller_Front::getInstance()->hasPlugin('User_Plugin_Acl'))
-                    $acl = Zend_Controller_Front::getInstance()->getPlugin('User_Plugin_Acl');
+                if (\Zend\Controller\Front::getInstance()->hasPlugin('User\Plugin\Acl'))
+                    $acl = \Zend\Controller\Front::getInstance()->getPlugin('User\Plugin\Acl');
 
                 if (!empty($layoutEntity->Widgets))
                     foreach ($layoutEntity->Widgets as $widget) {
 
                         if (!isset($acl)
-                                || !$acl instanceof User_Plugin_Acl
+                                || !$acl instanceof \User\Plugin\Acl
                                 || !$acl->isAllowed($widget->map_id)
                                 || !$widget->published) {
                             continue;

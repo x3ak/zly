@@ -224,7 +224,7 @@ class ErrorHandler extends \Zend\Controller\Plugin\AbstractPlugin
         $response = $this->getResponse();
 
         if (!empty($exceptions)) {
-            $error            = new ArrayObject(array(), ArrayObject::ARRAY_AS_PROPS);
+            $error            = new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS);
             $exceptionType    = current($exceptions);
 
             $error->exceptions = $exceptions;

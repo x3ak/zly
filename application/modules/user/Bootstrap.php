@@ -17,8 +17,11 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
 {
     protected function _initAcl()
     {
-        $this->bootstrap('Frontcontroller');
-        $this->getResource('Frontcontroller')->registerPlugin(
+        $front = $this->getApplication()
+                      ->getBroker()
+                      ->load('frontcontroller')
+                      ->getFrontController();
+        $front->registerPlugin(
                 new \User\Plugin\Acl(new \Zend\Acl\Acl())
         );
     }
