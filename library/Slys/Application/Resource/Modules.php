@@ -156,10 +156,12 @@ class Modules extends \Zend\Application\Resource\Modules
         }
 
         foreach($this->_bootstraps as $key=>$bootstrap) { 
-            if($bootstrap->_boostrapIt === true)
+            if($bootstrap->_boostrapIt === true) {
                 $bootstrap->bootstrap();
+                \Zend\Debug::dump($key);
+            }
         }
-        
+
         return $this->_bootstraps;
     }
 

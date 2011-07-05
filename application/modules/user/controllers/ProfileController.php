@@ -58,11 +58,11 @@ class ProfileController extends \Zend\Controller\Action
      */
     public function changePasswordAction()
     {
-        $form = new User_Form_Password();
+        $form = new Form\Password();
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-            $userModel = new User_Model_Users();
-            $identity = Zend_Auth::getInstance()->getIdentity();
-            $userId = $identity->id;
+            $userModel = new Model\Users();
+            $identity = $this->_auth ->getIdentity();
+            $userId = $identity->getId();
             $user = $userModel->getUser($userId);
             $result = $userModel->savePassword($user, $form->getValue('new_password'), $form->getValue('password'));
 

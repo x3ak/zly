@@ -220,6 +220,26 @@ class Map extends \Slys\Doctrine\Model
         }        
     }
     
+    public function getRequestByHash($hash)
+    {
+        $node = $this->getNodeByHash($hash);
+
+        if($node->level < 3) 
+            return false;
+        
+        $params = array();
+        if($node->level == 3)
+            $action = $node;
+        elseif($node->level == 4) {
+            $action = $this->getParentByHash($hash);
+//            $params = 
+        }
+
+        $controller = $this->getParentByHash($action->hash);
+        $module = $this->getParentByHash($controller->hash);
+        return new \Zend\Controller\Request\Simple($action->name, $controller->name, $module->name);
+    }
+    
     /**
      * Return sysmap root node
      * 

@@ -38,11 +38,11 @@ class Layout
      */
     protected $theme;
     /**
-     * @OneToMany(targetEntity="Templater\Model\Mapper\Widget", mappedBy="layout", cascade={"remove"})
+     * @OneToMany(targetEntity="Templater\Model\Mapper\Widget", mappedBy="layout", cascade={"remove", "persist"})
      */
     protected $widgets;    
     /**
-     * @OneToMany(targetEntity="Templater\Model\Mapper\LayoutPoint", mappedBy="layout", cascade={"remove"})
+     * @OneToMany(targetEntity="Templater\Model\Mapper\LayoutPoint", mappedBy="layout", cascade={"remove", "persist"})
      */
     protected $points;
 

@@ -74,30 +74,31 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
      */
     public function isAllowed($resource)
     {
-        if(!$this->_acl->has($resource)){
-
-            $apiRequest = new Slys_Api_Request($this, 
+        
+        if(empty($resource))
+            return false;
+        
+        if(!$this->_acl->hasResource($resource)) {
+            
+            $apiRequest = new \Slys\Api\Request($this, 
                                                 'sysmap.get-item-parents-by-identifier',
                                                 array('identifier'=>$resource));
+//           \Zend\Debug::dump($resource);
             $sysmap = $apiRequest->proceed()->getResponse()->getFirst();
-            
+//            \Zend\Debug::dump($sysmap);
             if(empty($sysmap))
                 return false;
 
             foreach($sysmap as $parentResource) {
+                $parentId = $parentResource->getResourceId();
 
-                $parentItem = $parentResource->getMapIdentifier();
-
-                if($parentResource == $parentItem)
-                    return false;
-
-                if(!$this->_acl->has($parentItem)) {
-                    $this->_acl->addResource($parentItem);
-                    $this->setRules($this->_currentRole, array($parentItem));
+                if(!$this->_acl->hasResource($parentId)) {
+                    $this->_acl->addResource($parentId);
+                    $this->setRules($this->_currentRole, array($parentId));
                 }
 
-                $allow = $this->_acl->isAllowed($this->_currentRole, $parentItem);
-                
+                $allow = $this->_acl->isAllowed($this->_currentRole, $parentId);
+
                 if($allow)
                     return true;
             }

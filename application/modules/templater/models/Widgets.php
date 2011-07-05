@@ -59,7 +59,7 @@ class Widgets extends \Slys\Doctrine\Model
     public function saveWidget(Mapper\Widget $widget, $values)
     {
         $widget->fromArray($values);     
-        
+
         if($widget->getId()) {
             $this->getEntityManager()->getRepository('\Templater\Model\Mapper\WidgetPoint')
                 ->deleteUnusedPoints($widget->getId(), $values['widget_points']);

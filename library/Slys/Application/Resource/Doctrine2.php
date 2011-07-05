@@ -49,14 +49,15 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
         }
         
         $application = $this->getBootstrap();
+        \Zend\Debug::dump(get_class($application));
         
         $this->_modules = $application->getBroker()->load('modules');
-
+        
         if(empty($this->_modules))
             return false;
         
         foreach($this->_modules->getExecutedBootstraps() as $name=>$module) {
-                
+
             if($module->getResourceLoader()->hasResourceType('mappers')) {
                 $resourceTypes = $module->getResourceLoader()->getResourceTypes();
                 $entityPath = $resourceTypes['mappers']['path'];
@@ -67,7 +68,7 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
             }
 
         }
-
+        \Zend\Debug::dump($this->_modules->getExecutedBootstraps());
         $config = new \Doctrine\ORM\Configuration;
         $config->setMetadataCacheImpl($cache);
         $driverImpl = $config->newDefaultAnnotationDriver($this->_entitiesPaths);

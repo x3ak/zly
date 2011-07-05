@@ -139,8 +139,11 @@ class Layout extends EntityRepository
                     ->innerJoin('w.points', 'wp')
                     ->andWhere($idsParts)
                     ->addOrderBy('wp.map_id','DESC');
-
-        return current($query->getQuery()->execute());
+        $result = $query->getQuery()->execute();
+        if(empty($result))
+            return false;
+        else            
+            return array_shift($result);;
     }
 
 }

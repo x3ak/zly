@@ -68,10 +68,10 @@ class ApiService
      */
     public function request(\Slys\Api\Request $request)
     {
-        if (in_array($request->getName(), $this->_processedRequests) === true) {
-            user_error('Possible request loop! Request \'' . $request->getName() . '\' was already processed!', E_USER_WARNING);
-            return;
-        }
+//        if (in_array($request->getName(), $this->_processedRequests) === true) {
+//            user_error('Possible request loop! Request \'' . $request->getName() . '\' was already processed!', E_USER_WARNING);
+//            return;
+//        }
 
         $this->_processedRequests[] = $request->getName();
 

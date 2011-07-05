@@ -100,8 +100,8 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
          */
         $widgetId = $this->getRequest()->getParam($this->_widgetIdName);
         if ($widgetId !== null) {
-            $formHelper = $this->_layout->getView()->getHelper('form');
-            if ($formHelper instanceof Slys_View_Helper_Form)
+            $formHelper = $this->_layout->getView()->broker('form');
+            if ($formHelper instanceof \Slys\View\Helper\Form)
                 $formHelper->setMarker($this->_widgetPostMarker, $widgetId);
         }
 
@@ -155,10 +155,15 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
                 $request = $this->getActionController()->getRequest();
                 $layoutEntity = $this->_layoutModel
                         ->getLayoutWithWidgetsbyNameAndRequest($layout->getLayout(), $mapIdentifiers);
-
+                
+                if(empty($layoutEntity))
+                    return false;
+                
                 if (\Zend\Controller\Front::getInstance()->hasPlugin('User\Plugin\Acl'))
                     $acl = \Zend\Controller\Front::getInstance()->getPlugin('User\Plugin\Acl');
+
                 $widgets = $layoutEntity->getWidgets();
+
                 if (!empty($widgets))
                     foreach ($widgets as $widget) {
 
@@ -168,14 +173,15 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
                                 || !$widget->getPublished()) {
                             continue;
                         }
-                        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-item-by-identifier',
+                        
+                        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-request-by-identifier',
                                         array('identifier' => $widget->getMapId()));
-                        $mapItem = $apiRequest->proceed()->getResponse()->getFirst();
-                        if (!$mapItem instanceof \Zend\Acl\Resource\GenericResource)
+                        $widgetRequest = $apiRequest->proceed()->getResponse()->getFirst();
+                        
+                        if (!$widgetRequest instanceof \Zend\Controller\Request\AbstractRequest)
                             continue;
-                        $widgetRequest = $mapItem->toRequest();
 
-                        $this->_pushStack($widget->id, $widgetRequest, $widget->getPlaceholder(), (array) $widgetRequest->getParams());
+                        $this->_pushStack($widget->getId(), $widgetRequest, $widget->getPlaceholder(), (array) $widgetRequest->getParams());
                     }
             }
         }

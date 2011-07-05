@@ -38,7 +38,7 @@ class Widget
      */
     protected $layout;
     /**
-     * @OneToMany(targetEntity="Templater\Model\Mapper\WidgetPoint", mappedBy="widget", cascade={"remove"})
+     * @OneToMany(targetEntity="Templater\Model\Mapper\WidgetPoint", mappedBy="widget", cascade={"remove", "persist"})
      */
     protected $points; 
     
@@ -64,7 +64,7 @@ class Widget
 
     public function setMapId($map_id)
     {
-        $this->map_Id = $map_id;
+        $this->map_id = $map_id;
     }
 
     public function getPublished()

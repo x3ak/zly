@@ -7,22 +7,25 @@
  *
  * @version    $Id: Profile.php 1012 2011-01-12 14:50:23Z deeper $
  */
-class User_Form_Password extends Zend_Form
+namespace User\Form;
+use \Zend\Form\Element as Element;
+
+class Password extends \Zend\Form\Form
 {
 
     public function init()
     {
-        $element = new Zend_Form_Element_Text('password');
+        $element = new Element\Text('password');
         $element->setLabel('Enter old password:');
         $element->setRequired(true);
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Text('new_password');
+        $element = new Element\Text('new_password');
         $element->setLabel('Enter new password:');
         $element->setRequired(true);
         $this->addElement($element);
 
-        $submitElement = new Zend_Form_Element_Submit('submit');
+        $submitElement = new Element\Submit('submit');
         $submitElement->setIgnore(true);
         $this->addElement($submitElement);
     }

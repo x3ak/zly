@@ -50,7 +50,15 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
                         unset($node->_childrens);
                     $request->getResponse()->setData( $node );
 
-                break;
+            break;
+            
+            case 'sysmap.get-request-by-identifier':
+                $params = $request->getParams();
+                if (empty($params['identifier']) === false and is_string($params['identifier']) === true) {
+                    $requestMap = $mapModel->getRequestByHash($params['identifier']);
+                    $request->getResponse()->setData( $requestMap );
+                }
+            break;
 
             case 'sysmap.get-item-parents-by-identifier':
                 $params = $request->getParams();
@@ -58,7 +66,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
                 if (empty($params['identifier']) === false and is_string($params['identifier']) === true)
                     $parentsHashes = array();
                     $parentsNodes = $mapModel->getParentByHash($params['identifier'], true);
-                   
+
                     foreach($parentsNodes as $node) {
                         $parentsHashes[] = new \Zend\Acl\Resource\GenericResource($node->hash);
                     }
