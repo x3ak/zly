@@ -34,8 +34,9 @@ class Modules extends \Zend\Application\Resource\Modules
     {
         $appOptions = $this->getBootstrap()->getApplication()->getOptions();
         $bootstrap = $this->getBootstrap();
+        $application = $this->getBootstrap()->getApplication();
         $bootstrap->bootstrap('frontcontroller');
-        $front = $bootstrap->getResource('frontcontroller');
+        $front = $this->getBootstrap()->getBroker()->load('frontcontroller')->getFrontController();
 
         $modulesArray = $front->getControllerDirectory();
         $default = $front->getDefaultModule();
@@ -77,7 +78,7 @@ class Modules extends \Zend\Application\Resource\Modules
                             if (isset($mergedOptions['bootstrap']))
                                 unset($mergedOptions['bootstrap']);
                             $bootstrap->getApplication()->setOptions($mergedOptions);
-                            $bootstrap->setOptions($mergedOptions);
+                            $bootstrap->setOptions($moduleConfig->toArray());
                             $bootstrap->moduleConfigFile = $moduleConfigFile;
                         }
                         
@@ -158,7 +159,6 @@ class Modules extends \Zend\Application\Resource\Modules
         foreach($this->_bootstraps as $key=>$bootstrap) { 
             if($bootstrap->_boostrapIt === true) {
                 $bootstrap->bootstrap();
-                \Zend\Debug::dump($key);
             }
         }
 
@@ -180,7 +180,7 @@ class Modules extends \Zend\Application\Resource\Modules
     
     public function setModuleOptions($moduleName, $options)
     {
-        $configFile = $this->getBootstrap()->getApplication()->getOption('config');
+        $configFile = $this->getBootstrap()->getApplication()->getApplication()->getOption('config');
         if(!empty($configFile)) {
             if(is_file($configFile) && is_readable($configFile) && is_writable($configFile)) {
                 
@@ -200,7 +200,7 @@ class Modules extends \Zend\Application\Resource\Modules
             $writer->setFilename($configFile);
             $writer->write();
         } else {
-            throw Exception("For save modules local config required local config file and 'config'\n"
+            throw new \Exception("For save modules local config required local config file and 'config'\n"
                     ." option with path ot in in main application config");
         }
         return $this;

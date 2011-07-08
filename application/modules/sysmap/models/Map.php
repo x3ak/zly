@@ -42,7 +42,7 @@ class Map extends \Slys\Doctrine\Model
         if($cache->hasCache('sysmap')) {
             $this->_cache = $cache->getCache('sysmap');            
         } else {
-            throw 'Sysmap module require own cache';
+            throw new \Exception('Sysmap module require own cache');
         }
         
         $this->_root = new \stdClass();
@@ -540,7 +540,7 @@ class Map extends \Slys\Doctrine\Model
     protected function _getControllerMap($fileName)
     {
         include_once $fileName;
-        @$file = new \Zend\Reflection\ReflectionFile($fileName);
+        $file = new \Zend\Reflection\ReflectionFile($fileName);
         $classes = $file->getClasses();
         $controller = new \stdClass();
         $controller->level = 2;
