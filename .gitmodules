@@ -1,6 +1,3 @@
-[submodule "library/Zend"]
-	path = library/Zend
-	url = git://github.com/zendframework/zf2.git
 [submodule "library/Doctrine/Orm"]
 	path = library/Doctrine/Orm
 	url = git://github.com/doctrine/doctrine2.git
@@ -19,3 +16,6 @@
 [submodule "library/Doctrine/Symfony/Component/Yaml"]
 	path = library/Doctrine/Symfony/Component/Yaml
 	url = git://github.com/symfony/Yaml.git
+[submodule "library/Zend"]
+	path = library/Zend
+	url = git://github.com/zendframework/zf2.git

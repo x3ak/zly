@@ -23,13 +23,13 @@ class Rule extends EntityRepository
      */
     public function getRoleRules($role, array $resources) 
     {
+
         $qb = $this->createQueryBuilder('rule');
-        $resourcesPart = $qb->expr()->in('rule.resource_id', ':resources');
+        $resourcesPart = $qb->expr()->in('rule.resource_id', $resources);
         return $qb->innerJoin('rule.role', 'role')
                   ->andWhere('role.name = :role')
                   ->andWhere($resourcesPart)
                   ->setParameter('role', $role)
-                  ->setParameter('resources', $resources)
                   ->getQuery()
                   ->execute();
     }
