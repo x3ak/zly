@@ -32,12 +32,11 @@ class Modules extends \Zend\Application\Resource\Modules
      */
     public function init()
     {
-        $appOptions = $this->getBootstrap()->getApplication()->getOptions();
+        $appOptions = $this->getBootstrap()->getOptions();
         $bootstrap = $this->getBootstrap();
-        $application = $this->getBootstrap()->getApplication();
         $bootstrap->bootstrap('frontcontroller');
         $front = $this->getBootstrap()->getBroker()->load('frontcontroller')->getFrontController();
-
+        $bootstrap->appid = uniqid();
         $modulesArray = $front->getControllerDirectory();
         $default = $front->getDefaultModule();
         $curBootstrapClass = get_class($bootstrap);
@@ -74,12 +73,17 @@ class Modules extends \Zend\Application\Resource\Modules
         
                         if (!empty($moduleConfig)) {
                             $appOptions = $bootstrap->getOptions();
+                            
                             $mergedOptions = $this->mergeOptions($moduleConfig->toArray(), $appOptions);
+
                             if (isset($mergedOptions['bootstrap']))
                                 unset($mergedOptions['bootstrap']);
-                            $bootstrap->getApplication()->setOptions($mergedOptions);
-                            $bootstrap->setOptions($moduleConfig->toArray());
-                            $bootstrap->moduleConfigFile = $moduleConfigFile;
+                              
+                            if (isset($mergedOptions['broker'])) {
+                                unset($mergedOptions['broker']);
+                            }
+
+                            $bootstrap->setOptions($mergedOptions);
                         }
                         
                     } else {
@@ -98,12 +102,6 @@ class Modules extends \Zend\Application\Resource\Modules
             
             // Custom modules options
             $moduleBootstrap = new $bootstrapClass($bootstrap); 
-            $moduleOptions = $bootstrap->getApplication()->getOption($module);
-            
-            
-            if (!empty($moduleOptions)) {
-                $moduleBootstrap->setOptions($moduleOptions);
-            }
 
             // Slys custom module autoloader resources
             $moduleBootstrap
@@ -119,28 +117,22 @@ class Modules extends \Zend\Application\Resource\Modules
                         )
                     ));
 
-            $bootstrapIt = false;
+            $bootstrapIt = true;
             
             if($moduleBootstrap instanceof \Slys\Application\Module\Installable 
-                    && !empty($moduleOptions['installed'])) {
-
-                $bootstrapIt = true;
+                    && $moduleBootstrap->hasOption('installed')) {
+                
+                $installed = $moduleBootstrap->getOption('installed');
+                if(empty($installed))
+                    $bootstrapIt = false;
             } 
             
             if($moduleBootstrap instanceof \Slys\Application\Module\Enableable 
-                    && !empty($moduleOptions['enabled'])) {
-
-                $bootstrapIt = true;
-            } elseif($moduleBootstrap instanceof \Slys\Application\Module\Enableable 
-                    && empty($moduleOptions['enabled'])) {
-                $bootstrapIt = false;
-            }
-            
-            if(!$moduleBootstrap instanceof \Slys\Application\Module\Installable 
-                    && !$moduleBootstrap instanceof \Slys\Application\Module\Enableable) {
-
-                $bootstrapIt = true;
-            }
+                    && $moduleBootstrap->hasOption('enabled')) {
+                $enabled = $moduleBootstrap->getOption('enabled');
+                if(empty($enabled))
+                    $bootstrapIt = false;
+            } 
             
             $moduleBootstrap->_boostrapIt = $bootstrapIt;
             $this->_bootstraps[$module] = $moduleBootstrap;
@@ -156,9 +148,9 @@ class Modules extends \Zend\Application\Resource\Modules
             }
         }
 
-        foreach($this->_bootstraps as $key=>$bootstrap) { 
-            if($bootstrap->_boostrapIt === true) {
-                $bootstrap->bootstrap();
+        foreach($this->_bootstraps as $key=>$mbootstrap) {             
+            if($mbootstrap->_boostrapIt === true) {
+                $mbootstrap->bootstrap();   
             }
         }
 

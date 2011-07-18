@@ -45,7 +45,7 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
             $cacheClass = '\Doctrine\Common\Cache\\'.ucfirst($connectionOptions['cache']).'Cache';
             $cache = new $cacheClass();
         } else {
-            $cache = new \Doctrine\Common\Cache\ArrayCache;
+            $cache = new \Doctrine\Common\Cache\ArrayCache();
         }
         
         $application = $this->getBootstrap();
