@@ -1,0 +1,21 @@
+Page_Model_Mapper_Page:
+  tableName: page_pages
+  columns:
+    id:
+      primary: true
+      autoincrement: true
+      type: integer
+    sysname:
+      type: string(64)
+      unique: true
+    title:
+      type: string(65)
+    content:
+      type: string(4000)
+    meta_keywords:
+      type: string(255)
+    meta_description:
+      type: string(4000)
+    built_in:
+      type: boolean
+      default: false

@@ -1,0 +1,20 @@
+<?php
+$this->headScript()->appendFile('/themes/interteam/js/ckeditor/ckeditor.js', 'text/javascript');
+$this->headScript()->appendFile('/themes/interteam/js/ckfinder/ckfinder.js', 'text/javascript');
+?>
+<h1><?php echo $this->title;?></h1>
+<?php echo $this->form; ?>
+
+<script type="text/javascript">
+	window.onload = function()
+	{
+		var editor = CKEDITOR.replace( 'content',
+				{
+					toolbar : 'CustomToolbar',
+					skin : 'office2003',
+					height: '400'
+
+				} );
+        CKFinder.setupCKEditor( editor, '/themes/interteam/js/ckfinder/' ) ;
+	};
+</script>
