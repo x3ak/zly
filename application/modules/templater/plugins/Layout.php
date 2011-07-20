@@ -37,7 +37,7 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
     public function __construct($options = array())
     {
         $this->setOptions($options);
-        $this->_model = new \Templater\Model\Layouts();
+        
     }
 
     /**
@@ -59,6 +59,11 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
     {
         return $this->_options;
     }
+    
+    public function routeStartup()
+    {
+        $this->_model = new \Templater\Model\Layouts();
+    }
 
     /**
      * On dispatch loop startup layout change is happens
@@ -68,7 +73,7 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
      * @return void
      */
     public function dispatchLoopStartup(\Zend\Controller\Request\AbstractRequest $request)
-    {
+    {        
         $config = new \Zend\Config\Config($this->getOptions());
         $themeSettings = $config->toArray();
         $apiRequest = new \Slys\Api\Request($this, 'sysmap.currently-active-items', array('request'=>$request));

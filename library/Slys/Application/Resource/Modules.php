@@ -32,128 +32,62 @@ class Modules extends \Zend\Application\Resource\Modules
      */
     public function init()
     {
-        $appOptions = $this->getBootstrap()->getOptions();
         $bootstrap = $this->getBootstrap();
         $bootstrap->bootstrap('frontcontroller');
-        $front = $this->getBootstrap()->getBroker()->load('frontcontroller')->getFrontController();
-        $bootstrap->appid = uniqid();
-        $modulesArray = $front->getControllerDirectory();
+        $front = $bootstrap->getResource('frontcontroller');
+        $modules = $front->getControllerDirectory();
+
         $default = $front->getDefaultModule();
         $curBootstrapClass = get_class($bootstrap);
-        $modules = new \ArrayObject($modulesArray);
         foreach ($modules as $module => $moduleDirectory) {
             $bootstrapClass = $this->_formatModuleName($module) . '\Bootstrap';
             if (!class_exists($bootstrapClass, false)) {
-                $bootstrapPath = dirname($moduleDirectory) . '/Bootstrap.php';
+                $bootstrapPath  = dirname($moduleDirectory) . '/Bootstrap.php';
                 if (file_exists($bootstrapPath)) {
                     $eMsgTpl = 'Bootstrap file found for module "%s" but bootstrap class "%s" not found';
                     include_once $bootstrapPath;
                     if (($default != $module)
-                            && !class_exists($bootstrapClass, false)
+                        && !class_exists($bootstrapClass, false)
                     ) {
-                        throw new \Zend\Application\Resource\Exception\InitializationException(sprintf(
-                                        $eMsgTpl, $module, $bootstrapClass
+                        throw new Exception\InitializationException(sprintf(
+                            $eMsgTpl, $module, $bootstrapClass
                         ));
                     } elseif ($default == $module) {
                         if (!class_exists($bootstrapClass, false)) {
                             $bootstrapClass = 'Bootstrap';
                             if (!class_exists($bootstrapClass, false)) {
-                                throw new \Zend\Application\Resource\Exception\InitializationException(sprintf(
-                                                $eMsgTpl, $module, $bootstrapClass
+                                throw new Exception\InitializationException(sprintf(
+                                    $eMsgTpl, $module, $bootstrapClass
                                 ));
                             }
                         }
-                    }
-
-                    $moduleConfigFile = realpath($moduleDirectory . '/../configs/module.ini');
-
-                    if ($moduleConfigFile) {
-                        $moduleConfig = new \Zend\Config\Ini($moduleConfigFile);
-                        $moduleConfig = $moduleConfig->get(APPLICATION_ENV);
-        
-                        if (!empty($moduleConfig)) {
-                            $appOptions = $bootstrap->getOptions();
-                            
-                            $mergedOptions = $this->mergeOptions($moduleConfig->toArray(), $appOptions);
-
-                            if (isset($mergedOptions['bootstrap']))
-                                unset($mergedOptions['bootstrap']);
-                              
-                            if (isset($mergedOptions['broker'])) {
-                                unset($mergedOptions['broker']);
-                            }
-
-                            $bootstrap->setOptions($mergedOptions);
-                        }
-                        
-                    } else {
-                        continue;
                     }
                 } else {
                     continue;
                 }
             }
 
-            if ($bootstrapClass == $curBootstrapClass) {
+            if ($bootstrapClass == $curBootstrapClass || $default == $module) {
                 // If the found bootstrap class matches the one calling this
                 // resource, don't re-execute.
                 continue;
-            }
+            }     
             
-            // Custom modules options
+            // Custom modules options            
+            $moduleConfig = $this->loadModuleConfig($moduleDirectory);
+            $bootstrap->setOptions($moduleConfig); 
+            
             $moduleBootstrap = new $bootstrapClass($bootstrap); 
-
             // Slys custom module autoloader resources
-            $moduleBootstrap
-                    ->getResourceLoader()
-                    ->addResourceTypes(array(
-                        'library' => array(
-                            'namespace' => 'Library',
-                            'path' => 'library'
-                        ),
-                        'config' => array(
-                            'namespace' => 'Config',
-                            'path' => 'configs'
-                        )
-                    ));
-
-            $bootstrapIt = true;
-            
-            if($moduleBootstrap instanceof \Slys\Application\Module\Installable 
-                    && $moduleBootstrap->hasOption('installed')) {
-                
-                $installed = $moduleBootstrap->getOption('installed');
-                if(empty($installed))
-                    $bootstrapIt = false;
-            } 
-            
-            if($moduleBootstrap instanceof \Slys\Application\Module\Enableable 
-                    && $moduleBootstrap->hasOption('enabled')) {
-                $enabled = $moduleBootstrap->getOption('enabled');
-                if(empty($enabled))
-                    $bootstrapIt = false;
-            } 
-            
-            $moduleBootstrap->_boostrapIt = $bootstrapIt;
+            if($moduleBootstrap instanceof \Zend\Application\Module\Bootstrap)
+                $moduleBootstrap->getResourceLoader()
+                                ->addResourceTypes(array( 
+                                    'library' => array( 'namespace' => 'Library', 'path' => 'library' ),
+                                    'config' => array( 'namespace' => 'Config', 'path' => 'configs' ) 
+                                 ));   
+            $moduleBootstrap->bootstrap();
             $this->_bootstraps[$module] = $moduleBootstrap;
-            
-            // Additional modules of current module
-            $moduleModulesDir = dirname($moduleDirectory) . '/modules';
-            if (is_dir($moduleModulesDir) && is_readable($moduleModulesDir)) {
-                $front->addModuleDirectory($moduleModulesDir);
-                $moduleModules = array_diff($front->getControllerDirectory(), $modules->getArrayCopy());
-                foreach ($moduleModules as $name => $dir) {
-                    $modules->offsetSet($name, $dir);
-                }
-            }
         }
-
-        foreach($this->_bootstraps as $key=>$mbootstrap) {             
-            if($mbootstrap->_boostrapIt === true) {
-                $mbootstrap->bootstrap();   
-            }
-        }
-
         return $this->_bootstraps;
     }
 
@@ -197,4 +131,20 @@ class Modules extends \Zend\Application\Resource\Modules
         }
         return $this;
     }
+    
+    public function loadModuleConfig($moduleDirectory)
+    {
+        $moduleConfigFile = realpath($moduleDirectory . '/../configs/module.ini');
+
+        if ($moduleConfigFile) {
+            $moduleConfig = new \Zend\Config\Ini($moduleConfigFile);
+            $moduleConfig = $moduleConfig->get(APPLICATION_ENV);
+
+            return $moduleConfig->toArray();
+        } 
+        else 
+            return array();
+        
+    }
+    
 }

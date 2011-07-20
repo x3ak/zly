@@ -38,9 +38,8 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
      * @return Slys\Application\Resource\Doctrine2
      */
     public function init()
-    {        
+    {       
         $connectionOptions = $this->getOptions();
-        
         if (!empty($connectionOptions['cache'])) {
             $cacheClass = '\Doctrine\Common\Cache\\'.ucfirst($connectionOptions['cache']).'Cache';
             $cache = new $cacheClass();
@@ -51,7 +50,7 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
         $application = $this->getBootstrap();
         
         $this->_modules = $application->getBroker()->load('modules');
-        
+
         if(empty($this->_modules))
             return false;
         
@@ -96,7 +95,7 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
             $connectionOptions = array('driver'=>'pdo_mysql');
 
         $this->_em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
-        $front = $this->getBootstrap()->getApplication()->getBroker()->load('frontcontroller')->getFrontController();
+        $front = $application->getBroker()->load('frontcontroller')->getFrontController();
         $front->setParam('doctrine2', $this);
         return $this;
     }

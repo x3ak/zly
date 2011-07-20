@@ -87,7 +87,7 @@ class ModulesController extends \Zend\Controller\Action
      * @param \Zend\Application\Module\Bootstrap $bootstrap
      * @return boolean 
      */
-    protected function _checkSlysCompatible(\Zend\Application\Module\Bootstrap $bootstrap)
+    protected function _checkSlysCompatible(\Zend\Application\Bootstrapper $bootstrap)
     {   
         $compatible = true;
         foreach($this->_requiredOptions as $option) {
@@ -103,7 +103,7 @@ class ModulesController extends \Zend\Controller\Action
      * @param \Zend\Application\Module\Bootstrap $bootstrap
      * @return type 
      */
-    protected function _checkModuleRequirements(\Zend\Application\Module\Bootstrap $bootstrap)
+    protected function _checkModuleRequirements(\Zend\Application\Bootstrapper $bootstrap)
     {
         $requirements = array('modules'=>array(),'resources'=>array());
         if($bootstrap->hasOption('requires')) {

@@ -540,7 +540,7 @@ class Map extends \Slys\Doctrine\Model
     protected function _getControllerMap($fileName)
     {
         include_once $fileName;
-        $file = new \Zend\Reflection\ReflectionFile($fileName);
+        @$file = new \Zend\Reflection\ReflectionFile($fileName);
         $classes = $file->getClasses();
         $controller = new \stdClass();
         $controller->level = 2;
