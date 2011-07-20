@@ -28,7 +28,14 @@ class Pages extends \Slys\Doctrine\Model
         return $this->getEntityManager()->getRepository('\Page\Model\Mapper\Page')->findAll();
     }
     
-      public function initSchema()
+    public function savePage(Mapper\Page $page, $data)
+    {
+        $page->fromArray($data);
+        $this->getEntityManager()->persist($page);
+        return $this->getEntityManager()->flush();
+    }
+    
+    public function initSchema()
     {
         $em = $this->getEntityManager();
         $tool = new \Doctrine\ORM\Tools\SchemaTool($em);

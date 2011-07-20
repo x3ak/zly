@@ -1,5 +1,5 @@
 <h1><?php echo $this->broker('translate')->direct('pages_list');?></h1>
-<table class="tablePrice" cellpadding="0" cellspacing="0">
+<table class="admin-table">
     <tr class="title">
         <td><?php echo $this->broker('translate')->direct('title');?></td>
         <td><?php echo $this->broker('translate')->direct('sysname');?></td>
@@ -9,12 +9,14 @@
     /** @var Mapper_Page $item */
     foreach($this->list as $k => $item):?>
     <tr class="row<?php echo ($k%2 == 1) ? '2' : '';?>">
-        <td><?php echo $this->link( $item->title,$this->url(array('module'=>'page','action'=>'edit','id'=>$item->id),'admin',true) );?></td>
-        <td><?php echo $item->sysname;?></td>
-        <td><?php echo $this->link($this->url(array('pagename'=>$item->sysname),'page',true),$this->url(array('pagename'=>$item->sysname),'page',true),array('target'=>'pageview'));?></td>
+        <td><a href="<?php echo $this->broker('url')->direct(array('module'=>'page','action'=>'edit','id'=>$item->getId()),'admin',true);?>"><?php echo $item->getTitle();?></a></td>
+        <td><?php echo $item->getSysname();?></td>
+        <td><a href="<?php echo $this->broker('url')->direct(array('pagename'=>$item->getSysname()),'page',true);?>"><?php echo $item->getSysname();?></a></td>
         <td>
-            <?php echo $this->link( 'edit' ,$this->url(array('module'=>'page','action'=>'edit','id'=>$item->id),'admin',true) );?>
-            <?php echo ($item->built_in == false) ? $this->link( 'delete' ,$this->url(array('module'=>'page','action'=>'delete','id'=>$item->id),'admin',true) ) : '' ;?>
+            <a href="<?php echo $this->broker('url')->direct(array('module'=>'page','action'=>'edit','id'=>$item->getId()),'admin',true);?>">edit</a>
+            <?php if($item->getBuiltIn() == false): ?> 
+            <a href="<?php echo $this->broker('url')->direct(array('module'=>'page','action'=>'delete','id'=>$item->getId()),'admin',true);?>">delete</a>
+            <?php endif;?>
         </td>
     </tr>
     <?php endforeach;?>

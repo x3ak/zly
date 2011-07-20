@@ -26,6 +26,6 @@ class IndexController extends \Zend\Controller\Action
             $this->view->page = $page;
         }
         else
-            $this->_redirect('/');
+            $this->broker('redirector')->gotoUrl('/');
     }
 }

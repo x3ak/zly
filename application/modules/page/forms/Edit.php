@@ -41,7 +41,18 @@ class Edit extends \Zend\Form\Form
         $description->setAttrib('rows',3);
         $description->setLabel( 'meta_description' );
         $this->addElement($description);
-
+        
+        $builtin = new Element\Hidden('built_in');
+        $this->addElement($builtin);
+        
+        $published = new Element\Checkbox('published');
+        $published->setLabel('published');
+        $this->addElement($published);
+        
+        $ordering = new Element\Text('ordering');
+        $ordering->setLabel('ordering');
+        $this->addElement($ordering);
+        
         $submitElement = new Element\Submit('submit');
         $submitElement->setLabel('save');
 

@@ -17,13 +17,13 @@ class AdminController extends \Zend\Controller\Action
 
     public function editAction() {
         $pageId = $this->getRequest()->getParam('id');
-        if(!empty($pageId)) {
-            $pagesModel = new Model\Pages();
+        $pagesModel = new Model\Pages();
+        if(!empty($pageId)) {            
             $pageMapper = $pagesModel->getPageById($pageId);
-            $this->view->title = $this->view->translate('page') . ' &laquo' . $pageMapper->title .'&raquo;';
+            $this->view->title = $this->view->broker('translate')->direct('page') . ' &laquo' . $pageMapper->getTitle() .'&raquo;';
         } else {
             $pageMapper = new Model\Mapper\Page();
-            $this->view->title = $this->view->translate('new_page');
+            $this->view->title = $this->view->broker('translate')->direct('new_page');
         }
 
         $form = new Form\Edit();
@@ -31,12 +31,10 @@ class AdminController extends \Zend\Controller\Action
 
         if ( $this->getRequest()->isPost() ) {
             if ( $form->isValid( $this->getRequest()->getPost() ) ) {
-
-                $pageMapper->fromArray($form->getValues());
-                $pageMapper->save();
+                $pagesModel->savePage($pageMapper, $form->getValues());
 
                 $this->broker('FlashMessenger')->addMessage('save_ok');
-                $this->broker('redirector')->goToRoute(array('module' => 'page'), 'admin', true);
+                $this->broker('redirector')->goToRoute(array('module' => 'page','action'=>'index'), 'admin', true);
             }
         }
 
@@ -50,6 +48,6 @@ class AdminController extends \Zend\Controller\Action
         $pageMapper->delete();
 
         $this->broker('FlashMessenger')->addMessage('save_ok');
-        $this->broker('redirector')->goToRoute(array('module' => 'page'), 'admin', true);
+        $this->broker('redirector')->goToRoute(array('module' => 'page', 'action'=>'index'), 'admin', true);
     }
 }
