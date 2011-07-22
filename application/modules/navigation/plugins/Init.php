@@ -17,8 +17,9 @@ class Init extends \Zend\Controller\Plugin\AbstractPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return void
      */
-    public function dispatchLoopStartup(Zend_Controller_Request_Abstract $request)
+    public function dispatchLoopStartup(\Zend\Controller\Request\AbstractRequest $request)
     {
-        \Zend\Registry::set('Zend\Navigation', Navigation\Model\Navigation::getInstance()->getNavigation());
+        $navigationModel = new \Navigation\Model\Navigation;
+        \Zend\Registry::set('Zend\Navigation', $navigationModel->getNavigation());
     }
 }

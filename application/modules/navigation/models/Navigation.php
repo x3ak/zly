@@ -7,7 +7,9 @@
  * @author     Serghei Ilin <criolit@gmail.com>
  * @version    $Id: Navigation.php 1176 2011-02-04 16:05:59Z criolit $
  */
-class Navigation_Model_Navigation
+namespace Navigation\Model;
+
+class Navigation extends \Slys\Doctrine\Model
 {
 	/**
 	 * Defines that navigation item referers to an external resource
@@ -28,11 +30,6 @@ class Navigation_Model_Navigation
     const TYPE_NAVIGATION_ROOT = 'menu';
 
     /**
-     * @var Navigation_Model_Navigation
-     */
-    protected static $_instance = null;
-
-    /**
      * @var boolean
      */
     protected $_cacheEnabled = false;
@@ -47,28 +44,20 @@ class Navigation_Model_Navigation
      */
     protected $_cacheName = 'navigation_full_navigation';
 
-    protected function __construct()
+    public function __construct()
     {
-        $options = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('modules')->navigation->getOptions();
+        $options = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getResource('modules')->navigation->getOptions();
 
         if (empty($options) === false) {
             $this->_cacheEnabled = (boolean)$options['cache']['enabled'];
 
-            $this->_cache = Zend_Cache::factory(
+            $this->_cache = \Zend\Cache\Cache::factory(
                 $options['cache']['frontend']['name'],
                 $options['cache']['backend']['name'],
                 $options['cache']['frontend']['options'],
                 $options['cache']['backend']['options']
             );
         }
-    }
-
-    public static function getInstance()
-    {
-        if (self::$_instance === null)
-            self::$_instance = new self;
-
-        return self::$_instance;
     }
 
     /**
@@ -177,9 +166,9 @@ class Navigation_Model_Navigation
     public function getNavigation($itemId = null)
     {
         if ($this->_cache->test($this->_cacheName) === false) {
-            $navigation = new Zend_Navigation();
+            $navigation = new \Zend\Navigation\Navigation();
 
-            $roots = Doctrine_Core::getTable('Navigation_Model_Mapper_Item')->getTree()->fetchRoots();
+            $roots = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->getTree()->fetchRoots();
             $this->_formatNavigationPages($roots, $navigation);
 
             if ($this->_cacheEnabled)

@@ -19,25 +19,25 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
 {
     protected function _initRegisterHelper()
     {
-//        if (!$this->getApplication()->hasResource('view'))
-//            $this->getApplication()->getBroker()->register('view', new \Zend\Application\Resource\View());
-//
-//        $this->getApplication()->bootstrap('view');
-//
-//        $this->getApplication()->getResource('view')->broker()->register(
-//                'adminCurrentSubmenu',
-//                new View\Helper\AdminCurrentSubmenu()
-//        );
-//
-//        $this->getApplication()->getResource('view')->broker()->register(
-//                'arrayTreeToTable',
-//                new View\Helper\ArrayTreeToTable()
-//        );
+        if (!$this->hasResource('view'))
+            $this->getBroker()->register('view', new \Zend\Application\Resource\View());
+
+        $this->getApplication()->bootstrap('view');
+
+        $this->getApplication()->getResource('view')->broker()->register(
+                'adminCurrentSubmenu',
+                new View\Helper\AdminCurrentSubmenu()
+        );
+
+        $this->getApplication()->getResource('view')->broker()->register(
+                'arrayTreeToTable',
+                new View\Helper\ArrayTreeToTable()
+        );
     }
 
     protected function _initPlugins()
     {
-//        \Zend\Controller\Front::getInstance()->registerPlugin(new Plugin\Init());
+        \Zend\Controller\Front::getInstance()->registerPlugin(new Plugin\Init());
     }
     
     public function enable()

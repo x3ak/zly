@@ -29,15 +29,11 @@ class Slys extends \Zend\Application\Resource\AbstractResource
      */
     public function init()
     {
-
-        $view = $this->getBootstrap()->getBroker()->load('view');
-        
+        $this->getBootstrap()->getBroker()->load('view');
         if(empty($this->getBootstrap()->view))
-            $view = $this->getBootstrap()->bootstrap('view');
-        
-        $view = $this->getBootstrap()->view;
+            $view = $this->getBootstrap()->bootstrap('view');        
+        $view = $this->getBootstrap()->getBroker()->load('view')->getView();        
         $view->broker()->setClassLoader(new \Slys\View\HelperLoader());
-
         return $this;
     }
 }
