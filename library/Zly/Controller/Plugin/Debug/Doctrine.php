@@ -22,7 +22,7 @@
  * 
  * 
  */
-class Slys_Controller_Plugin_Debug_Doctrine extends ZFDebug_Controller_Plugin_Debug_Plugin implements ZFDebug_Controller_Plugin_Debug_Plugin_Interface
+class Zly_Controller_Plugin_Debug_Doctrine extends ZFDebug_Controller_Plugin_Debug_Plugin implements ZFDebug_Controller_Plugin_Debug_Plugin_Interface
 {
     /**
     * Contains plugin identifier name

@@ -36,26 +36,26 @@
             </td>
 
             <td align="center">
-                <?php if($bootstrap instanceof \Slys\Application\Module\Enableable) { ?>
+                <?php if($bootstrap instanceof \Zly\Application\Module\Enableable) { ?>
                     <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) echo 'enabled'; else echo 'disabled  ';?>
                 <?php } ?>  
             </td>
             <td>                
                 
-            <?php if($bootstrap instanceof \Slys\Application\Module\Installable) {                    
+            <?php if($bootstrap instanceof \Zly\Application\Module\Installable) {                    
                 if(!$bootstrap->hasOption('installed') || (boolean)$bootstrap->getOption('installed') == false) { ?>
                     <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'install','item'=>$moduleName));?>">Install</a>
                 <?php } elseif($bootstrap->hasOption('installed') && (boolean)$bootstrap->getOption('installed') == true) { ?>
                     <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'uninstall','item'=>$moduleName));?>">Uninstall</a>
                 <?php  } }?>
 
-            <?php if($bootstrap instanceof \Slys\Application\Module\Updateable 
-                    && ($bootstrap instanceof \Slys\Application\Module\Installable && (boolean)$bootstrap->getOption('installed') == true)) { ?>
+            <?php if($bootstrap instanceof \Zly\Application\Module\Updateable 
+                    && ($bootstrap instanceof \Zly\Application\Module\Installable && (boolean)$bootstrap->getOption('installed') == true)) { ?>
                 <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'update','item'=>$moduleName));?>">Update</a>
             <?php }?>
 
-            <?php if($bootstrap instanceof \Slys\Application\Module\Enableable 
-                    && ($bootstrap instanceof \Slys\Application\Module\Installable && (boolean)$bootstrap->getOption('installed') == true)) { ?>
+            <?php if($bootstrap instanceof \Zly\Application\Module\Enableable 
+                    && ($bootstrap instanceof \Zly\Application\Module\Installable && (boolean)$bootstrap->getOption('installed') == true)) { ?>
                 <?php if($bootstrap->hasOption('enabled') && (boolean)$bootstrap->getOption('enabled') == true) { ?>    
                     <a href="<?php echo $this->broker('url')->direct(array('action'=>'proceed','deed'=>'disable','item'=>$moduleName));?>">Disable</a> 
                 <?php } else { ?>

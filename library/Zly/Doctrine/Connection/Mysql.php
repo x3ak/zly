@@ -1,6 +1,6 @@
 <?php
 
-class Slys_Doctrine_Connection_Mysql extends Doctrine_Connection_Mysql
+class Zly_Doctrine_Connection_Mysql extends Doctrine_Connection_Mysql
 {
 
 	public function getTable($name)

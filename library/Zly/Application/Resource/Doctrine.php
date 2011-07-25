@@ -1,11 +1,11 @@
 <?php
 /**
- * Slys Doctrine 2 resource
+ * Zly Doctrine 2 resource
  * @author evgheni.poleacov@gmail.com
  */
-namespace Slys\Application\Resource;
+namespace Zly\Application\Resource;
 
-class Doctrine2 extends \Zend\Application\Resource\AbstractResource
+class Doctrine extends \Zend\Application\Resource\AbstractResource
 {
     
     /**
@@ -29,13 +29,13 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
     
     /**
      *
-     * @var \Slys\Application\Resource\Modules
+     * @var \Zly\Application\Resource\Modules
      */
     protected $_modules;
 
     /**
      * Resource initialization
-     * @return Slys\Application\Resource\Doctrine2
+     * @return Zly\Application\Resource\Doctrine2
      */
     public function init()
     {       
@@ -96,7 +96,7 @@ class Doctrine2 extends \Zend\Application\Resource\AbstractResource
 
         $this->_em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
         $front = $application->getBroker()->load('frontcontroller')->getFrontController();
-        $front->setParam('doctrine2', $this);
+        $front->setParam('doctrine', $this);
         return $this;
     }
 

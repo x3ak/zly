@@ -1,6 +1,6 @@
 <?php
 
-namespace Slysman;
+namespace Zlyman;
 
 class MarketplaceController extends \Zend\Controller\Action
 {

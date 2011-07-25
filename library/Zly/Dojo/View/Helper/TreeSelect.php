@@ -8,7 +8,7 @@
  * @version    $Id: TreeSelect.php 839 2010-12-21 10:54:20Z deeper $
  */
 
-class Slys_Dojo_View_Helper_TreeSelect extends Zend_Dojo_View_Helper_ComboBox
+class Zly_Dojo_View_Helper_TreeSelect extends Zend_Dojo_View_Helper_ComboBox
 {
 	protected $_module = array('dojo.data.ItemFileWriteStore','dijit.tree.ForestStoreModel');
 

@@ -8,7 +8,7 @@
  * @version    $Id: TitlePaneMenu.php 839 2010-12-21 10:54:20Z deeper $
  */
 
-class Slys_Dojo_View_Helper_TitlePaneMenu extends Zend_Dojo_View_Helper_Dijit
+class Zly_Dojo_View_Helper_TitlePaneMenu extends Zend_Dojo_View_Helper_Dijit
 {
 
 	public function titlePaneMenu($id, Zend_Navigation $navigation, $options = array())

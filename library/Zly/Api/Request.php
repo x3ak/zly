@@ -6,7 +6,7 @@
  * Time: 12:15
  * To change this template use File | Settings | File Templates.
  */
-namespace Slys\Api;
+namespace Zly\Api;
 
 class Request
 {
@@ -27,7 +27,7 @@ class Request
      */
     protected $_params = array();
     /**
-     * @var Slys_Api_Request_Response
+     * @var Zly_Api_Request_Response
      */
     protected $_response = null;
 
@@ -79,21 +79,21 @@ class Request
 
     /**
      * Execute
-     * @return Slys_Api_Request
+     * @return Zly_Api_Request
      */
     public function proceed($params = array())
     {
         if (empty($params) === false)
             $this->_params = $params;
 
-        $this->_response = new \Slys\Api\Request\Response($this);
-        \Slys\Api\ApiService::getInstance()->request($this);
+        $this->_response = new \Zly\Api\Request\Response($this);
+        \Zly\Api\ApiService::getInstance()->request($this);
         return $this;
     }
 
     /**
      * Returns object which contains responses from handlers
-     * @return Slys\Api\Request\Response
+     * @return Zly\Api\Request\Response
      */
     public function getResponse()
     {

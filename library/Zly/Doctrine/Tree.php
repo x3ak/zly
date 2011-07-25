@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @version    $Id: Tree.php 839 2010-12-21 10:54:20Z deeper $
@@ -10,7 +10,7 @@
 /**
  * Doctrine tree extend tools
  */
-class Slys_Doctrine_Tree
+class Zly_Doctrine_Tree
 {
 	/**
 	 * Return Doctrine_Tree_NestedSet or selected tree
@@ -43,7 +43,7 @@ class Slys_Doctrine_Tree
 					$result->merge($current);
 				}
 			}
-			$emptyFilter = new Slys_Filter_Empty();
+			$emptyFilter = new Zly_Filter_Empty();
 			$result = $emptyFilter->filter($result);
 		}
 		return $result;

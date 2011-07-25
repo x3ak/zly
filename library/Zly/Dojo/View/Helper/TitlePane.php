@@ -1,6 +1,6 @@
 <?php
 
-class Slys_Dojo_View_Helper_TitlePane extends Zend_Dojo_View_Helper_DijitContainer
+class Zly_Dojo_View_Helper_TitlePane extends Zend_Dojo_View_Helper_DijitContainer
 {
     /**
      * Dijit being used

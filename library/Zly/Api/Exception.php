@@ -1,6 +1,6 @@
 <?php
 
-namespace Slys\Api;
+namespace Zly\Api;
 
 class Exception extends \Exception
 {

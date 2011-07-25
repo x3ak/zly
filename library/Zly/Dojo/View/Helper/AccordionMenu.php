@@ -8,7 +8,7 @@
  * @version    $Id: AccordionMenu.php 679 2010-12-04 16:09:35Z deeper $
  */
 
-class Slys_Dojo_View_Helper_AccordionMenu extends Zend_Dojo_View_Helper_Dijit
+class Zly_Dojo_View_Helper_AccordionMenu extends Zend_Dojo_View_Helper_Dijit
 {
 
 	public function accordionMenu($id, Zend_Navigation $navigation, $options = array())

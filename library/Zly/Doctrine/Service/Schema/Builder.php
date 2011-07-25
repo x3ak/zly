@@ -8,7 +8,7 @@
  * @license    http://zendmania.com/license/new-bsd New BSD License
  */
 
-class Slys_Doctrine_Service_Schema_Builder
+class Zly_Doctrine_Service_Schema_Builder
 {
 
     protected $_dbFileName;
@@ -174,7 +174,7 @@ class Slys_Doctrine_Service_Schema_Builder
         $schema = $this->_ymlParser->loadData($this->_curFileName);
 
         foreach($schema as $key=>$value) {
-            if(!strstr($key, 'SlysMigration')) {
+            if(!strstr($key, 'ZlyMigration')) {
                 unset($schema[$key]);
             }
         }
@@ -384,7 +384,7 @@ class Slys_Doctrine_Service_Schema_Builder
      */
     protected function createEmptyDbSchema()
     {
-        $schema = array('SlysTMP'=>array('tableName'=>'slys_tmp'));
+        $schema = array('ZlyTMP'=>array('tableName'=>'slys_tmp'));
         return $schema;
     }
 

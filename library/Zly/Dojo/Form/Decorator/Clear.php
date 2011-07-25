@@ -1,6 +1,6 @@
 <?php
 
-class Slys_Dojo_Form_Decorator_Clear extends Zend_Form_Decorator_Abstract
+class Zly_Dojo_Form_Decorator_Clear extends Zend_Form_Decorator_Abstract
 {
     public function render($content)
 	{

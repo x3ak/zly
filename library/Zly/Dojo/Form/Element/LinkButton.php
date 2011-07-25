@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @uses       Zend_Dojo_Form_Element_Button
- * @package    Slys_Dojo
+ * @package    Zly_Dojo
  * @version    $Id: LinkButton.php 839 2010-12-21 10:54:20Z deeper $
  */
 
-class Slys_Dojo_Form_Element_LinkButton extends Zend_Dojo_Form_Element_Button
+class Zly_Dojo_Form_Element_LinkButton extends Zend_Dojo_Form_Element_Button
 {
 
     /**
@@ -22,7 +22,7 @@ class Slys_Dojo_Form_Element_LinkButton extends Zend_Dojo_Form_Element_Button
      * Set url for link button
      *
      * @param string $url
-     * @return Slys_Dojo_Form_Element_LinkButton
+     * @return Zly_Dojo_Form_Element_LinkButton
      */
     public function setUrl($url)
     {
@@ -34,7 +34,7 @@ class Slys_Dojo_Form_Element_LinkButton extends Zend_Dojo_Form_Element_Button
      * Set confirm message for link button
      *
      * @param string $message
-     * @return Slys_Dojo_Form_Element_LinkButton
+     * @return Zly_Dojo_Form_Element_LinkButton
      */
     public function setConfirmMessage($message)
     {

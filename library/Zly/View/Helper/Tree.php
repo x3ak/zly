@@ -4,12 +4,12 @@
  * SlyS Framework
  *
  * @category   SlyS
- * @package    Slys_View
+ * @package    Zly_View
  * @subpackage Helper
  * @version    $Id: Tree.php 1003 2011-01-11 10:43:38Z deeper $
  */
 
-namespace Slys\View\Helper;
+namespace Zly\View\Helper;
 
 class Tree extends \Zend\View\Helper\FormRadio
 {

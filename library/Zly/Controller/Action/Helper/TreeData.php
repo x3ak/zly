@@ -5,7 +5,7 @@
  *
  * @version    $Id: TreeData.php 839 2010-12-21 10:54:20Z deeper $
  */
-class Slys_Controller_Action_Helper_TreeData extends Zend_Controller_Action_Helper_Abstract
+class Zly_Controller_Action_Helper_TreeData extends Zend_Controller_Action_Helper_Abstract
 {
 	public function prepareDataFromNavigation(Zend_Navigation_Container $navigation, $idField, $labelField)
 	{

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @version    $Id: StripArrayObjectKey.php 839 2010-12-21 10:54:20Z deeper $
  */
 
-class Slys_Filter_StripArrayObjectKey implements Zend_Filter_Interface
+class Zly_Filter_StripArrayObjectKey implements Zend_Filter_Interface
 {
 	/**
 	 * ArrayObject key

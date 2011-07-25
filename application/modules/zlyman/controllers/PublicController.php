@@ -1,5 +1,5 @@
 <?php
-namespace Slysman;
+namespace Zlyman;
 
 class PublicController extends \Zend\Controller\Action
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Slys\View;
+namespace Zly\View;
 
 class HelperLoader extends \Zend\Loader\PluginClassLoader
 {
@@ -54,6 +54,6 @@ class HelperLoader extends \Zend\Loader\PluginClassLoader
         'serverurl'           => 'Zend\View\Helper\ServerUrl',
         'translate'           => 'Zend\View\Helper\Translate',
         'url'                 => 'Zend\View\Helper\Url',
-        'tree'                => 'Slys\View\Helper\Tree',
+        'tree'                => 'Zly\View\Helper\Tree',
     );
 }

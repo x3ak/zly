@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @author  Evgheni Poleacov <evgheni.poelacov@gmail.com>
  * @version $Id: Tree.php 998 2011-01-06 16:14:45Z deeper $
  */
 
-namespace Slys\Form\Element;
+namespace Zly\Form\Element;
 
 class Tree extends \Zend\Form\Element\Multi
 {
@@ -77,7 +77,7 @@ class Tree extends \Zend\Form\Element\Multi
     /**
      * Switch tree to multiple select mode
      * @param boolean $multiple
-     * @return Slys_Form_Element_Tree
+     * @return Zly_Form_Element_Tree
      */
     public function setMultiple($multiple = true)
     {
@@ -90,7 +90,7 @@ class Tree extends \Zend\Form\Element\Multi
      *
      * @param string $field
      * @param Zend_Validate_Interface $validator
-     * @return Slys_Form_Element_Tree
+     * @return Zly_Form_Element_Tree
      */
     public function addDisableCondition($field, \Zend\Validator\AbstractValidator $validator = null)
     {
@@ -103,7 +103,7 @@ class Tree extends \Zend\Form\Element\Multi
      *
      * @param string $label
      * @param mixed $value
-     * @return Slys_Form_Element_Tree
+     * @return Zly_Form_Element_Tree
      */
     public function setRoot($label, $value = null)
     {
@@ -115,7 +115,7 @@ class Tree extends \Zend\Form\Element\Multi
     /**
      * Set key which would be represented like tree item title
      * @param string $key
-     * @return Slys_Form_Element_Tree
+     * @return Zly_Form_Element_Tree
      */
     public function setTitleKey($key)
     {
@@ -135,7 +135,7 @@ class Tree extends \Zend\Form\Element\Multi
     /**
      * Set key which would be represented like tree item value
      * @param string $key
-     * @return Slys_Form_Element_Tree
+     * @return Zly_Form_Element_Tree
      */
     public function setValueKey($key, $defaultValue = null)
     {
@@ -154,7 +154,7 @@ class Tree extends \Zend\Form\Element\Multi
     /**
      * Set key which would be represented like tree item value
      * @param string $key
-     * @return Slys_Form_Element_Tree
+     * @return Zly_Form_Element_Tree
      */
     public function setChildrensKey($key)
     {
@@ -165,7 +165,7 @@ class Tree extends \Zend\Form\Element\Multi
     /**
      * Get key which would be represented like tree item value
      * @param string $key
-     * @return Slys_Form_Element_Tree
+     * @return Zly_Form_Element_Tree
      */
     public function getChildrensKey()
     {
@@ -175,7 +175,7 @@ class Tree extends \Zend\Form\Element\Multi
     /**
      * Set value pattern separator
      * @param string $separator
-     * @return Slys_Form_Element_Tree 
+     * @return Zly_Form_Element_Tree 
      */
     public function setValuePatternSeparator($separator)
     {

@@ -16,10 +16,10 @@
  * @package    SlyS
  * @copyright  Copyright (c) 2010-2011 Evgheni Poleacov (http://zendmania.com)
  * @license    http://zendmania.com/license/new-bsd New BSD License
- * @version    $Id: Slys.php 937 2010-12-30 15:01:37Z deeper $
+ * @version    $Id: Zly.php 937 2010-12-30 15:01:37Z deeper $
  */
 
-class Slys_Application_Resource_Debug
+class Zly_Application_Resource_Debug
     extends Zend_Application_Resource_ResourceAbstract
 {
 
@@ -56,7 +56,7 @@ class Slys_Application_Resource_Debug
                     $this->getBootstrap()->bootstrap('doctrine');
                 }
                     $zfDebug = $front->getPlugin('ZFDebug_Controller_Plugin_Debug')
-                        ->registerPlugin(new Slys_Controller_Plugin_Debug_Doctrine());
+                        ->registerPlugin(new Zly_Controller_Plugin_Debug_Doctrine());
             }
         }
     }

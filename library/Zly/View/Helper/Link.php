@@ -3,11 +3,11 @@
  * SlyS Framework
  *
  * @category   SlyS
- * @package    Slys_View
+ * @package    Zly_View
  * @subpackage Helper
  * @version    $v$
  */
-class Slys_View_Helper_Link extends Zend_View_Helper_HtmlElement
+class Zly_View_Helper_Link extends Zend_View_Helper_HtmlElement
 {
 	public function link($title, $url, array $additional = null,$confirmMessage = null)
 	{

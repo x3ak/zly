@@ -1,11 +1,11 @@
 <?php
 /**
- * Slys log class. By default uses Firebug writter to log events in development enviroment
+ * Zly log class. By default uses Firebug writter to log events in development enviroment
  * and Stream writter in production enviroment in APPLICATION_PATH/../data/logs/app.log file
  *
  * @author Serghei Ilin <criolit@gmail.com>
  */
-class Slys_Log
+class Zly_Log
 {
 	/**
 	 * @var Zend_Log

@@ -4,7 +4,7 @@
  * 
  */
 
-namespace Slysman;
+namespace Zlyman;
 
 /**
  * 
@@ -27,7 +27,7 @@ class ModulesController extends \Zend\Controller\Action
                 ->getParam('bootstrap')->getResource('modules');
         
         foreach($this->modulesBootstraps as $key=>$bootstrap) {
-            $bootstrap->isSlysCompatible = $this->_checkSlysCompatible($bootstrap);
+            $bootstrap->isZlyCompatible = $this->_checkZlyCompatible($bootstrap);
             $bootstrap->moduleRequirements = $this->_checkModuleRequirements($bootstrap);
             $this->modulesBootstraps[$key] = $bootstrap;
         }
@@ -39,7 +39,7 @@ class ModulesController extends \Zend\Controller\Action
      */
     public function indexAction()
     {
-        $modulesForm = new \Slysman\Form\Modules(); 
+        $modulesForm = new \Zlyman\Form\Modules(); 
         
         if($this->getRequest()->isPost() && $modulesForm->isValid($this->getRequest()->getPost())) {
             switch($modulesForm->getElement('action')->getValue()) {
@@ -63,7 +63,7 @@ class ModulesController extends \Zend\Controller\Action
         $deed = $this->getRequest()->getParam('deed');
 
         $bootstrap = $this->modulesBootstraps[$module];
-        if( $bootstrap instanceof \Slys\Application\Module\Installable) {
+        if( $bootstrap instanceof \Zly\Application\Module\Installable) {
             $result = $bootstrap->{$deed}();
             if($result instanceof \Zend\Controller\Request\AbstractRequest) {
                 $this->_forward(
@@ -87,7 +87,7 @@ class ModulesController extends \Zend\Controller\Action
      * @param \Zend\Application\Module\Bootstrap $bootstrap
      * @return boolean 
      */
-    protected function _checkSlysCompatible(\Zend\Application\Bootstrapper $bootstrap)
+    protected function _checkZlyCompatible(\Zend\Application\Bootstrapper $bootstrap)
     {   
         $compatible = true;
         foreach($this->_requiredOptions as $option) {

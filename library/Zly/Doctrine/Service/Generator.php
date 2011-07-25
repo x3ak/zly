@@ -12,7 +12,7 @@
 require_once 'Doctrine/Parser/sfYaml/sfYaml.php';
 
 
-class Slys_Doctrine_Service_Generator
+class Zly_Doctrine_Service_Generator
 {
     /**
      *
@@ -240,7 +240,7 @@ class Slys_Doctrine_Service_Generator
      *
      * @param array $destinations
      * @param array $newFiles
-     * @return Slys_Doctrine_Service_Generator
+     * @return Zly_Doctrine_Service_Generator
      */
     protected function removeNotActualMappersFiles($destinations, $newFiles)
     {

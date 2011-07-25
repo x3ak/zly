@@ -1,6 +1,6 @@
 <?php
 
-namespace Slys\Api\Request;
+namespace Zly\Api\Request;
 
 class Response
 {
@@ -9,7 +9,7 @@ class Response
      */
     protected $_data = array();
     /**
-     * @var Slys_Api_Request
+     * @var Zly_Api_Request
      */
     protected $_request = null;
     /**
@@ -17,7 +17,7 @@ class Response
      */
     protected $_filter;
 
-    public function __construct(\Slys\Api\Request $request)
+    public function __construct(\Zly\Api\Request $request)
     {
         $this->_request = $request;
     }
@@ -66,7 +66,7 @@ class Response
      */
     public function setData($data, $priority = 0)
     {
-        if (\Slys\Api\ApiService::getInstance()->isRequestInProcess($this->_request->getName())) {
+        if (\Zly\Api\ApiService::getInstance()->isRequestInProcess($this->_request->getName())) {
             $this->_data['data'] = $data;
             $this->_data['priority'] = (int)$priority;
         }
@@ -75,7 +75,7 @@ class Response
     }
 
     /**
-     * @return Slys_Api_Request
+     * @return Zly_Api_Request
      */
     public function getRequest()
     {

@@ -1,5 +1,5 @@
 <?php
-namespace Slys\Application\Module;
+namespace Zly\Application\Module;
 
 interface Installable
 {

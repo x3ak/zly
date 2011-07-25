@@ -8,7 +8,7 @@
  * @version    $Id: LinkButton.php 839 2010-12-21 10:54:20Z deeper $
  */
 
-class Slys_Dojo_View_Helper_LinkButton extends Zend_Dojo_View_Helper_Button
+class Zly_Dojo_View_Helper_LinkButton extends Zend_Dojo_View_Helper_Button
 {
 
     /**

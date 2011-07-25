@@ -7,12 +7,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-interface Slys_Api_Notification_Notifier
+interface Zly_Api_Notification_Notifier
 {
     /**
      * @abstract
-     * @param Slys_Api_Notification_Registry $registry
+     * @param Zly_Api_Notification_Registry $registry
      * @return void
      */
-    public function publishNotifications( Slys_Api_Notification_Registry $registry );
+    public function publishNotifications( Zly_Api_Notification_Registry $registry );
 }

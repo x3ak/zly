@@ -10,7 +10,7 @@
  * @link http://wiki.optimum-web.com/doku.php/slys:manual:library
  */
 
-namespace Slys\Api\Notification;
+namespace Zly\Api\Notification;
 
 class Registry
 {

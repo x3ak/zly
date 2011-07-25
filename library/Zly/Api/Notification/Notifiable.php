@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-interface Slys_Api_Notification_Notifiable
+interface Zly_Api_Notification_Notifiable
 {
-    public function onNotification(Slys_Api_Notification $notification);
+    public function onNotification(Zly_Api_Notification $notification);
 }

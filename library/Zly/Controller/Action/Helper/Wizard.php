@@ -1,5 +1,5 @@
 <?php
-class Slys_Controller_Action_Helper_Wizard extends Zend_Controller_Action_Helper_Abstract
+class Zly_Controller_Action_Helper_Wizard extends Zend_Controller_Action_Helper_Abstract
 {
 	/**
 	 * session namespace name for questionnaire data

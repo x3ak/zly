@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @author  Evgheni Poleacov <evgheni.poelacov@gmail.com>
  *          Pavel Galaton
  * @version $Id: TreeSelect.php 839 2010-12-21 10:54:20Z deeper $
  */
- class Slys_Dojo_Form_Element_TreeSelect extends Zend_Dojo_Form_Element_ComboBox
+ class Zly_Dojo_Form_Element_TreeSelect extends Zend_Dojo_Form_Element_ComboBox
 {
 	/**
      * Use Tree view helper
@@ -24,7 +24,7 @@
     /**
      * Switch tree to multiple select mode
      * @param boolean $multiple
-     * @return Slys_Dojo_Form_Element_TreeSelect
+     * @return Zly_Dojo_Form_Element_TreeSelect
      */
 	public function setMultiple($multiple = true)
 	{
@@ -48,7 +48,7 @@
      * Set tree nodes
      *
      * @param Zend_Dojo_Data $tree
-     * @return Slys_Dojo_Form_Element_TreeSelect
+     * @return Zly_Dojo_Form_Element_TreeSelect
      */
 	public function setMultiOptions(Zend_Dojo_Data $tree)
 	{
@@ -67,7 +67,7 @@
      *
      * @param string $key
      * @param mixed $value
-     * @return Slys_Dojo_Form_Element_TreeSelect
+     * @return Zly_Dojo_Form_Element_TreeSelect
      */
 	public function setTreeParam($key, $value)
 	{
@@ -81,7 +81,7 @@
      * Set dijit.tree custom multi params
      *
      * @param array $params
-     * @return Slys_Dojo_Form_Element_TreeSelect
+     * @return Zly_Dojo_Form_Element_TreeSelect
      */
 	public function setTreeParams($params)
 	{
@@ -107,7 +107,7 @@
      * Set tree nodes identities which should be selected
      *
      * @param mixed $value
-     * @return Slys_Dojo_Form_Element_TreeSelect
+     * @return Zly_Dojo_Form_Element_TreeSelect
      */
 	public function setValue($value)
 	{
@@ -130,7 +130,7 @@
      *
      * @param string $field
      * @param mixed $value
-     * @return Slys_Dojo_Form_Element_TreeSelect
+     * @return Zly_Dojo_Form_Element_TreeSelect
      */
     public function setDisabledField($field, $value = null)
     {
@@ -145,7 +145,7 @@
      *
      * @param string $label
      * @param mixed $value
-     * @return Slys_Dojo_Form_Element_TreeSelect
+     * @return Zly_Dojo_Form_Element_TreeSelect
      */
     public function setRoot($label, $value = null)
     {

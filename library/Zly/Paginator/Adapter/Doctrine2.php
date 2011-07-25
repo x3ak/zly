@@ -1,5 +1,5 @@
 <?php
-namespace Slys\Paginator\Adapter;
+namespace Zly\Paginator\Adapter;
 
 use Zend\Paginator\Adapter;
 

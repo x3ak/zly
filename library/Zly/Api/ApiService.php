@@ -1,15 +1,15 @@
 <?php
 /**
- * Slys Api manager class
+ * Zly Api manager class
  * @version $Id: Api.php 1231 2011-04-17 17:49:48Z deeper $
  */
 
-namespace Slys\Api;
+namespace Zly\Api;
 
 class ApiService
 {
     /**
-     * @var Slys_Api
+     * @var Zly_Api
      */
     protected static $_instance = null;
     /**
@@ -26,7 +26,7 @@ class ApiService
     protected $_processedNotifications = array();
 
     /**
-     * @var Slys_Api_Notification_Registry
+     * @var Zly_Api_Notification_Registry
      */
     protected $_notificationRegistry = null;
 
@@ -35,14 +35,14 @@ class ApiService
      */
     protected function __construct()
     {
-        $this->_notificationRegistry = new \Slys\Api\Notification\Registry();
+        $this->_notificationRegistry = new \Zly\Api\Notification\Registry();
         $this->_collectNotifications();
     }
 
     /**
-     * Returns the Slys_Api object
+     * Returns the Zly_Api object
      * @static
-     * @return Slys_Api
+     * @return Zly_Api
      */
     public static function getInstance()
     {
@@ -63,10 +63,10 @@ class ApiService
     }
 
     /**
-     * @param Slys_Api_Request $request
-     * @return Slys_Api_Request_Response
+     * @param Zly_Api_Request $request
+     * @return Zly_Api_Request_Response
      */
-    public function request(\Slys\Api\Request $request)
+    public function request(\Zly\Api\Request $request)
     {
 //        if (in_array($request->getName(), $this->_processedRequests) === true) {
 //            user_error('Possible request loop! Request \'' . $request->getName() . '\' was already processed!', E_USER_WARNING);
@@ -83,7 +83,7 @@ class ApiService
         $bootstraps = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getResource('modules');
 
         foreach($bootstraps as $key=>$bootstrap) {
-            if ($bootstrap instanceof \Slys\Api\Request\Requestable) {
+            if ($bootstrap instanceof \Zly\Api\Request\Requestable) {
                 $bootstrap->onRequest($request);
 
                 if ($request->getResponse()->getData() !== null) {
@@ -117,12 +117,12 @@ class ApiService
 
     /**
      * @param  $context
-     * @param  Slys_Api_Notification $notification
+     * @param  Zly_Api_Notification $notification
      * @return void
      */
     public function notify($context, $name, $params = array())
     {
-        $notification = new \Slys\Api\Notification($context, $name, $params);
+        $notification = new \Zly\Api\Notification($context, $name, $params);
 
         if (in_array($notification->getName(), $this->_processedNotifications)) {
             user_error('Possible notification loop! Notification \'' . $notification->getName() . '\' was already processed!', E_USER_WARNING);
@@ -139,7 +139,7 @@ class ApiService
         $bootstraps = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getResource('modules');
 
         foreach($bootstraps as $bootstrap) {
-            if ($bootstrap instanceof Slys_Api_Notification_Notifiable) {
+            if ($bootstrap instanceof Zly_Api_Notification_Notifiable) {
                 $bootstrap->onNotification($notification);
             }
         }
@@ -152,7 +152,7 @@ class ApiService
         $bootstraps = \Zend\Controller\Front::getInstance()->getParam('bootstrap')->getResource('modules');
 
         foreach($bootstraps as $bootstrap) {
-            if ($bootstrap instanceof \Slys\Api\Notification\Notifier) {
+            if ($bootstrap instanceof \Zly\Api\Notification\Notifier) {
                 $bootstrap->publishNotifications( $this->_notificationRegistry );
             }
         }

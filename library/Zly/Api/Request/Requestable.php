@@ -1,8 +1,8 @@
 <?php
 
-namespace Slys\Api\Request;
+namespace Zly\Api\Request;
 
 interface Requestable
 {
-    public function onRequest(\Slys\Api\Request $request);
+    public function onRequest(\Zly\Api\Request $request);
 }

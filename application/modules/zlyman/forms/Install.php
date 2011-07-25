@@ -1,6 +1,6 @@
 <?php
 
-class Slysman_Form_Install extends Zend_Form
+class Zlyman_Form_Install extends Zend_Form
 {
     public function init()
     {

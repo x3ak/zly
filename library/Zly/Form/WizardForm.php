@@ -1,5 +1,5 @@
 <?php
-class Slys_Form_Wizard extends Zend_Form
+class Zly_Form_Wizard extends Zend_Form
 {
 	/**
 	 * @see Zend/Zend_Form::addSubForm()

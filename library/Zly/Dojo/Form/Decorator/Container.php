@@ -1,6 +1,6 @@
 <?php
 
-class Slys_Dojo_Form_Decorator_Container extends Zend_Form_Decorator_Abstract
+class Zly_Dojo_Form_Decorator_Container extends Zend_Form_Decorator_Abstract
 {
 	static public $_content = array();
 	protected $_current;

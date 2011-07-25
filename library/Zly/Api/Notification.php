@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class Slys_Api_Notification
+class Zly_Api_Notification
 {
     /**
      * @var string Name of the notification

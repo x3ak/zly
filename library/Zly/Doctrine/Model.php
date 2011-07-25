@@ -9,7 +9,7 @@
  *
  * @author deep
  */
-namespace Slys\Doctrine;
+namespace Zly\Doctrine;
 
 abstract class Model
 {
@@ -35,15 +35,15 @@ abstract class Model
 
     /**
      * Set entity manager to
-     * @return Slys_Doctrine_Model
+     * @return Zly_Doctrine_Model
      */
     private function _setEntityManager()
     {
-        $doctrine2 = \Zend\Controller\Front::getInstance()
-                        ->getParam('doctrine2');
+        $doctrine = \Zend\Controller\Front::getInstance()
+                        ->getParam('doctrine');
 
-        if(!empty($doctrine2) && $doctrine2 instanceof \Slys\Application\Resource\Doctrine2) {
-            $this->_em = $doctrine2->getEntityManager();
+        if(!empty($doctrine) && $doctrine instanceof \Zly\Application\Resource\Doctrine) {
+            $this->_em = $doctrine->getEntityManager();
         }
 
         return $this;

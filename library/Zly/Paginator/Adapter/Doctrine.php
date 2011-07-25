@@ -1,5 +1,5 @@
 <?php
-class Slys_Paginator_Adapter_Doctrine implements Zend_Paginator_Adapter_Interface
+class Zly_Paginator_Adapter_Doctrine implements Zend_Paginator_Adapter_Interface
 {
     /**
      * @var Doctrine_Query

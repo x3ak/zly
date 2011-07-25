@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @version    $Id: Table.php 839 2010-12-21 10:54:20Z deeper $
  */
-class Slys_Dojo_View_Helper_Table extends Zend_Dojo_View_Helper_ComboBox
+class Zly_Dojo_View_Helper_Table extends Zend_Dojo_View_Helper_ComboBox
 {
 
     /**
@@ -53,7 +53,7 @@ class Slys_Dojo_View_Helper_Table extends Zend_Dojo_View_Helper_ComboBox
      * Set structure
      *
      * @param array $structure
-     * @return Slys_Dojo_View_Helper_Table
+     * @return Zly_Dojo_View_Helper_Table
      */
     public function setStructure($structure)
     {
@@ -64,7 +64,7 @@ class Slys_Dojo_View_Helper_Table extends Zend_Dojo_View_Helper_ComboBox
     /**
      * Set tabe data
      * @param Zend_Dojo_Data $dojoData
-     * @return Slys_Dojo_View_Helper_Table 
+     * @return Zly_Dojo_View_Helper_Table 
      */
     public function setData(Zend_Dojo_Data $dojoData = null)
     {
@@ -75,7 +75,7 @@ class Slys_Dojo_View_Helper_Table extends Zend_Dojo_View_Helper_ComboBox
     /**
      * Set remote data URL
      * @param string $url
-     * @return Slys_Dojo_View_Helper_Table
+     * @return Zly_Dojo_View_Helper_Table
      */
     public function setUrl($url)
     {
@@ -152,7 +152,7 @@ class Slys_Dojo_View_Helper_Table extends Zend_Dojo_View_Helper_ComboBox
 
     /**
      * Return current class
-     * @return Slys_Dojo_View_Helper_Table
+     * @return Zly_Dojo_View_Helper_Table
      */
     public function table()
     {

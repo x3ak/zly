@@ -22,7 +22,7 @@
 /**
  * @namespace
  */
-namespace Slys\Authentication\Adapter;
+namespace Zly\Authentication\Adapter;
 
 use Zend\Authentication\Adapter as AuthenticationAdapter,
     Zend\Authentication\Result as AuthenticationResult,

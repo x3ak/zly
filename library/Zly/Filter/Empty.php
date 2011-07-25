@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @version    $Id: Empty.php 839 2010-12-21 10:54:20Z deeper $
  */
 
-class Slys_Filter_Empty implements Zend_Filter_Interface
+class Zly_Filter_Empty implements Zend_Filter_Interface
 {
 	/**
 	 * Unset empty values from array recursively

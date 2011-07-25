@@ -16,16 +16,16 @@
  * @package    SlyS
  * @copyright  Copyright (c) 2010-2011 Evgheni Poleacov (http://zendmania.com)
  * @license    http://zendmania.com/license/new-bsd New BSD License
- * @version    $Id: Slys.php 1193 2011-02-17 10:43:39Z criolit $
+ * @version    $Id: Zly.php 1193 2011-02-17 10:43:39Z criolit $
  */
-namespace Slys\Application\Resource;
+namespace Zly\Application\Resource;
 
-class Slys extends \Zend\Application\Resource\AbstractResource
+class Zly extends \Zend\Application\Resource\AbstractResource
 {
 
 
     /**
-     * Slys requirements initialization
+     * Zly requirements initialization
      */
     public function init()
     {
@@ -33,7 +33,7 @@ class Slys extends \Zend\Application\Resource\AbstractResource
         if(empty($this->getBootstrap()->view))
             $view = $this->getBootstrap()->bootstrap('view');        
         $view = $this->getBootstrap()->getBroker()->load('view')->getView();        
-        $view->broker()->setClassLoader(new \Slys\View\HelperLoader());
+        $view->broker()->setClassLoader(new \Zly\View\HelperLoader());
         return $this;
     }
 }

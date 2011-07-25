@@ -1,5 +1,5 @@
 <?php
-namespace Slysman\Form;
+namespace Zlyman\Form;
 
 class Modules extends \Zend\Form\Form
 {

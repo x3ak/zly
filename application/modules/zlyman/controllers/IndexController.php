@@ -1,5 +1,5 @@
 <?php
-namespace Slysman;
+namespace Zlyman;
 class IndexController extends \Zend\Controller\Action
 {
     protected $messages = array();

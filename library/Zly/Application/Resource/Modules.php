@@ -19,7 +19,7 @@
  * @license    http://zendmania.com/license/new-bsd New BSD License
  * @version    $Id: Modules.php 1249 2011-04-28 15:02:58Z deeper $
  */
-namespace Slys\Application\Resource;
+namespace Zly\Application\Resource;
 
 class Modules extends \Zend\Application\Resource\Modules
 {    
@@ -78,7 +78,7 @@ class Modules extends \Zend\Application\Resource\Modules
             $bootstrap->setOptions($moduleConfig); 
             
             $moduleBootstrap = new $bootstrapClass($bootstrap); 
-            // Slys custom module autoloader resources
+            // Zly custom module autoloader resources
             if($moduleBootstrap instanceof \Zend\Application\Module\Bootstrap)
                 $moduleBootstrap->getResourceLoader()
                                 ->addResourceTypes(array( 
