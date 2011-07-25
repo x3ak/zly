@@ -2,7 +2,7 @@
 
 namespace Page\Model;
 
-class Pages extends \Slys\Doctrine\Model
+class Pages extends \Zly\Doctrine\Model
 {
 
     /**

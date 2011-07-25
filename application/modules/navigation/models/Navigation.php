@@ -1,6 +1,6 @@
 <?php
 /**
- * Slys
+ * Zly
  *
  * Main module navigation module
  *
@@ -9,7 +9,7 @@
  */
 namespace Navigation\Model;
 
-class Navigation extends \Slys\Doctrine\Model
+class Navigation extends \Zly\Doctrine\Model
 {
 	/**
 	 * Defines that navigation item referers to an external resource
@@ -58,6 +58,44 @@ class Navigation extends \Slys\Doctrine\Model
                 $options['cache']['backend']['options']
             );
         }
+    }
+    
+    public function initSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->dropSchema($classes);    
+        $tool->createSchema($classes);
+        return $this;
+    }
+    
+    public function updateSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->updateSchema($classes);
+        return $this;
+    }
+    
+    public function dropSchema()
+    {
+        $em = $this->getEntityManager();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $classes = $this->_getShemaClasses();
+        $tool->dropSchema($classes);
+        return $this;
+    }
+    
+    protected function _getShemaClasses()
+    {
+        $em = $this->getEntityManager();
+        $classes = array(
+          $em->getClassMetadata('\Navigation\Model\Mapper\Item')
+        );
+        
+        return $classes;
     }
 
     /**
@@ -219,8 +257,8 @@ class Navigation extends \Slys\Doctrine\Model
                     $page->reset_params = true;
 
                 /** @var $sysmapItem Sysmap_Model_Mapper_Sysmap */
-                $sysmapItem = Slys_Api::getInstance()->request(
-                    new Slys_Api_Request($this, 'sysmap.get-item-by-identifier', array(
+                $sysmapItem = Zly_Api::getInstance()->request(
+                    new Zly_Api_Request($this, 'sysmap.get-item-by-identifier', array(
                         'identifier' => $item->sysmap_identifier
                     ))
                 );

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @version    $Id: Roles.php 1232 2011-04-17 21:00:36Z deeper $
  */
 namespace User\Model;
 
-class Roles extends \Slys\Doctrine\Model
+class Roles extends \Zly\Doctrine\Model
 {
     /**
      * Return collection of all roles

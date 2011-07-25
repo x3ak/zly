@@ -1,6 +1,6 @@
 <?php
 /**
- * Slys 2
+ * Zly 2
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  */
 
@@ -10,7 +10,7 @@
 
 namespace Sysmap\Model;
 
-class Map extends \Slys\Doctrine\Model
+class Map extends \Zly\Doctrine\Model
 {    
     /**
      *
@@ -252,7 +252,7 @@ class Map extends \Slys\Doctrine\Model
     
     /**
      * Return from element with system map tree
-     * @return \Slys\Form\Element\Tree 
+     * @return \Zly\Form\Element\Tree 
      */
     public function getMapTreeElement()
     {
@@ -262,7 +262,7 @@ class Map extends \Slys\Doctrine\Model
         $root->_childrens = $sysmap;
         $rootedSysmap = array($root);
 
-        $formElement = new \Slys\Form\Element\Tree('sysmap_id');
+        $formElement = new \Zly\Form\Element\Tree('sysmap_id');
         $formElement->setValueKey('hash');
         $formElement->setTitleKey('name');
         $formElement->setChildrensKey('_childrens');

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @version    $Id: Themes.php 1134 2011-01-28 14:31:15Z deeper $
  */
 namespace Templater\Model;
 
-class Themes extends \Slys\Doctrine\Model
+class Themes extends \Zly\Doctrine\Model
 {
 
     /**
@@ -116,7 +116,7 @@ class Themes extends \Slys\Doctrine\Model
 
         if($current === true) {
             
-            $apiRequest = new \Slys\Api\Request($this,  'sysmap.get-root-identifier');
+            $apiRequest = new \Zly\Api\Request($this,  'sysmap.get-root-identifier');
             $rootNode = $apiRequest->proceed()->getResponse()->getFirst();
  
             $front = false;

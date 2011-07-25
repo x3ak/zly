@@ -1,8 +1,8 @@
 <?php
 namespace Page;
 
-use \Slys\Application\Module as Module, 
-    \Slys\Api as Api;
+use \Zly\Application\Module as Module, 
+    \Zly\Api as Api;
 
 class Bootstrap extends \Zend\Application\Module\Bootstrap 
                 implements Module\Installable, Module\Updateable

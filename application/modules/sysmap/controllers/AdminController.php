@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Slys 2
+ * Zly 2
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * 
  */

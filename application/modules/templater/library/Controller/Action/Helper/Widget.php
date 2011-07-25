@@ -101,7 +101,7 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
         $widgetId = $this->getRequest()->getParam($this->_widgetIdName);
         if ($widgetId !== null) {
             $formHelper = $this->_layout->getView()->broker('form');
-            if ($formHelper instanceof \Slys\View\Helper\Form)
+            if ($formHelper instanceof \Zly\View\Helper\Form)
                 $formHelper->setMarker($this->_widgetPostMarker, $widgetId);
         }
 
@@ -149,7 +149,7 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
             if ($layout->isEnabled()) {
                 $this->_initStack();
 
-                $apiRequest = new \Slys\Api\Request($this, 'sysmap.currently-active-items');
+                $apiRequest = new \Zly\Api\Request($this, 'sysmap.currently-active-items');
                 $mapIdentifiers = $apiRequest->proceed()->getResponse()->getFirst();
 
                 $request = $this->getActionController()->getRequest();
@@ -174,7 +174,7 @@ class Widget extends \Zend\Controller\Action\Helper\AbstractHelper {
                             continue;
                         }
                         
-                        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-request-by-identifier',
+                        $apiRequest = new \Zly\Api\Request($this, 'sysmap.get-request-by-identifier',
                                         array('identifier' => $widget->getMapId()));
                         $widgetRequest = $apiRequest->proceed()->getResponse()->getFirst();
                         

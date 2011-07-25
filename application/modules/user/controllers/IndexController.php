@@ -109,7 +109,7 @@ class IndexController extends \Zend\Controller\Action
     protected function _getAuthAdapter($username, $password)
     {
         $userModel = new Model\Users();
-        $authAdapter = new \Slys\Authentication\Adapter\Doctrine($userModel->getEntityManager());
+        $authAdapter = new \Zly\Authentication\Adapter\Doctrine($userModel->getEntityManager());
         $authAdapter->setEntityName('\User\Model\Mapper\User')
                 ->setIdentityField('login')
                 ->setCredentialField('password')

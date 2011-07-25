@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * Template layout switcher. Used to check and switch layout for the current theme
  * such file exists

@@ -12,7 +12,7 @@ class Navigation_Form_DisplayMenuParams extends Zend_Form_SubForm
     {
         $this->setMethod(self::METHOD_POST);
 
-        $navigator = new Slys_Form_Element_Tree('item_id');
+        $navigator = new Zly_Form_Element_Tree('item_id');
         $navigator->setMultiple(false)
                   ->setRequired(true)
                   ->setValueKey('id')

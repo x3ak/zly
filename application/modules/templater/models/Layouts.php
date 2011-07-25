@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @version    $Id: Layouts.php 1134 2011-01-28 14:31:15Z deeper $
  */
 namespace Templater\Model;
 
-class Layouts extends \Slys\Doctrine\Model
+class Layouts extends \Zly\Doctrine\Model
 {
     /**
      * Widgets repository
@@ -102,7 +102,7 @@ class Layouts extends \Slys\Doctrine\Model
 
         $layouts = $this->getLayoutsFiles($path);
         
-        $apiRequest = new \Slys\Api\Request($this,  'sysmap.get-root-identifier');
+        $apiRequest = new \Zly\Api\Request($this,  'sysmap.get-root-identifier');
         $rootNode = $apiRequest->proceed()->getResponse()->getFirst();
             
         if($import)

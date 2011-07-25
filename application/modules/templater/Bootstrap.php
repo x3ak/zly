@@ -1,16 +1,16 @@
 <?php
 /**
- * Slys
+ * Zly
  *
- * Theme support for the Slys applications
+ * Theme support for the Zly applications
  *
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  */
 
 namespace Templater;
 
-use \Slys\Application\Module as Module, 
-    \Slys\Api\Request as Api;
+use \Zly\Application\Module as Module, 
+    \Zly\Api\Request as Api;
 
 class Bootstrap extends \Zend\Application\Module\Bootstrap 
                 implements Module\Installable, 

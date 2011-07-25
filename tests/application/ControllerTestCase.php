@@ -1,6 +1,6 @@
 <?php
 /**
- * Slys
+ * Zly
  *
  * Base unit test class for ZF
  *

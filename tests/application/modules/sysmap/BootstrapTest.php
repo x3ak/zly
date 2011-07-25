@@ -21,13 +21,13 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     {
         
         $requests = array(
-            new \Slys\Api\Request($this, 'sysmap.currently-active-items', 
+            new \Zly\Api\Request($this, 'sysmap.currently-active-items', 
                     array('request'=> new \Zend\Controller\Request\Simple('index', 'admin', 'sysmap'))),
-            new \Slys\Api\Request($this, 'sysmap.get-map'),
-            new \Slys\Api\Request($this, 'sysmap.get-map-form-element'),
-            new \Slys\Api\Request($this, 'sysmap.get-item-by-identifier', 
+            new \Zly\Api\Request($this, 'sysmap.get-map'),
+            new \Zly\Api\Request($this, 'sysmap.get-map-form-element'),
+            new \Zly\Api\Request($this, 'sysmap.get-item-by-identifier', 
                     array('identifier'=> 'def8134b3963fae594dc7b54adfd367d')),
-            new \Slys\Api\Request($this, 'sysmap.get-item-parents-by-identifier', 
+            new \Zly\Api\Request($this, 'sysmap.get-item-parents-by-identifier', 
                     array('identifier'=> 'def8134b3963fae594dc7b54adfd367d')),
         );
         foreach($requests as $request) {
@@ -66,7 +66,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
                     break;
                     
                     case 'sysmap.get-map-form-element':
-                        $this->assertTrue($response instanceof \Slys\Form\Element\Tree, 'sysmap form elements should as \Slys\Form\Element\Tree type '); 
+                        $this->assertTrue($response instanceof \Zly\Form\Element\Tree, 'sysmap form elements should as \Zly\Form\Element\Tree type '); 
                         $options = $response->getMultiOptions();
                         $this->assertTrue(!empty($options), 'Sysmap tree element should be always have options');
                     break;

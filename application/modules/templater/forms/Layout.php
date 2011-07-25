@@ -49,10 +49,10 @@ class Layout extends \Zend\Form\Form
         $element->setLabel('Published:');
         $this->addElement($element);
 
-        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-form-element');
+        $apiRequest = new \Zly\Api\Request($this, 'sysmap.get-map-form-element');
         $navigator = $apiRequest->proceed()->getResponse()->getFirst();
 
-        if($navigator instanceof \Slys\Form\Element\Tree) {
+        if($navigator instanceof \Zly\Form\Element\Tree) {
             $navigator->setName('map_id');
             $navigator->setMultiple(true);
             $navigator->setRequired();

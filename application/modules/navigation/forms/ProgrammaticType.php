@@ -12,9 +12,9 @@ class Navigation_Form_ProgrammaticType extends Zend_Form_SubForm
     public function init()
     {
         /**
-         * @var $map Slys_Form_Element_Tree
+         * @var $map Zly_Form_Element_Tree
          */
-        $mapTree = Slys_Api::getInstance()->request(new Slys_Api_Request($this, 'sysmap.get-map-tree'))->getFirst();
+        $mapTree = Zly_Api::getInstance()->request(new Zly_Api_Request($this, 'sysmap.get-map-tree'))->getFirst();
         $mapTree->setName('sysmap_identifier')
                 ->addDisableCondition('level', new Zend_Validate_LessThan(1));
         $this->addElement($mapTree);

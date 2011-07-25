@@ -26,7 +26,7 @@ class Extend extends \Zend\Form\Form
 
         $this->addElement($title);
 
-//        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-tree');
+//        $apiRequest = new \Zly\Api\Request($this, 'sysmap.get-map-tree');
 //        $mapTree = $apiRequest->proceed()->getResponse()->getFirst();
 //        $mapTree->setLabel('Extension parent node');
 //        $mapTree->addDisableCondition('level', new \Zend\Validator\LessThan(3))

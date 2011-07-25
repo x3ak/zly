@@ -1,6 +1,6 @@
 <?php
 /**
- * Slys
+ * Zly
  *
  * Main module navigation module
  *

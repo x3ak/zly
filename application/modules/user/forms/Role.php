@@ -34,10 +34,10 @@ class Role extends \Zend\Form\Form
             $parents[$role->getId()] = $role->getName();
         }
 
-        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-form-element');
+        $apiRequest = new \Zly\Api\Request($this, 'sysmap.get-map-form-element');
         $actionNavigator = $apiRequest->proceed()->getResponse()->getFirst();
 
-        if ($actionNavigator instanceof \Slys\Form\Element\Tree) {
+        if ($actionNavigator instanceof \Zly\Form\Element\Tree) {
             $actionNavigator->setName('resources');
             $actionNavigator->setMultiple(true);
             $actionNavigator->setRequired(false);

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @version    $Id: Users.php 1212 2011-03-03 13:53:33Z deeper $
  */
 namespace User\Model;
 
-class Users extends \Slys\Doctrine\Model
+class Users extends \Zly\Doctrine\Model
 {
     public function initSchema()
     {
@@ -142,7 +142,7 @@ class Users extends \Slys\Doctrine\Model
     public function createDefaultUser($userName, $userPassword, $userRoleName, $guestRoleName) 
     {
 
-            $apiRequest = new \Slys\Api\Request($this,  'sysmap.get-root-identifier');
+            $apiRequest = new \Zly\Api\Request($this,  'sysmap.get-root-identifier');
             $rootNode = $apiRequest->proceed()->getResponse()->getFirst();
               
             $guestRole = new Mapper\Role();

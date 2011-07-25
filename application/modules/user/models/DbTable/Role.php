@@ -50,12 +50,12 @@ class Role extends EntityRepository
 
     /**
      * Return paginator for User mapper
-     * @return \Slys\Paginator\Adapter\Doctrine2 
+     * @return \Zly\Paginator\Adapter\Doctrine2 
      */
     public function getPaginatorAdapter()
     {
         $query = $this->createQueryBuilder('role')->getQuery();
-        return new \Slys\Paginator\Adapter\Doctrine2($query);
+        return new \Zly\Paginator\Adapter\Doctrine2($query);
     }
 
 }

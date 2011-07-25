@@ -56,13 +56,13 @@ class Widget extends \Zend\Form\Form
 
         $this->addDisplayGroup(array('placeholder','name'), 'place', array('order' => 2, 'legend' => 'Display options:'));
 
-        $apiRequest = new \Slys\Api\Request($this, 'sysmap.get-map-form-element');
+        $apiRequest = new \Zly\Api\Request($this, 'sysmap.get-map-form-element');
         $sysmapElement = $apiRequest->proceed()->getResponse()->getFirst();
 
         if(!empty($sysmapElement)) {
             $actionNavigator = clone $sysmapElement;
 
-            if ($actionNavigator instanceof \Slys\Form\Element\Tree) {
+            if ($actionNavigator instanceof \Zly\Form\Element\Tree) {
                 $actionNavigator->setName('map_id');
                 $actionNavigator->setRequired();
                 $actionNavigator->setLabel('Widget content provider action:');
@@ -72,7 +72,7 @@ class Widget extends \Zend\Form\Form
 
             $displayNavigator = clone $sysmapElement;
 
-            if ($displayNavigator instanceof \Slys\Form\Element\Tree) {
+            if ($displayNavigator instanceof \Zly\Form\Element\Tree) {
                 $displayNavigator->setName('widget_points');
                 $displayNavigator->setLabel('Widget display pages:');
                 $displayNavigator->setRequired();

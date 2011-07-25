@@ -1,6 +1,6 @@
 <?php
 /**
- * Slys
+ * Zly
  *
  * Default application bootstrap class
  *

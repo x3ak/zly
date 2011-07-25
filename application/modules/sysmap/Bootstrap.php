@@ -1,19 +1,19 @@
 <?php
 /**
- * Slys 2
+ * Zly 2
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * 
  */
 
 namespace Sysmap;
 
-use \Slys\Application\Module as Module, 
-    \Slys\Api as Api;
+use \Zly\Application\Module as Module, 
+    \Zly\Api as Api;
 
 class Bootstrap extends \Zend\Application\Module\Bootstrap 
                 implements Api\Request\Requestable, Module\Installable, Module\Updateable
 {
-    public function onRequest(\Slys\Api\Request $request) 
+    public function onRequest(\Zly\Api\Request $request) 
     {
 
         $mapModel = new Model\Map();

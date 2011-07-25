@@ -16,7 +16,7 @@ class Navigation_Form_MenuItem extends Zend_Form
 					  ->setRequired(true);
 		$this->addElement($menuItemTitle);
 
-        $navigator = new Slys_Form_Element_Tree('parent_id');
+        $navigator = new Zly_Form_Element_Tree('parent_id');
         $navigator->setMultiple(false)
                   ->setRequired(true)
                   ->setValueKey('id')

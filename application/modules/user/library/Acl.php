@@ -12,7 +12,7 @@ class User_Library_Acl extends Zend_Acl
     protected $_initilized = false;
 
     /**
-     * Init Slys_Acl object from acl.ini file
+     * Init Zly_Acl object from acl.ini file
      */
     public function __construct(Zend_Config $aclConfig = null)
     {
@@ -108,7 +108,7 @@ class User_Library_Acl extends Zend_Acl
 
                     if (!empty($resource[3])) {
                         parse_str($resource[3], $params);
-                        $assertion = new Slys_Acl_Assertion_Params($params, $rule);
+                        $assertion = new Zly_Acl_Assertion_Params($params, $rule);
                         $resourceId .= ':' . str_replace('&', ':', str_replace('=', ':', $resource[3]));
                     }
 

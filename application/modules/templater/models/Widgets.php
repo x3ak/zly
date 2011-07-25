@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * @version    $Id: Widgets.php 1056 2011-01-19 14:38:17Z deeper $
  */
 namespace Templater\Model;
 
-class Widgets extends \Slys\Doctrine\Model
+class Widgets extends \Zly\Doctrine\Model
 {
 
     /**

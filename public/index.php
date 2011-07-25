@@ -1,6 +1,6 @@
 <?php
 /**
- * Slys index file
+ * Zly index file
  *
  * @author Evgheni Poleacov <evgheni.poleacov@gmail.com>
  */

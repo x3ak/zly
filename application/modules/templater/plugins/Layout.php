@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * Template layout switcher. Used to check and switch layout for the current theme
  * such file exists
@@ -76,7 +76,7 @@ class Layout extends \Zend\Controller\Plugin\AbstractPlugin
     {        
         $config = new \Zend\Config\Config($this->getOptions());
         $themeSettings = $config->toArray();
-        $apiRequest = new \Slys\Api\Request($this, 'sysmap.currently-active-items', array('request'=>$request));
+        $apiRequest = new \Zly\Api\Request($this, 'sysmap.currently-active-items', array('request'=>$request));
         $mapIdentifiers = $apiRequest->proceed()->getResponse()->getFirst();
 
         /**

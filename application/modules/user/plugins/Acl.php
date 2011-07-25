@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Slys
+ * Zly
  *
  * Acl plugin for restrict access to resource
  *
@@ -80,7 +80,7 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
         
         if(!$this->_acl->hasResource($resource)) {
             
-            $apiRequest = new \Slys\Api\Request($this, 
+            $apiRequest = new \Zly\Api\Request($this, 
                                                 'sysmap.get-item-parents-by-identifier',
                                                 array('identifier'=>$resource));
 //           \Zend\Debug::dump($resource);
@@ -181,7 +181,7 @@ class Acl extends \Zend\Controller\Plugin\AbstractPlugin
             $this->_acl->addRole(new \Zend\Acl\Role\GenericRole($role->getName()), $parent);
         }
 
-        $apiRequest = new \Slys\Api\Request($this, 'sysmap.currently-active-items');
+        $apiRequest = new \Zly\Api\Request($this, 'sysmap.currently-active-items');
 
         foreach($apiRequest->proceed()->getResponse()->getFirst() as $resource) {
             if($resource instanceof \Zend\Acl\Resource\GenericResource) {
