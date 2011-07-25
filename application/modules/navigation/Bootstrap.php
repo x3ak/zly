@@ -38,7 +38,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
     protected function _initPlugins()
     {
         
-//        \Zend\Controller\Front::getInstance()->registerPlugin(new Plugin\Init());
+        \Zend\Controller\Front::getInstance()->registerPlugin(new Plugin\Init());
     }
     
     public function enable()

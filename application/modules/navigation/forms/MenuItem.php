@@ -2,51 +2,71 @@
 /**
  * @version    $Id: MenuItem.php 1136 2011-01-28 15:50:56Z criolit $
  */
-class Navigation_Form_MenuItem extends Zend_Form
+namespace Navigation\Form;
+
+use Zend\Form\Element as Element;
+
+class MenuItem extends \Zend\Form\Form
 {
-	public function init()
-	{
-		$this->setMethod('post')
-			 ->setAction(
-			 	$this->getView()->url(array('module' => 'navigation', 'controller' => 'admin', 'action' => 'edit-menu-item'))
-			 );
+    /**
+     *
+     * @var \Navigation\Model\Navigation 
+     */
+    protected $model;
+    
+    public function __construct($options = null)
+    {
+        $this->model = $options['model'];
+        return parent::__construct($options);
+    }
+        
+    public function init()
+    {
+        if(!$this->model instanceof \Navigation\Model\Navigation)
+            throw new \Exception('Form model not provided, model instance of \Navigation\Model\Navigation');
+        
+        $this->setMethod('post')
+                 ->setAction(
+                        $this->getView()->broker('url')->direct(array('module' => 'navigation', 'controller' => 'admin', 'action' => 'edit-menu-item'))
+                 );
 
-		$menuItemTitle = new Zend_Form_Element_Text('title');
-		$menuItemTitle->setLabel('Title')
-					  ->setRequired(true);
-		$this->addElement($menuItemTitle);
+        $menuItemTitle = new Element\Text('title');
+        $menuItemTitle->setLabel('Title')
+                                  ->setRequired(true);
+        $this->addElement($menuItemTitle);
 
-        $navigator = new Zly_Form_Element_Tree('parent_id');
+        $navigator = new \Zly\Form\Element\Tree('parent_id');
         $navigator->setMultiple(false)
                   ->setRequired(true)
                   ->setValueKey('id')
                   ->setTitleKey('label')
                   ->setChildrensKey('pages');
-
-        $navigator->setMultiOptions( Navigation_Model_Navigation::getInstance()->getNavigation()->toArray() );
+        $navigation = $this->model->getNavigation();
+        if(!empty($navigation))
+            $navigator->setMultiOptions( $navigation->toArray() );
 
         $this->addElement($navigator);
 
-		$menuItemType = new Zend_Form_Element_Select('type');
-		$menuItemType->setLabel('Menu item type')
-                     ->setAllowEmpty(false)
-                     ->setRequired(true)
-					 ->addMultiOptions(array(
-                        '' => '',
-					 	Navigation_Model_Navigation::TYPE_EXTERNAL => 'External',
-					 	Navigation_Model_Navigation::TYPE_PROGRAMMATIC => 'Programmatic'
-					 ));
-		$this->addElement($menuItemType);
+        $menuItemType = new Element\Select('type');
+        $menuItemType->setLabel('Menu item type')
+             ->setAllowEmpty(false)
+             ->setRequired(true)
+                                 ->addMultiOptions(array(
+                '' => '',
+                                        \Navigation\Model\Navigation::TYPE_EXTERNAL => 'External',
+                                        \Navigation\Model\Navigation::TYPE_PROGRAMMATIC => 'Programmatic'
+                                 ));
+        $this->addElement($menuItemType);
 
-		$submit = new Zend_Form_Element_Submit('menu_item_submit');
-		$submit->setIgnore(true)
-			   ->setLabel('Save')
-			   ->setOrder(100)
-			   ->setIgnore(true);
-		$this->addElement($submit);
+        $submit = new Element\Submit('menu_item_submit');
+        $submit->setIgnore(true)
+                   ->setLabel('Save')
+                   ->setOrder(100)
+                   ->setIgnore(true);
+        $this->addElement($submit);
 
-		$this->addElement('hidden', 'id');
-	}
+        $this->addElement('hidden', 'id');
+    }
 
     /**
      * Populate form
@@ -63,7 +83,7 @@ class Navigation_Form_MenuItem extends Zend_Form
         $data['options']['external_link'] = $data['external_link'];
         $data['options']['sysmap_identifier'] = $data['sysmap_identifier'];
 
-        if ($data['type'] == Navigation_Model_Navigation::TYPE_PROGRAMMATIC and !empty($data['options']['sysmap_identifier']))
+        if ($data['type'] == \Navigation\Model\Navigation::TYPE_PROGRAMMATIC and !empty($data['options']['sysmap_identifier']))
             $this->_prepareRoutes($data['options']['sysmap_identifier']);
 
         return parent::populate($data);

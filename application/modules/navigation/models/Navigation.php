@@ -102,11 +102,13 @@ class Navigation extends \Zly\Doctrine\Model
      * Returns NestedSet with all navigation items
      *
      * @param array $fields List of table fields
-     * @return Doctrine_Tree_NestedSet
+     * @return \Zly\Doctrine\NestedSet\Node
      */
     public function getStructureTree($fields = null)
     {
     	$tree = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->getTree();
+        if(empty($tree))
+            return $tree;
     	$baseAlias = $tree->getBaseAlias();
     	$select = '';
 
@@ -131,7 +133,7 @@ class Navigation extends \Zly\Doctrine\Model
     /**
      * Get navigation item
      * @param int $id
-     * @return Navigation_Model_Mapper_Item
+     * @return \Navigation\Model\Mapper\Item
      */
     public function getItem($id)
     {
@@ -199,14 +201,19 @@ class Navigation extends \Zly\Doctrine\Model
     /**
      * Get user defined navigation
      * @param int $itemId If null is passed all menus will be as one menu
-     * @return Zend_Navigation
+     * @return \Zend\Navigation\Navigation
      */
     public function getNavigation($itemId = null)
-    {
+    {   
         if ($this->_cache->test($this->_cacheName) === false) {
             $navigation = new \Zend\Navigation\Navigation();
 
-            $roots = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->getTree()->fetchRoots();
+            $tree = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->getTree();
+            
+            if(empty($tree))
+                return false;
+            
+            $roots = $tree->fetchRoots();
             $this->_formatNavigationPages($roots, $navigation);
 
             if ($this->_cacheEnabled)
@@ -230,12 +237,12 @@ class Navigation extends \Zly\Doctrine\Model
     /**
      * Gets all user defined navigation
      * @param array $root First node for the current tree
-     * @param Zend_Navigation_Container $navigation Navigation object which will contain navigation converted from
+     * @param \Zend\Navigation\Container $navigation Navigation object which will contain navigation converted from
      * NestedSet
      */
     protected function _formatNavigationPages($root, \Zend\Navigation\Container $navigation)
     {
-        /** @var $item Navigation_Model_Mapper_Item */
+        /** @var $item \Navigation\Model\Mapper\Item */
     	foreach ($root as $item) {
             $page = null;
 
@@ -327,9 +334,9 @@ class Navigation extends \Zly\Doctrine\Model
 	 * $conditions have to have the following structure:
 	 * [index][page_property] = [page_value]
 	 *
-	 * @param Zend_Navigation $navigation
+	 * @param \Zend\Navigation\Navigation $navigation
 	 * @param array $conditions
-	 * @return Zend_Navigation|null
+	 * @return \Zend\Navigation\Navigation|null
 	 */
 	public function getPagesByConditions(\Zend\Navigation\Navigation $navigation, $conditions, $leaveParents = false)
 	{

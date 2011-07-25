@@ -33,6 +33,10 @@ class Item implements Node
     protected $lft;
     /** @Column(type="integer") */
     protected $rgt;
+    /**
+     * @Column(type="integer")
+     */
+    private $root;
     
     public function getId()     
     {
@@ -119,6 +123,18 @@ class Item implements Node
         $this->rgt = $rgt;
     }
 
-
+    public function __toString() 
+    {
+        return $this->title;
+    }
+    
+    public function getRootValue() 
+    { 
+        return $this->root; 
+    }
+    public function setRootValue($root) 
+    { 
+        $this->root = $root;
+    }
 }
 

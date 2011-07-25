@@ -15,13 +15,13 @@ class AdminController extends \Zend\Controller\Action
 
 	public function init()
 	{
-		$this->_navigationModel = Navigation_Model_Navigation::getInstance();
+            $this->_navigationModel = new Model\Navigation();
 	}
 
-    /**
-     *
-     * @return void
-     */
+        /**
+         *
+         * @return void
+         */
 	public function indexAction()
 	{
 		$this->_forward('list-menu');
@@ -32,9 +32,12 @@ class AdminController extends \Zend\Controller\Action
 	 */
 	public function listMenuAction()
 	{
-		$this->view->tree = array(
-            $this->_navigationModel->getStructureTree(array('id', 'title', 'route', 'read_only'))->fetchTree(array(), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY)
-        );
+            $this->view->tree = array();
+            $tree = $this->_navigationModel
+                         ->getStructureTree(array('id', 'title', 'route', 'read_only'));
+            
+            if(!empty($tree))
+                $this->view->tree = array( $tree->fetchTree(array(), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY) );
 	}
 
 	/**
@@ -44,7 +47,7 @@ class AdminController extends \Zend\Controller\Action
 	{
 		$id = $this->getRequest()->getParam('id', null);
 		if ($id !== null) {
-            $item = $this->_navigationModel->getItem($id);
+                $item = $this->_navigationModel->getItem($id);
 			if (empty($item) === false and $item->read_only === true) {
 				$this->_helper->getHelper('FlashMessenger')->addMessage('That was a READ ONLY navigation item');
 				return $this->_helper->redirector->gotoUrl(
@@ -53,8 +56,8 @@ class AdminController extends \Zend\Controller\Action
 			}
 		}
 
-		$form = new Navigation_Form_MenuItem();
-
+		$form = new Form\MenuItem(array('model'=>$this->_navigationModel));
+                
 		if ($this->getRequest()->isPost()) {
 			if ($form->isValid($this->getRequest()->getPost())) {
 				$this->_navigationModel->saveLeafItem( $form->getValues() );
@@ -76,7 +79,7 @@ class AdminController extends \Zend\Controller\Action
                 }
                 else {
                     return $this->_helper->redirector->gotoUrl(
-				        $this->view->url( array('action' => 'edit-menu-item', 'module' => 'navigation', 'controller' => 'admin'), null, true )
+                        $this->view->url( array('action' => 'edit-menu-item', 'module' => 'navigation', 'controller' => 'admin'), null, true )
                     );
                 }
 			}
@@ -99,8 +102,7 @@ class AdminController extends \Zend\Controller\Action
 				    $this->view->url( array('action' => 'list-menu') )
                 );
 			}
-		}
-		else {
+		} else {
 			$this->_helper->getHelper('FlashMessenger')->addMessage('No value for ID parameter');
 			return $this->_helper->redirector->gotoUrl( $this->view->url( array('action' => 'list-menu') ) );
 		}
