@@ -1,6 +1,7 @@
 <?php
+namespace Zly\View\Helper;
 
-class Zly_View_Helper_Form extends Zend_View_Helper_FormElement
+class Form extends \Zend\View\Helper\FormElement
 {
 
     protected $_additionalContent = array();
@@ -48,7 +49,7 @@ class Zly_View_Helper_Form extends Zend_View_Helper_FormElement
      *
      * @param string $field
      * @param string $value
-     * @return Zly_View_Helper_Form
+     * @return \Zly\View\Helper\Form
      */
     public function setMarker($field, $value)
     {
@@ -61,7 +62,7 @@ class Zly_View_Helper_Form extends Zend_View_Helper_FormElement
      * Add current form marker to already exist markers
      * @param string $field
      * @param string $value
-     * @return Zly_View_Helper_Form
+     * @return \Zly\View\Helper\Form
      */
     public function addMarker($field, $value)
     {
@@ -71,7 +72,7 @@ class Zly_View_Helper_Form extends Zend_View_Helper_FormElement
 
     /**
      * Remove all current form markers
-     * @return Zly_View_Helper_Form
+     * @return \Zly\View\Helper\Form
      */
     public function clearMarkers()
     {
