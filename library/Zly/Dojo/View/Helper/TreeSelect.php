@@ -1,6 +1,6 @@
 <?php
 /**
- * SlyS
+ * Zly
  *
  * @author      Pavel Galaton <pavel.galaton@gmail.com>
  *              Evgheni Poleacov <evgheni.poleacov@gmail.com>

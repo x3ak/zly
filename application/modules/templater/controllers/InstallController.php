@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  *
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @version    $Id: IndexController.php 1018 2011-01-13 14:28:24Z deeper $

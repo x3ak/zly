@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  * 
  * @version $Id: Widget.php 269 2010-10-05 13:38:46Z deeper $
  * @license New BSD

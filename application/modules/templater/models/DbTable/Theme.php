@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  * 
  * @version $Id: Theme.php 1224 2011-04-04 13:58:41Z deeper $
  * @license New BSD

@@ -180,7 +180,7 @@ class Zly_Doctrine_Service_Generator
 
         $class = new Zend_CodeGenerator_Php_Class();
         $docblock = new Zend_CodeGenerator_Php_Docblock(array(
-                    'shortDescription' => "SlyS",
+                    'shortDescription' => "Zly",
                     'longDescription' => 'This is a class generated with Zend_CodeGenerator.',
                     'tags' => array(
                         array(

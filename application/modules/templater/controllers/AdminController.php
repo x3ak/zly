@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  *
  * @abstract    contains Templater_AdminController class,
  *              extending Zend_Controller_Action

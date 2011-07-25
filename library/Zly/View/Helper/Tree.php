@@ -1,9 +1,9 @@
 <?php
 
 /**
- * SlyS Framework
+ * Zly Framework
  *
- * @category   SlyS
+ * @category   Zly
  * @package    Zly_View
  * @subpackage Helper
  * @version    $Id: Tree.php 1003 2011-01-11 10:43:38Z deeper $

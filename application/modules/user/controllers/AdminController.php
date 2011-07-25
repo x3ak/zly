@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  *
  * @abstract   contains User_AdminController class, extending Zend
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>

@@ -1,6 +1,6 @@
 <?php
 /**
- * SlyS
+ * Zly
  *
  * LICENSE
  *
@@ -12,8 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zendmania.com so we can send you a copy immediately.
  *
- * @category   SlyS
- * @package    SlyS
+ * @category   Zly
+ * @package    Zly
  * @copyright  Copyright (c) 2010-2011 Evgheni Poleacov (http://zendmania.com)
  * @license    http://zendmania.com/license/new-bsd New BSD License
  * @version    $Id: Zly.php 1193 2011-02-17 10:43:39Z criolit $

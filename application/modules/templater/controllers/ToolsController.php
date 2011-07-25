@@ -1,7 +1,7 @@
 <?php
 
 /**
- *	SlyS
+ *	Zly
  *
  * @abstract   contains Templater_ToolsController class, extending Zend_Controller_Action
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>

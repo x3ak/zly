@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	SlyS
+ * 	Zly
  *
  * @abstract   contains User_IndexController class, extending Zend_Controller_Action
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>

@@ -1,6 +1,6 @@
 <?php
 /**
- *	SlyS
+ *	Zly
  * @author     Pavel Galaton <pavel.galaton@gmail.com>
  *
  * @version    $Id: TreeData.php 839 2010-12-21 10:54:20Z deeper $

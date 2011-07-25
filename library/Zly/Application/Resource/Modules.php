@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  *
  * LICENSE
  *
@@ -13,8 +13,8 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zendmania.com so we can send you a copy immediately.
  *
- * @category   SlyS
- * @package    SlyS
+ * @category   Zly
+ * @package    Zly
  * @copyright  Copyright (c) 2010-2011 Evgheni Poleacov (http://zendmania.com)
  * @license    http://zendmania.com/license/new-bsd New BSD License
  * @version    $Id: Modules.php 1249 2011-04-28 15:02:58Z deeper $
@@ -75,6 +75,10 @@ class Modules extends \Zend\Application\Resource\Modules
             
             // Custom modules options            
             $moduleConfig = $this->loadModuleConfig($moduleDirectory);
+            if($bootstrap->getOption($module)) {
+                $moduleConfig = $this->mergeOptions($moduleConfig, $bootstrap->getOptions());
+            }
+            if(!empty($moduleConfig))
             $bootstrap->setOptions($moduleConfig); 
             
             $moduleBootstrap = new $bootstrapClass($bootstrap); 
@@ -85,6 +89,9 @@ class Modules extends \Zend\Application\Resource\Modules
                                     'library' => array( 'namespace' => 'Library', 'path' => 'library' ),
                                     'config' => array( 'namespace' => 'Config', 'path' => 'configs' ) 
                                  ));   
+            
+                     
+            if($this->checkForLoadingBootstrap($moduleBootstrap))
             $moduleBootstrap->bootstrap();
             $this->_bootstraps[$module] = $moduleBootstrap;
         }
@@ -145,6 +152,28 @@ class Modules extends \Zend\Application\Resource\Modules
         else 
             return array();
         
+    }
+    
+    protected function checkForLoadingBootstrap($bootstrap)
+    {
+        $bootstrapIt = true;
+
+        if($bootstrap instanceof \Zly\Application\Module\Installable 
+                && $bootstrap->hasOption('installed')) {
+
+            $installed = $bootstrap->getOption('installed');
+            if(empty($installed))
+                $bootstrapIt = false;
+        }
+
+        if($bootstrap instanceof \Zly\Application\Module\Enableable 
+                && $bootstrap->hasOption('enabled')) {
+            $enabled = $bootstrap->getOption('enabled');
+            if(empty($enabled))
+                $bootstrapIt = false;
+        } 
+
+        return $bootstrapIt;
     }
     
 }

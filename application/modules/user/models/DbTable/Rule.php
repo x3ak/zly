@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  * 
  * This is a class generated with Zend_CodeGenerator.
  * 

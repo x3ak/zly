@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  *
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @version    $Id: Layout.php 1134 2011-01-28 14:31:15Z deeper $

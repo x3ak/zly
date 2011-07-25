@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  *
  * @version $Id: Layout.php 1097 2011-01-24 08:38:38Z criolit $
  * @license New BSD

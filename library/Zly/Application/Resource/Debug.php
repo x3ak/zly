@@ -1,6 +1,6 @@
 <?php
 /**
- * SlyS
+ * Zly
  *
  * LICENSE
  *
@@ -12,15 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zendmania.com so we can send you a copy immediately.
  *
- * @category   SlyS
- * @package    SlyS
+ * @category   Zly
+ * @package    Zly
  * @copyright  Copyright (c) 2010-2011 Evgheni Poleacov (http://zendmania.com)
  * @license    http://zendmania.com/license/new-bsd New BSD License
  * @version    $Id: Zly.php 937 2010-12-30 15:01:37Z deeper $
  */
+namespace Zly\Navigation\Resource;
 
-class Zly_Application_Resource_Debug
-    extends Zend_Application_Resource_ResourceAbstract
+class Debug extends \Zend\Application\Resource\ResourceAbstract
 {
 
     public function init()
@@ -31,7 +31,7 @@ class Zly_Application_Resource_Debug
 
 
             $front = $this->getBootstrap()->getResource('frontcontroller');
-            $autoloader = Zend_Loader_Autoloader::getInstance();
+            $autoloader = \Zend\Loader\Autoloader::getInstance();
             $autoloader->registerNamespace('ZFDebug');
 
             $options = array(
@@ -43,7 +43,7 @@ class Zly_Application_Resource_Debug
                                    'Exception')
             );
 
-            $debug = new ZFDebug_Controller_Plugin_Debug($options);
+            $debug = new \ZFDebug\Controller\Plugin\Debug($options);
 
             $this->getBootstrap()->bootstrap('frontController');
             $frontController = $this->getBootstrap()->getResource('frontcontroller');
@@ -56,7 +56,7 @@ class Zly_Application_Resource_Debug
                     $this->getBootstrap()->bootstrap('doctrine');
                 }
                     $zfDebug = $front->getPlugin('ZFDebug_Controller_Plugin_Debug')
-                        ->registerPlugin(new Zly_Controller_Plugin_Debug_Doctrine());
+                        ->registerPlugin(new \Zly\Controller\Plugin\Debug\Doctrine());
             }
         }
     }

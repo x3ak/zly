@@ -1,8 +1,8 @@
 <?php
 /**
- * SlyS Framework
+ * Zly Framework
  *
- * @category   SlyS
+ * @category   Zly
  * @package    Zly_View
  * @subpackage Helper
  * @version    $v$

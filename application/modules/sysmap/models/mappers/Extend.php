@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  * 
  * @version $Id: Role.php 1232 2011-04-17 21:00:36Z deeper $
  * @license New BSD

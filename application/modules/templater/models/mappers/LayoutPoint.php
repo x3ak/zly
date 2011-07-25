@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SlyS
+ * Zly
  * 
  * @version $Id: Generator.php 985 2011-01-06 08:23:52Z deeper $
  * @license New BSD
