@@ -42,12 +42,12 @@ class User extends EntityRepository
 
     /**
      * Return paginator for User mapper
-     * @return \Zly\Paginator\Adapter\Doctrine2 
+     * @return \Zly\Paginator\Adapter\Doctrine 
      */
     public function getPaginatorAdapter()
     {
         $query = $this->createQueryBuilder('user')->getQuery();
-        return new \Zly\Paginator\Adapter\Doctrine2($query);
+        return new \Zly\Paginator\Adapter\Doctrine($query);
     }
 
 }

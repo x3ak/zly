@@ -15,12 +15,12 @@ class Theme extends EntityRepository
 
     /**
      * Return paginator for theme mapper
-     * @return \Zly\Paginator\Adapter\Doctrine2 
+     * @return \Zly\Paginator\Adapter\Doctrine 
      */
     public function getPaginatorAdapter()
     {
         $query = $this->createQueryBuilder('theme')->getQuery();
-        return new \Zly\Paginator\Adapter\Doctrine2($query);
+        return new \Zly\Paginator\Adapter\Doctrine($query);
     }
     
     /**

@@ -39,7 +39,7 @@ class Widget extends EntityRepository
     
     /**
      * Return paginator for widget mapper
-     * @return \Zly\Paginator\Adapter\Doctrine2 
+     * @return \Zly\Paginator\Adapter\Doctrine 
      */
     public function getPaginatorAdapter()
     {
@@ -48,7 +48,7 @@ class Widget extends EntityRepository
                       ->leftJoin('wd.layout', 'lay')
                       ->leftJoin('lay.theme', 'theme')
                       ->getQuery();
-        return new \Zly\Paginator\Adapter\Doctrine2($query);
+        return new \Zly\Paginator\Adapter\Doctrine($query);
     }
 }
 
