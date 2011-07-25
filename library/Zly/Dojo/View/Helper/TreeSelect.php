@@ -14,7 +14,7 @@ class Zly_Dojo_View_Helper_TreeSelect extends Zend_Dojo_View_Helper_ComboBox
 
     public function treeSelect($id, $value = null, array $params = array(), array $attribs = array(), $options = null)
 	{
-		$this->dojo->requireModule('slys.dijit.CheckBoxTree');
+		$this->dojo->requireModule('zly.dijit.CheckBoxTree');
 
 		if(empty($params['store']['type']))
 			$params['store']['type'] = 'dojo.data.ItemFileWriteStore';
@@ -30,7 +30,7 @@ class Zly_Dojo_View_Helper_TreeSelect extends Zend_Dojo_View_Helper_ComboBox
 		$forest = array('store'=>new Zend_Json_Expr($storeParams['store']),'childrenAttrs'=>new Zend_Json_Expr('["__children","children"]'));
 		$tree = array(
 			'jsId' => 'tree'.$filter->filter($id),
-			'treeType' => 'slys.dijit.CheckBoxTree',
+			'treeType' => 'zly.dijit.CheckBoxTree',
 			'treeParams' => array(
 				'treeName' => $id,
 				'style' => 'min-height: 100px',

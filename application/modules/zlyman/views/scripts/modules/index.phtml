@@ -1,4 +1,4 @@
-<?php echo $this->broker('headLink')->appendStylesheet('/slysman/public/files/css/install.css'); ?>
+<?php echo $this->broker('headLink')->appendStylesheet('/zlyman/public/files/css/install.css'); ?>
 <h2>Application Modules </h2>
 <table border="1" cellspacing="0" cellpadding="3">
     <tr>
@@ -18,16 +18,16 @@
             <td>
                 <div><?php if($bootstrap->hasOption('description')) echo $moduleOptions['description'];?></div>
                 
-                <?php if(!empty($bootstrap->moduleRequirements['modules'])) { echo '<div class="slysman-requires-label modules">Require modules:</div>';?>
-                    <ul class="slysman-requirements-modules">
+                <?php if(!empty($bootstrap->moduleRequirements['modules'])) { echo '<div class="zlyman-requires-label modules">Require modules:</div>';?>
+                    <ul class="zlyman-requirements-modules">
                     <?php foreach($bootstrap->moduleRequirements['modules'] as $name=>$version) {?>
                         <li><?php echo ucfirst($name).' ver.'.$version; ?></li>
                     <?php } ?> 
                     </ul>
                 <?php } ?>  
                 
-                <?php if(!empty($bootstrap->moduleRequirements['resources'])) { echo '<div class="slysman-requires-label resources">Require resources:</div>';?>
-                    <ul class="slysman-requirements-resources">
+                <?php if(!empty($bootstrap->moduleRequirements['resources'])) { echo '<div class="zlyman-requires-label resources">Require resources:</div>';?>
+                    <ul class="zlyman-requirements-resources">
                         <?php foreach($bootstrap->moduleRequirements['resources'] as $name=>$version) {?>
                         <li><?php echo ucfirst($name).' ver.'.$version; ?></li>
                         <?php } ?> 

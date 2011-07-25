@@ -21,7 +21,7 @@ class Zly_Doctrine_Service_Schema_Builder
     protected $_newSchemas;
     protected $_ymlParser;
     protected $_correspondence = array();
-    protected $_slysMigPrefix = 'slys_migration_';
+    protected $_zlyMigPrefix = 'zly_migration_';
 
     /**
      * Prepating builder for work
@@ -72,14 +72,14 @@ class Zly_Doctrine_Service_Schema_Builder
         $schema = $this->_ymlParser->loadData($this->_curFileName);
 
         foreach($schema as $key=>$value) {
-            if(!strstr($value['tableName'], $this->_slysMigPrefix))
+            if(!strstr($value['tableName'], $this->_zlyMigPrefix))
                     unset($schema[$key]);
         }
         $this->_ymlParser->dumpData($schema, $this->_curFileName);
 
-        $classPrefix = str_replace('_','',$this->_filter->filter($this->_slysMigPrefix));
+        $classPrefix = str_replace('_','',$this->_filter->filter($this->_zlyMigPrefix));
         $file = file_get_contents($this->_curFileName);
-        $file = str_replace($this->_slysMigPrefix, '', $file);
+        $file = str_replace($this->_zlyMigPrefix, '', $file);
         $file = str_replace($classPrefix, '', $file);
         file_put_contents($this->_curFileName, $file);
 
@@ -143,7 +143,7 @@ class Zly_Doctrine_Service_Schema_Builder
             $schema = $this->_ymlParser->loadData($file);
             if(is_array($schema))
                 foreach($schema as $key=>$value){
-                    $value['tableName'] = $this->_slysMigPrefix.$value['tableName'];
+                    $value['tableName'] = $this->_zlyMigPrefix.$value['tableName'];
                     $newName = 'Temp'.$this->_filter->filter($key);
                     $this->_correspondence[$newName] = $key;
                     $allSchemas[$newName] = $value;
@@ -384,7 +384,7 @@ class Zly_Doctrine_Service_Schema_Builder
      */
     protected function createEmptyDbSchema()
     {
-        $schema = array('ZlyTMP'=>array('tableName'=>'slys_tmp'));
+        $schema = array('ZlyTMP'=>array('tableName'=>'zly_tmp'));
         return $schema;
     }
 

@@ -27,30 +27,30 @@ a:hover {
     text-decoration: underline;
 }
 
-ul.slysman-requirements-modules {
+ul.zlyman-requirements-modules {
     list-style-type: square;
     margin: 0px;
     padding: 0px;
     list-style-position: inside;
 }
 
-ul.slysman-requirements-modules li{
+ul.zlyman-requirements-modules li{
     margin-left: 10px;
 }
 
-ul.slysman-requirements-resources {
+ul.zlyman-requirements-resources {
         list-style-type: square;
     margin: 0px;
     padding: 0px;
     list-style-position: inside;
 }
 
-ul.slysman-requirements-resources li{
+ul.zlyman-requirements-resources li{
     margin-left: 10px;
 }
 
 
-div.slysman-requires-label {
+div.zlyman-requires-label {
     font-weight: bold
 }
 

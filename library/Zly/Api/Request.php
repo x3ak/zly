@@ -21,7 +21,7 @@ class Request
     /**
      * @var string Name of the request
      */
-    protected $_name = 'slys.request';
+    protected $_name = 'zly.request';
     /**
      * @var array additionals parameters of the request
      */

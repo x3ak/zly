@@ -105,9 +105,9 @@ class Zly_Doctrine_Service_Generator
         $options = $this->getOptions();
         $customFixturesPath = false;
 
-        if(!empty($options['resources']['slys']['config'])) {
+        if(!empty($options['resources']['zly']['config'])) {
             $customFixturesPath = realpath(APPLICATION_PATH.DIRECTORY_SEPARATOR.
-                        'configs'.DIRECTORY_SEPARATOR.$options['resources']['slys']['config'].DIRECTORY_SEPARATOR.'fixtures');
+                        'configs'.DIRECTORY_SEPARATOR.$options['resources']['zly']['config'].DIRECTORY_SEPARATOR.'fixtures');
         }
 
         if (file_exists($dataFileName) || $customFixturesPath) {

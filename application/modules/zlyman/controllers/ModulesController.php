@@ -73,7 +73,7 @@ class ModulesController extends \Zend\Controller\Action
                         $result->getParams()
                 );
             } else {
-                $this->_redirect($this->broker('url')->direct('index','modules','slysman'));
+                $this->_redirect($this->broker('url')->direct('index','modules','zlyman'));
                 return true;
             }
 

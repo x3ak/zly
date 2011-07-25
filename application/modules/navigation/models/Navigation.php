@@ -106,7 +106,7 @@ class Navigation extends \Zly\Doctrine\Model
      */
     public function getStructureTree($fields = null)
     {
-    	$tree = Doctrine_Core::getTable('Navigation_Model_Mapper_Item')->getTree();
+    	$tree = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->getTree();
     	$baseAlias = $tree->getBaseAlias();
     	$select = '';
 
@@ -120,7 +120,7 @@ class Navigation extends \Zly\Doctrine\Model
     	}
 
 		$tree->setBaseQuery(
-			Doctrine_Core::getTable('Navigation_Model_Mapper_Item')
+			$this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')
 						   ->createQuery($baseAlias)
 						   ->select($select)
 		);
@@ -138,7 +138,7 @@ class Navigation extends \Zly\Doctrine\Model
     	if ($id === null)
     		return null;
 
-    	return Navigation_Model_DbTable_Item::getInstance()->find($id);
+    	return $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->find($id);
     }
 
     /**
@@ -152,8 +152,8 @@ class Navigation extends \Zly\Doctrine\Model
 
         $newNode = true;
 
-        $childNode = new Navigation_Model_Mapper_Item();
-        $rootNode = Navigation_Model_DbTable_Item::getInstance()->find($values['parent_id']);
+        $childNode = new \Navigation\Model\Mapper\Item();
+        $rootNode = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->find($values['parent_id']);
 
         if (!empty($values['id'])) {
             $childNode->assignIdentifier($values['id']);
@@ -188,7 +188,7 @@ class Navigation extends \Zly\Doctrine\Model
     public function deleteItem($id)
     {
     	if (!empty($id)) {
-			$menu = Navigation_Model_DbTable_Item::getInstance()->findOneById($id);
+			$menu = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->findOneById($id);
 			$menu->getNode()->delete();
 
             if ($this->_cacheEnabled)
@@ -218,7 +218,7 @@ class Navigation extends \Zly\Doctrine\Model
         if ($itemId !== null) {
             $page = $navigation->findOneBy('id', $itemId);
 
-            $navigation = new Zend_Navigation();
+            $navigation = new \Zend\Navigation\Navigation();
 
             if ($page !== false)
                 $navigation->addPage($page);
@@ -233,21 +233,21 @@ class Navigation extends \Zly\Doctrine\Model
      * @param Zend_Navigation_Container $navigation Navigation object which will contain navigation converted from
      * NestedSet
      */
-    protected function _formatNavigationPages($root, Zend_Navigation_Container $navigation)
+    protected function _formatNavigationPages($root, \Zend\Navigation\Container $navigation)
     {
         /** @var $item Navigation_Model_Mapper_Item */
     	foreach ($root as $item) {
             $page = null;
 
     		if ($item->type == self::TYPE_EXTERNAL) {
-    			$page = new Zend_Navigation_Page_Uri();
+    			$page = new \Zend\Navigation\Page\Uri();
 
     			$page->id = $item->id;
     			$page->label = $item->title;
     			$page->uri = $item->external_link;
     		}
     		elseif ($item->type == self::TYPE_PROGRAMMATIC) {
-                $page = new Zend_Navigation_Page_Mvc();
+                $page = new \Zend\Navigation\Page\Mvc();
 
                 $page->id = $item->id;
                 $page->label = $item->title;
@@ -257,8 +257,8 @@ class Navigation extends \Zly\Doctrine\Model
                     $page->reset_params = true;
 
                 /** @var $sysmapItem Sysmap_Model_Mapper_Sysmap */
-                $sysmapItem = Zly_Api::getInstance()->request(
-                    new Zly_Api_Request($this, 'sysmap.get-item-by-identifier', array(
+                $sysmapItem = \Zly\Api::getInstance()->request(
+                    new \Zly\Api\Request($this, 'sysmap.get-item-by-identifier', array(
                         'identifier' => $item->sysmap_identifier
                     ))
                 );
@@ -282,7 +282,7 @@ class Navigation extends \Zly\Doctrine\Model
                     $page->params = $mca->getParams();
             }
             elseif($item->type == self::TYPE_NAVIGATION_ROOT) {
-                $page = new Zend_Navigation_Page_Uri();
+                $page = new \Zend\Navigation\Page\Uri();
     			$page->id = $item->id;
     			$page->label = $item->title;
     			$page->uri = '/';
@@ -311,10 +311,10 @@ class Navigation extends \Zly\Doctrine\Model
 		if (!is_array($navigations) or empty($navigations))
 			return null;
 
-		$completeNavigation = new Zend_Navigation();
+		$completeNavigation = new \Zend\Navigation\Navigation();
 
 		foreach ($navigations as $navigation) {
-			if ($navigation instanceof Zend_Navigation_Page) {
+			if ($navigation instanceof \Zend\Navigation\Page) {
 				$completeNavigation->addPage($navigation);
 			}
 		}
@@ -331,12 +331,12 @@ class Navigation extends \Zly\Doctrine\Model
 	 * @param array $conditions
 	 * @return Zend_Navigation|null
 	 */
-	public function getPagesByConditions(Zend_Navigation $navigation, $conditions, $leaveParents = false)
+	public function getPagesByConditions(\Zend\Navigation\Navigation $navigation, $conditions, $leaveParents = false)
 	{
 		if (!is_array($conditions) or empty($conditions))
 			return null;
 
-		$resultNavigation = new Zend_Navigation();
+		$resultNavigation = new \Zend\Navigation\Navigation();
 
 		$iterator = new RecursiveIteratorIterator($navigation, RecursiveIteratorIterator::SELF_FIRST);
 		// iterating over the navigation pages
@@ -365,7 +365,7 @@ class Navigation extends \Zly\Doctrine\Model
 						$resultPage = $resultPage->toArray();
 						unset($resultPage['pages']);
 
-						$resultPage = Zend_Navigation_Page::factory($resultPage);
+						$resultPage = \ZendNavigation\Page::factory($resultPage);
 					}
 
 					$resultNavigation->addPage($resultPage);
