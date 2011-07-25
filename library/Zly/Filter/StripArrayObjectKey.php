@@ -6,8 +6,9 @@
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @version    $Id: StripArrayObjectKey.php 839 2010-12-21 10:54:20Z deeper $
  */
+namespace Zly\Filter;
 
-class Zly_Filter_StripArrayObjectKey implements Zend_Filter_Interface
+class StripArrayObjectKey implements \Zend\Filter\Filter
 {
 	/**
 	 * ArrayObject key
@@ -55,13 +56,13 @@ class Zly_Filter_StripArrayObjectKey implements Zend_Filter_Interface
 	public function filter($input)
 	{
 		if(is_array($input))
-			$input = new ArrayObject($input);
+			$input = new \ArrayObject($input);
 		foreach($input as $key=>$value) {
 			if($key == $this->_key) {
 				$this->_found = true;
 				if($this->_remove)
 					unset($input[$key]);
-				if($value instanceof Iterator) {
+				if($value instanceof \Iterator) {
 					$this->_found = $this->filter($value);
 				}
 			}

@@ -6,8 +6,9 @@
  * @author     Evgheni Poleacov <evgheni.poleacov@gmail.com>
  * @version    $Id: Empty.php 839 2010-12-21 10:54:20Z deeper $
  */
+namespace Zly\Filter;
 
-class Zly_Filter_Empty implements Zend_Filter_Interface
+class EmptyFilter implements \Zend\Filter\Filter
 {
 	/**
 	 * Unset empty values from array recursively
@@ -31,5 +32,5 @@ class Zly_Filter_Empty implements Zend_Filter_Interface
 			//TODO: Create support of object filtering
 			return $input;
 		}
-	}
+        }
 }
