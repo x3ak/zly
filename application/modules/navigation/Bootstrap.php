@@ -64,6 +64,7 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
         }
         $mapModel = new Model\Navigation();
         $mapModel->initSchema();
+        $mapModel->createRoot();
         $modulesPlugin = $this->getBroker()->load('modules');
         $modulesPlugin->installModule('navigation');
         return true;

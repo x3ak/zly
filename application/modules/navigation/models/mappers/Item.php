@@ -21,20 +21,20 @@ class Item implements Node
     protected $type;
     /** @Column(length=255) */
     protected $title;
-    /** @Column(length=255) */
+    /** @Column(length=255, nullable=true) */
     protected $external_link;
-    /** @Column(length=50) */
+    /** @Column(length=50, nullable=true) */
     protected $sysmap_identifier;
-    /** @Column(length=30) */
+    /** @Column(length=30, nullable=true) */
     protected $route;
-    /** @Column(type="boolean") */
+    /** @Column(type="boolean", nullable=true) */
     protected $read_only;
-    /** @Column(type="integer") */
+    /** @Column(type="integer", nullable=true) */
     protected $lft;
-    /** @Column(type="integer") */
+    /** @Column(type="integer", nullable=true) */
     protected $rgt;
     /**
-     * @Column(type="integer")
+     * @Column(type="integer", nullable=true)
      */
     private $root;
     
@@ -135,6 +135,31 @@ class Item implements Node
     public function setRootValue($root) 
     { 
         $this->root = $root;
+    }
+    
+    public function toArray()
+    {
+        $array = array();
+        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
+
+        $vars = get_class_vars(get_class($this));
+        foreach (array_keys($vars) as $var) {
+            $array[$var] = $this->{'get' . $filter->filter($var)}();
+        }
+        return $array;
+    }
+
+    public function fromArray($data)
+    {
+        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
+
+        $vars = get_class_vars(get_class($this));
+        foreach (array_keys($vars) as $var) {
+            if (isset($data[$var]))
+                $this->{'set' . $filter->filter($var)}($data[$var]);
+        }
+
+        return $this;
     }
 }
 

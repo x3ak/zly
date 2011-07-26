@@ -97,6 +97,14 @@ class Navigation extends \Zly\Doctrine\Model
         
         return $classes;
     }
+    
+    public function createRoot()
+    {
+        $node = new Mapper\Item();
+        $node->setTitle('Root');
+        $node->setType(self::TYPE_NAVIGATION_ROOT);
+        return $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->createRoot($node);
+    }
 
     /**
      * Returns NestedSet with all navigation items
@@ -107,25 +115,6 @@ class Navigation extends \Zly\Doctrine\Model
     public function getStructureTree($fields = null)
     {
     	$tree = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->getTree();
-        if(empty($tree))
-            return $tree;
-    	$baseAlias = $tree->getBaseAlias();
-    	$select = '';
-
-    	if ($fields === null)
-    		$select = $baseAlias . '.id,' . $baseAlias . '.title';
-    	else {
-    		foreach ($fields as $field)
-    			$select .= $baseAlias . '.' . $field . ',';
-
-    		$select = substr($select, 0, -1);
-    	}
-
-		$tree->setBaseQuery(
-			$this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')
-						   ->createQuery($baseAlias)
-						   ->select($select)
-		);
 
     	return $tree;
     }
@@ -155,7 +144,7 @@ class Navigation extends \Zly\Doctrine\Model
         $newNode = true;
 
         $childNode = new \Navigation\Model\Mapper\Item();
-        $rootNode = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->find($values['parent_id']);
+        $rootNode = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->getTree($values['parent_id']);
 
         if (!empty($values['id'])) {
             $childNode->assignIdentifier($values['id']);
@@ -172,12 +161,15 @@ class Navigation extends \Zly\Doctrine\Model
         }
 
         $childNode->fromArray($values);
-        $childNode->save();
+        $node = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->wrapNode($childNode);
+        $childNode = $node->getNode();
+        $this->getEntityManager()->persist($childNode);
+        $this->getEntityManager()->flush();
 
         if ($newNode === true)
-            $childNode->getNode()->insertAsLastChildOf($rootNode);
+            $node->insertAsLastChildOf($rootNode);
         else
-            $childNode->getNode()->moveAsLastChildOf($rootNode);
+            $node->moveAsLastChildOf($rootNode);
 
         if ($this->_cacheEnabled)
             $this->_cache->remove($this->_cacheName);
@@ -208,13 +200,12 @@ class Navigation extends \Zly\Doctrine\Model
         if ($this->_cache->test($this->_cacheName) === false) {
             $navigation = new \Zend\Navigation\Navigation();
 
-            $tree = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->getTree();
+            $tree = $this->getEntityManager()->getRepository('\Navigation\Model\Mapper\Item')->getTreeAsArray();
             
             if(empty($tree))
                 return false;
-            
-            $roots = $tree->fetchRoots();
-            $this->_formatNavigationPages($roots, $navigation);
+
+            $this->_formatNavigationPages($tree, $navigation);
 
             if ($this->_cacheEnabled)
                 $this->_cache->save($navigation, $this->_cacheName);
@@ -243,22 +234,22 @@ class Navigation extends \Zly\Doctrine\Model
     protected function _formatNavigationPages($root, \Zend\Navigation\Container $navigation)
     {
         /** @var $item \Navigation\Model\Mapper\Item */
-    	foreach ($root as $item) {
-            $page = null;
-
-    		if ($item->type == self::TYPE_EXTERNAL) {
+    	foreach ($root as $node) {
+                $page = null;
+                $item = $node->getNode();
+    		if ($item->getType() == self::TYPE_EXTERNAL) {
     			$page = new \Zend\Navigation\Page\Uri();
 
-    			$page->id = $item->id;
-    			$page->label = $item->title;
-    			$page->uri = $item->external_link;
+    			$page->id = $item->getId();
+    			$page->label = $item->getTitle();
+    			$page->uri = $item->getExternalLink();
     		}
-    		elseif ($item->type == self::TYPE_PROGRAMMATIC) {
+    		elseif ($item->getType() == self::TYPE_PROGRAMMATIC) {
                 $page = new \Zend\Navigation\Page\Mvc();
 
-                $page->id = $item->id;
-                $page->label = $item->title;
-                $page->route = $item->route;
+                $page->id = $item->getId();
+                $page->label = $item->getTitle();
+                $page->route = $item->getRoute();
 
                 if ($page->reset_params === null)
                     $page->reset_params = true;
@@ -288,17 +279,17 @@ class Navigation extends \Zly\Doctrine\Model
                 if (!empty($params))
                     $page->params = $mca->getParams();
             }
-            elseif($item->type == self::TYPE_NAVIGATION_ROOT) {
+            elseif($item->getType() == self::TYPE_NAVIGATION_ROOT) {
                 $page = new \Zend\Navigation\Page\Uri();
-    			$page->id = $item->id;
-    			$page->label = $item->title;
+    			$page->id = $item->getId();
+    			$page->label = $item->getTitle();
     			$page->uri = '/';
             }
 
             if ($page === null)
                 return;
 
-            $itemNode = $item->getNode();
+            $itemNode = $node;
 
             if ($itemNode->hasChildren())
                 $this->_formatNavigationPages($itemNode->getChildren(), $page);

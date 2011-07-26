@@ -14,12 +14,6 @@ class MenuItem extends \Zend\Form\Form
      */
     protected $model;
     
-    public function __construct($options = null)
-    {
-        $this->model = $options['model'];
-        return parent::__construct($options);
-    }
-        
     public function init()
     {
         if(!$this->model instanceof \Navigation\Model\Navigation)
@@ -31,8 +25,7 @@ class MenuItem extends \Zend\Form\Form
                  );
 
         $menuItemTitle = new Element\Text('title');
-        $menuItemTitle->setLabel('Title')
-                                  ->setRequired(true);
+        $menuItemTitle->setLabel('Title')->setRequired(true);
         $this->addElement($menuItemTitle);
 
         $navigator = new \Zly\Form\Element\Tree('parent_id');
@@ -42,6 +35,7 @@ class MenuItem extends \Zend\Form\Form
                   ->setTitleKey('label')
                   ->setChildrensKey('pages');
         $navigation = $this->model->getNavigation();
+
         if(!empty($navigation))
             $navigator->setMultiOptions( $navigation->toArray() );
 
@@ -51,11 +45,11 @@ class MenuItem extends \Zend\Form\Form
         $menuItemType->setLabel('Menu item type')
              ->setAllowEmpty(false)
              ->setRequired(true)
-                                 ->addMultiOptions(array(
-                '' => '',
-                                        \Navigation\Model\Navigation::TYPE_EXTERNAL => 'External',
-                                        \Navigation\Model\Navigation::TYPE_PROGRAMMATIC => 'Programmatic'
-                                 ));
+             ->addMultiOptions(array(
+                    '' => '',
+                    \Navigation\Model\Navigation::TYPE_EXTERNAL => 'External',
+                    \Navigation\Model\Navigation::TYPE_PROGRAMMATIC => 'Programmatic'
+             ));
         $this->addElement($menuItemType);
 
         $submit = new Element\Submit('menu_item_submit');
@@ -66,6 +60,11 @@ class MenuItem extends \Zend\Form\Form
         $this->addElement($submit);
 
         $this->addElement('hidden', 'id');
+    }
+    
+    public function setModel($model)
+    {
+        $this->model = $model;
     }
 
     /**
@@ -99,7 +98,7 @@ class MenuItem extends \Zend\Form\Form
     {
         $this->_appendSubForm($data['type']);
 
-        if ($data['type'] == Navigation_Model_Navigation::TYPE_PROGRAMMATIC and !empty($data['options']['sysmap_identifier']))
+        if ($data['type'] == \Navigation\Model\Navigation::TYPE_PROGRAMMATIC and !empty($data['options']['sysmap_identifier']))
             $this->_prepareRoutes($data['options']['sysmap_identifier']);
 
         return parent::isValid($data);
@@ -108,10 +107,10 @@ class MenuItem extends \Zend\Form\Form
     protected function _appendSubForm($type)
     {
         if (empty($type) === false) {
-            if ($type == Navigation_Model_Navigation::TYPE_EXTERNAL)
-                $this->addSubForm(new Navigation_Form_ExternalType(), 'options', $this->getElement('menu_item_submit')->getOrder() - 2);
-            elseif($type == Navigation_Model_Navigation::TYPE_PROGRAMMATIC)
-                $this->addSubForm(new Navigation_Form_ProgrammaticType(), 'options', $this->getElement('menu_item_submit')->getOrder() - 2);
+            if ($type == \Navigation\Model\Navigation::TYPE_EXTERNAL)
+                $this->addSubForm(new \Navigation\Form\ExternalType(), 'options', $this->getElement('menu_item_submit')->getOrder() - 2);
+            elseif($type == \Navigation\Model\Navigation::TYPE_PROGRAMMATIC)
+                $this->addSubForm(new \Navigation\Form\ProgrammaticType(), 'options', $this->getElement('menu_item_submit')->getOrder() - 2);
         }
     }
 

@@ -20,9 +20,26 @@ class Item extends \Doctrine\ORM\EntityRepository
         return $result;
     }
     
-    public function getTree()
+    public function getTree($id = 1)
     {
-        return $this->nsm->fetchTree(1);
+        return $this->nsm->fetchTree($id);
+    }
+    
+    public function getTreeAsArray()
+    {
+        return $this->nsm->fetchTreeAsArray(1);
+    }
+    
+    public function wrapNode($node)
+    {
+        return $this->nsm->wrapNode($node);
+    }
+    
+    public function createRoot(\Navigation\Model\Mapper\Item $node)
+    {
+        $rootNode = $this->nsm->createRoot($node);
+        $this->getEntityManager()->persist($node);
+        return $this->getEntityManager()->flush();
     }
 }
 

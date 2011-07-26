@@ -7,11 +7,15 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class Navigation_Form_ExternalType extends Zend_Form_SubForm
+namespace Navigation\Form;
+
+use \Zend\form\Element as Element;
+
+class ExternalType extends \Zend\Form\SubForm
 {
     public function init()
     {
-        $url = new Zend_Form_Element_Text('external_link');
+        $url = new Element\Text('external_link');
         $url->setLabel('url')
             ->setRequired(true)
             ->setAllowEmpty(false);

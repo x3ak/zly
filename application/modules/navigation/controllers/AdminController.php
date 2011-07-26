@@ -24,7 +24,7 @@ class AdminController extends \Zend\Controller\Action
          */
 	public function indexAction()
 	{
-		$this->_forward('list-menu');
+            
 	}
 
 	/**
@@ -35,9 +35,9 @@ class AdminController extends \Zend\Controller\Action
             $this->view->tree = array();
             $tree = $this->_navigationModel
                          ->getStructureTree(array('id', 'title', 'route', 'read_only'));
-            
+
             if(!empty($tree))
-                $this->view->tree = array( $tree->fetchTree(array(), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY) );
+                $this->view->tree = array( $tree );
 	}
 
 	/**
@@ -49,10 +49,9 @@ class AdminController extends \Zend\Controller\Action
 		if ($id !== null) {
                 $item = $this->_navigationModel->getItem($id);
 			if (empty($item) === false and $item->read_only === true) {
-				$this->_helper->getHelper('FlashMessenger')->addMessage('That was a READ ONLY navigation item');
-				return $this->_helper->redirector->gotoUrl(
-				    $this->view->url( array('action' => 'list-menu') )
-                );
+				$this->broker('FlashMessenger')->addMessage('That was a READ ONLY navigation item');
+				return $this->broker('redirector')->goToRoute(array('module' => 'navigation', 'action' => 'list-menu'), 'admin', true);
+
 			}
 		}
 
@@ -61,9 +60,9 @@ class AdminController extends \Zend\Controller\Action
 		if ($this->getRequest()->isPost()) {
 			if ($form->isValid($this->getRequest()->getPost())) {
 				$this->_navigationModel->saveLeafItem( $form->getValues() );
-				return $this->_helper->redirector->gotoUrl(
-				    $this->view->url( array('action' => 'list-menu', 'module' => 'navigation', 'controller' => 'admin'), null, true )
-                );
+                                $this->broker('FlashMessenger')->addMessage('Menu item successful saved.');
+                                return $this->broker('redirector')->goToRoute(array('module' => 'navigation', 'action' => 'list-menu'), 'admin', true);
+		
 			}
 		}
 		else {
@@ -78,9 +77,9 @@ class AdminController extends \Zend\Controller\Action
                     $form->populate($itemData);
                 }
                 else {
-                    return $this->_helper->redirector->gotoUrl(
-                        $this->view->url( array('action' => 'edit-menu-item', 'module' => 'navigation', 'controller' => 'admin'), null, true )
-                    );
+                    $this->broker('FlashMessenger')->addMessage('Menu item successful saved.');
+                    return $this->broker('redirector')->goToRoute(array('module' => 'navigation', 'action' => 'edit-menu-item'), 'admin', true);
+
                 }
 			}
 		}
