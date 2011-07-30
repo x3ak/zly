@@ -1,22 +1,22 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
  * User: criollit
- * Date: 06.01.11
- * Time: 14:16
- * To change this template use File | Settings | File Templates.
  */
 
-class Navigation_Form_ProgrammaticType extends Zend_Form_SubForm
+namespace Navigation\Form;
+
+use \Zend\Form\Element;
+
+class ProgrammaticType extends \Zend\Form\SubForm
 {
     public function init()
     {
         /**
-         * @var $map Zly_Form_Element_Tree
+         * @var $map \Zly\Form\Element\Tree
          */
-        $mapTree = Zly_Api::getInstance()->request(new Zly_Api_Request($this, 'sysmap.get-map-tree'))->getFirst();
+        $mapTree = \Zly\Api\ApiService::getInstance()->request(new \Zly\Api\Request($this, 'sysmap.get-map-form-element'))->getFirst();
         $mapTree->setName('sysmap_identifier')
-                ->addDisableCondition('level', new Zend_Validate_LessThan(1));
+                ->addDisableCondition('level', new \Zend\Validator\LessThan(1));
         $this->addElement($mapTree);
     }
 }

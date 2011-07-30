@@ -255,9 +255,9 @@ class Navigation extends \Zly\Doctrine\Model
                     $page->reset_params = true;
 
                 /** @var $sysmapItem Sysmap_Model_Mapper_Sysmap */
-                $sysmapItem = \Zly\Api::getInstance()->request(
+                $sysmapItem = \Zly\Api\ApiService::getInstance()->request(
                     new \Zly\Api\Request($this, 'sysmap.get-item-by-identifier', array(
-                        'identifier' => $item->sysmap_identifier
+                        'identifier' => $item->getSysmapIdentifier()
                     ))
                 );
 
