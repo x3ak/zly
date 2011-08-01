@@ -373,4 +373,10 @@ class Navigation extends \Zly\Doctrine\Model
 
 		return $resultNavigation;
 	}
+        
+        public function testEntity()
+        {
+            $entity = new Mapper\Item();
+            $this->getEntityManager()->persist($entity);
+        }
 }

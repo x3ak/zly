@@ -94,7 +94,14 @@ class Doctrine extends \Zend\Application\Resource\AbstractResource
         if($connectionOptions === null)
             $connectionOptions = array('driver'=>'pdo_mysql');
 
+        
+        
         $this->_em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
+        $evm = $this->_em->getEventManager();
+        $evm = new \Doctrine\Common\EventManager();
+        $treeListener = new \Zly\Doctrine\Tree\TreeListener();
+        $evm->addEventSubscriber($treeListener);
+
         $front = $application->getBroker()->load('frontcontroller')->getFrontController();
         $front->setParam('doctrine', $this);
         return $this;

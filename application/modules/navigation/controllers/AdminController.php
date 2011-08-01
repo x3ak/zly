@@ -24,7 +24,7 @@ class AdminController extends \Zend\Controller\Action
          */
 	public function indexAction()
 	{
-            
+            $this->_navigationModel->testEntity();
 	}
 
 	/**

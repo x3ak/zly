@@ -12,13 +12,6 @@ use Zly\Doctrine\NestedSet as NestedSet;
 
 class Item extends \Doctrine\ORM\EntityRepository
 {
-    public function __construct(\Doctrine\ORM\EntityManager $em, $class)
-    {
-        $result = parent::__construct($em, $class);        
-        $config = new NestedSet\Config($this->getEntityManager(), '\Navigation\Model\Mapper\Item');
-        $this->nsm = new NestedSet\Manager($config);
-        return $result;
-    }
     
     public function getTree($id = 1)
     {
@@ -27,7 +20,7 @@ class Item extends \Doctrine\ORM\EntityRepository
     
     public function getTreeAsArray()
     {
-        return $this->nsm->fetchTreeAsArray(1);
+        return array();
     }
     
     public function wrapNode($node)

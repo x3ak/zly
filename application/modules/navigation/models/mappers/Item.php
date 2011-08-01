@@ -5,10 +5,11 @@ namespace Navigation\Model\Mapper;
 use Zly\Doctrine\NestedSet\Node;
 
 /**
+ * @Zly:Tree(type="nested")
  * @Entity(repositoryClass="Navigation\Model\DbTable\Item")
  * @Table(name="navigation_items")
  */
-class Item implements Node
+class Item
 {
 
     /**
