@@ -12,6 +12,12 @@ class Card extends \Zend\Form\Form
      */
     protected $_model;
     
+    /**
+     * Uploads directory path
+     * @var type 
+     */
+    protected $_uploads = '';
+    
     public function init()
     {
         $title = new Element\Text('title');
@@ -20,6 +26,7 @@ class Card extends \Zend\Form\Form
         $this->addElement($title);
 
         $picture = new Element\File('picture');
+        $picture->getDecorator('Description')->setEscape(false);
         $picture->setLabel('Picture');
         $this->addElement($picture);
                
@@ -38,5 +45,16 @@ class Card extends \Zend\Form\Form
     {
         $this->_model = $model;
         return $this;
+    }
+    
+    public function setUploads($uploads)
+    {
+        $this->_uploads = $uploads;
+    }
+    
+    public function populate($values)
+    {
+        $this->getElement('picture')->setDescription('<img src="'.str_replace(realpath(APPLICATION_PATH.'/../public'), '',$this->_uploads.'/'.$values['picture']).'"/>');
+        return parent::populate($values);
     }
 }

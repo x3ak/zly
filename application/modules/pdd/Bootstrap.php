@@ -23,9 +23,10 @@ class Bootstrap extends \Zend\Application\Module\Bootstrap
         $model = new Model\Cards();
         $model->initSchema();
 
-        if(!mkdir($options['upload_directory'], 0777, true)) {
-            throw new \Exception("Can't create upload directory: {$options['upload_directory']}");
-        }
+        if(!is_dir($options['upload_directory']))
+            if(!mkdir($options['upload_directory'], 0777, true)) {
+                throw new \Exception("Can't create upload directory: {$options['upload_directory']}");
+            }
         
         $modulesPlugin = $this->getBroker()->load('modules');
         $modulesPlugin->installModule('pdd');

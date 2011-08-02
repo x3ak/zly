@@ -25,28 +25,31 @@ class AdminController extends \Zend\Controller\Action
             $card = $model->getCardById($id);
         else
             $card = new Model\Mapper\Card;
+        $options = $this->getInvokeArg('bootstrap')->getOption('pdd');
+        $uploads = realpath($options['upload_directory']);
+        $form = new Form\Card(array('model'=>$model, 'uploads'=>$uploads));
         
-        $form = new Form\Card(array('model'=>$model));
-        
-        if($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+        if($this->getRequest()->isPost()) {
             
-            $result = $model->saveCard($card, $form->getValues());
+            if($form->isValid($this->getRequest()->getPost())) {
+                $result = $model->saveCard($card, $form->getValues());
+                if($result) { 
+                    
+                    $adapter = new \Zend\File\Transfer\Adapter\Http();
+                    $adapter->setDestination($uploads);
+                    if (!$adapter->receive()) {
+                        $messages = $adapter->getMessages();
+                    } else {
+                        $form->setErrors(array('Picure not uploaded'));
+                        continue;
+                    }
             
-            if($result) {
-                
-                $adapter = new \Zend\File\Transfer\Adapter\Http();
-
-                $options = $this->getInvokeArg('bootstrap')->getOption('pdd');
-                $adapter->setDestination($options['upload_directory']);
-
-                if (!$adapter->receive()) {
-                    $messages = $adapter->getMessages();
+                    $this->broker('FlashMessenger')->addMessage('Card saved');
+                    $this->broker('redirector')->goToRoute(array('module' => 'pdd', 'action' => 'index'), 'admin', true);
+                    return ;
                 }
-                
-                $this->broker('FlashMessenger')->addMessage('Card saved');
-                $this->broker('redirector')->goToRoute(array('module' => 'pdd', 'action' => 'index'), 'admin', true);
-                return ;
             }
+        
         }
 
         $form->populate($card->toArray());
