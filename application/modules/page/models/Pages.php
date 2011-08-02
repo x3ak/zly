@@ -50,7 +50,7 @@ class Pages extends \Zly\Doctrine\Model
         $em = $this->getEntityManager();
         $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
         $classes = $this->_getShemaClasses();
-        $tool->updateSchema($classes);
+        $tool->updateSchema($classes, true);
         return $this;
     }
     
