@@ -62,4 +62,11 @@ class Cards extends \Zly\Doctrine\Model
         $this->getEntityManager()->flush();
         return true;
     }
+    
+    public function deleteCard(Mapper\Card $card)
+    {   
+        $this->getEntityManager()->remove($card);
+        $this->getEntityManager()->flush();
+        return true;
+    }
 }

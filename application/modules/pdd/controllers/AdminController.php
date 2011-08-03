@@ -44,8 +44,8 @@ class AdminController extends \Zend\Controller\Action
                         continue;
                     }
             
-                    $this->broker('FlashMessenger')->addMessage('Card saved');
-                    $this->broker('redirector')->goToRoute(array('module' => 'pdd', 'action' => 'index'), 'admin', true);
+                    $this->broker('flashmessenger')->addMessage('Card saved');
+                    $this->broker('redirector')->goToRoute(array('module' => 'pdd', 'action' => 'cards'), 'admin', true);
                     return ;
                 }
             }
@@ -67,9 +67,9 @@ class AdminController extends \Zend\Controller\Action
             $result = $model->deleteCard($card);
         
         if($result) {
-            $this->broker('FlashMessager')->addMEssage('Card saved');                
+            $this->broker('flashmessenger')->addMEssage('Card saved');                
         }
         
-        return $this->broker('redirector')->goToRoute(array('module' => 'pdd', 'action' => 'index'), 'admin', true);
+        return $this->broker('redirector')->goToRoute(array('module' => 'pdd', 'action' => 'cards'), 'admin', true);
     }
 }
