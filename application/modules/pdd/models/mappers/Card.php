@@ -31,7 +31,14 @@ class Card
      * @OneToMany(targetEntity="Pdd\Model\Mapper\Question", mappedBy="card")
      */
     protected $questions;
-   
+    
+    /**
+     * @ManyToOne(targetEntity="Pdd\Model\Mapper\Category")
+     * @JoinColumn(name="category_id", referencedColumnName="id", unique=false)
+     */
+    protected $category;
+
+
     public function getId()     
     {
         return $this->id;
@@ -86,7 +93,18 @@ class Card
     {
         $this->questions = $questions;
     }
+    
+    public function getCategory()     
+    {
+        return $this->category;
+    }
 
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
+    
     public function toArray()
     {
         $array = array();

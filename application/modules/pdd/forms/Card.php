@@ -29,7 +29,15 @@ class Card extends \Zend\Form\Form
         $picture->getDecorator('Description')->setEscape(false);
         $picture->setLabel('Picture');
         $this->addElement($picture);
-               
+        
+        $categories = $this->_model->getCategories();
+        $categoryOptions = array();
+        foreach ($categories as $value)
+            $categoryOptions[$value->getId()] = $value->getTitle();
+        $category = new Element\Select('category');
+        $category->addMultiOptions($categoryOptions)->setLabel('Category');
+        $this->addElement($category);
+        
         $answer = new Element\Text('answer');
         $answer->setLabel('Answer')
               ->setRequired(true);
@@ -54,7 +62,11 @@ class Card extends \Zend\Form\Form
     
     public function populate($values)
     {
-        $this->getElement('picture')->setDescription('<img src="'.str_replace(realpath(APPLICATION_PATH.'/../public'), '',$this->_uploads.'/'.$values['picture']).'"/>');
+        if(!empty($values['picture']))
+            $this->getElement('picture')->setDescription(
+                    '<img src="'.str_replace(realpath(APPLICATION_PATH.'/../public'), 
+                    '',$this->_uploads.'/'.$values['picture']).'"/>'
+            );
         return parent::populate($values);
     }
 }

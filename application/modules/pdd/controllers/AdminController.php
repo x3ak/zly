@@ -67,9 +67,63 @@ class AdminController extends \Zend\Controller\Action
             $result = $model->deleteCard($card);
         
         if($result) {
-            $this->broker('flashmessenger')->addMEssage('Card saved');                
+            $this->broker('flashmessenger')->addMessage('Card removed');                
         }
         
         return $this->broker('redirector')->goToRoute(array('module' => 'pdd', 'action' => 'cards'), 'admin', true);
+    }
+    
+    public function categoriesAction()
+    {
+        $page = $this->getRequest()->getParam('page');
+        $model = new Model\Cards();
+        $categories = $model->getCategories($page);
+        $this->view->categories = $categories;
+    }
+    
+    public function editCategoryAction()
+    {
+        $model = new Model\Cards();
+        $id = $this->getRequest()->getParam('id');
+        if($id)
+            $category = $model->getCategoryById($id);
+        else
+            $category = new Model\Mapper\Category;
+
+        $form = new Form\Category();
+        
+        if($this->getRequest()->isPost()) {
+            
+            if($form->isValid($this->getRequest()->getPost())) {
+                $result = $model->saveCategory($category, $form->getValues());
+                if($result) { 
+            
+                    $this->broker('flashmessenger')->addMessage('Category saved');
+                    $this->broker('redirector')->goToRoute(array('module' => 'pdd', 'action' => 'categories'), 'admin', true);
+                    return ;
+                }
+            }
+        
+        }
+
+        $form->populate($category->toArray());
+        $this->view->form = $form;
+    }
+    
+    public function deleteCategoryAction()
+    {
+        $model = new Model\Cards();
+        $id = $this->getRequest()->getParam('id');
+        if($id)
+            $category = $model->getCategoryById($id);
+        
+        if($category)
+            $result = $model->deleteCategory($category);
+        
+        if($result) {
+            $this->broker('flashmessenger')->addMessage('Category removed');                
+        }
+        
+        return $this->broker('redirector')->goToRoute(array('module' => 'pdd', 'action' => 'categories'), 'admin', true);
     }
 }

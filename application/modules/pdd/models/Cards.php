@@ -38,6 +38,7 @@ class Cards extends \Zly\Doctrine\Model
         $classes = array(
           $em->getClassMetadata('\Pdd\Model\Mapper\Card'),
           $em->getClassMetadata('\Pdd\Model\Mapper\Question'),
+          $em->getClassMetadata('\Pdd\Model\Mapper\Category'),
         );
         
         return $classes;
@@ -66,6 +67,33 @@ class Cards extends \Zly\Doctrine\Model
     public function deleteCard(Mapper\Card $card)
     {   
         $this->getEntityManager()->remove($card);
+        $this->getEntityManager()->flush();
+        return true;
+    }
+    
+    public function getCategories($page = null)
+    {
+        return $this->getEntityManager()->getRepository('\Pdd\Model\Mapper\Category')->findAll();
+    }
+    
+    public function getCategoryById($id)
+    {
+        return $this->getEntityManager()
+                    ->getRepository('\Pdd\Model\Mapper\Category')
+                    ->findOneBy(array('id'=>$id));
+    }
+    
+    public function saveCategory(Mapper\Category $category, $data)
+    {
+        $category->fromArray($data);       
+        $this->getEntityManager()->persist($category);
+        $this->getEntityManager()->flush();
+        return true;
+    }
+    
+    public function deleteCategory(Mapper\Category $category)
+    {   
+        $this->getEntityManager()->remove($category);
         $this->getEntityManager()->flush();
         return true;
     }
