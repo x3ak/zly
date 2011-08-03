@@ -39,6 +39,7 @@ class AdminController extends \Zend\Controller\Action
                     $adapter->setDestination($uploads);
                     if (!$adapter->receive()) {
                         $messages = $adapter->getMessages();
+                        \Zend\Debug::dump($messages); die;
                     } else {
                         $form->setErrors(array('Picure not uploaded'));
                         continue;

@@ -58,8 +58,13 @@ class Cards extends \Zly\Doctrine\Model
     
     public function saveCard(Mapper\Card $card, $data)
     {
+        if(!empty($data['category_id']))
+            $category = $this->getCategoryById($data['category_id']);
+        
         $card->fromArray($data);       
+        $card->setCategory($category);
         $this->getEntityManager()->persist($card);
+        $this->getEntityManager()->persist($category);
         $this->getEntityManager()->flush();
         return true;
     }

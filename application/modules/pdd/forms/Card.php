@@ -34,7 +34,7 @@ class Card extends \Zend\Form\Form
         $categoryOptions = array();
         foreach ($categories as $value)
             $categoryOptions[$value->getId()] = $value->getTitle();
-        $category = new Element\Select('category');
+        $category = new Element\Select('category_id');
         $category->addMultiOptions($categoryOptions)->setLabel('Category');
         $this->addElement($category);
         
