@@ -7,3 +7,4 @@
 /application/configs/local.ini
 /application/modules/sysmap/configs/local.ini
 /data/cache/*
+/public/uploads/pdd/cards/
